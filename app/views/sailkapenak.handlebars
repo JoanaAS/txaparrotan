@@ -1,0 +1,50 @@
+{{#if menuadmin}}
+  {{> menuadmin}}
+{{else}}
+  {{> menu}}
+{{/if}} 
+
+<div class="jumbotron">
+        <h2>Sailkapena</h2>
+      </div>
+        {{#if menuadmin}}
+        {{else}}
+           {{#if taldekoa}} 
+                <a href="/sailkapenak" class="btn btn-primary btn-sm" role="button">Sailkapen guztiak ikusi</a>
+            {{else}}
+                <a href="/taldesailkapena" class="btn btn-primary btn-sm" role="button">Zure multzoaren sailkapena ikusi</a>
+            {{/if}}
+        {{/if}}
+      <div class="row marketing">
+
+        <div class="col-lg-6 col-sm-offset-1">
+        {{#each data2}}
+                  
+                    <h2 style="color:#0000FF">{{mailaizena}}</h2>  
+                    
+                    {{#each multzoak}} 
+                        <h3>{{multzo}}</h3>  
+                        <table class="table table-striped">
+                            <tr>
+                                <th>  </th>
+                                <th>Taldea</th>
+                                <th>Jokatutako partiduak</th>
+                                <th>Irabazitako partiduak</th>
+                                <th>Puntuak</th>
+                            </tr>  
+                        {{#each taldeak}}
+                            
+                            <tr>
+                                <td> <b>{{postua}}</b> </td>
+                                <td>{{taldeizena}}</td>
+                                <td width="10%" align="center">{{jokatutakopartiduak}}</td>
+                                <td width="10%" align="center">{{irabazitakopartiduak}}</td>
+                                <td align="center">{{puntuak}}</td>       
+                            </tr>
+                        {{/each}} 
+                        </table>
+                    {{/each}} 
+                
+            {{/each}}
+        </div>
+      </div>

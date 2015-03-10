@@ -1,0 +1,28 @@
+	{{> menu}}
+      <div class="jumbotron">
+        <h2>Emaitzak</h2>
+      </div>
+ 
+      <a href="/jokalariak" class="btn btn-primary btn-sm" role="button">Emaitza guztiak ikusi</a>
+      </br>
+      </br>
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <table class="table table-striped">
+            <tr>
+                <th align="center">A taldea</th>
+                <th align="center">B taldea</th>
+                <th align="center">Emaitza</th>
+            </tr>  
+        {{#each data2}} 
+            <tr>
+                <td>{{idtalde1}} {{taldeizena1}}</td>      
+                <td>{{idtalde2}} {{taldeizena2}}</td> 
+                <td align="center" width="5%">{{emaitza1}}-{{emaitza2}}</td>              
+            </tr>
+        {{/each}}
+        </table>
+        </div>
+      </div>
+
+      

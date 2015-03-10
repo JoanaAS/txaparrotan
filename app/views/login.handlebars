@@ -1,0 +1,61 @@
+
+<div class="container">
+
+<div class="col-sm-6 col-sm-offset-3">
+
+  <h1><span class="fa fa-sign-in"></span> Saioa hasi </h1>
+
+  <!-- show any messages that come back with authentication -->
+  <!--<% if (message.length > 0) { %>
+    <div class="alert alert-danger"><%= message %></div>
+  <% } %>-->
+
+  <!-- LOGIN FORM -->
+  <form action="/login" method="post">
+    <div class="form-group">
+      <label>Emaila</label>
+      <input type="email" class="form-control" required id="emailaard" autofocus placeholder="Sartu emaila" name="emailaard">
+    </div>
+
+    <div class="form-group">
+      <label for="sTaldeak">Taldearen izena</label>
+      <select name="sTaldeak" id="sTaldeak"></select>
+    </div>
+  
+    <div class="form-group">
+      <label>Pasahitza</label>
+      <input type="password" class="form-control" required id="pasahitza" placeholder="Sartu pasahitza" name="pasahitza">
+    </div>
+
+    <button type="submit" class="btn btn-warning btn-lg">Sartu</button>
+  </form>
+
+  <hr>
+
+  <p>Pasahitza ahaztu al duzu?<a href="/forgot"> Pasahitza </a></p>
+  <p>Izen-eman nahi? <a href="/izenematea">Izena-eman</a></p>
+  <p>Edo hasierara <a href="/">Hasiera</a>.</p>
+
+</div>
+
+</div>
+<script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $('#emailaard').change(function(){
+        socket.emit('taldeak', $('#emailaard').val());
+        return false;
+      });
+      socket.on('taldeak', function(data){
+        var totTal = data.length;
+        sTaldeak.length = totTal;
+        for (var i = 0; i< totTal; i++){
+           sTaldeak.options[i] = new Option (data[i].taldeizena, data[i].idtaldeak)
+         };
+      });
+    </script>
+
+
+
+

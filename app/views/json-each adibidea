@@ -1,0 +1,77 @@
+{taldeak: [{
+  taldeizena: "talde 22",
+  jokalariak: [{
+    jokalariizena: "jok22",
+    emailaj: "joan@gmail.com"
+  },
+  {
+    jokalariizena: "jok22-2",
+    emailaj: "joankkhl@gmail.com"
+  }]
+},
+{taldeizena: "talde 33",
+  jokalariak: [{
+    jokalariizena: "jok33",
+    emailaj: "joan@gmail.com"
+  },
+  {
+    jokalariizena: "jok33-3",
+    emailaj: "joankkhl@gmail.com"
+  }]
+}]
+}
+
+
+
+
+
+<div class="post">
+{{#each taldeak}}
+  <h1>By {{taldeizena}}</h1>
+
+  <h1>jokalariak</h1>
+
+  {{#each jokalariak}}
+    <h2>By {{jokalariizena}}</h2>
+    {{emailaj}}
+  {{/each}}
+{{/each}}
+</div>
+------------------------------------------------------------
+
+{zelaiak: [{
+  zelaiizena: "Argiñano"},
+  {zelaiizena: "Tablaua"},
+  {zelaiizena: "Santa Barbara"},
+  {zelaiizena: "Mollarri"}
+]
+}
+
+{orduak: [{
+ 
+ saioak: [{taldeizena: "10:00"},
+  {taldeizena: "1-1a", taldeizena2: "1-1b"},
+  {taldeizena: "1-2a", taldeizena2: "1-2b"},
+  {taldeizena: "1-3a", taldeizena2: "1-3b"},
+  {taldeizena: "1-4a", taldeizena2: "1-4b"}]},
+
+{saioak: [{taldeizena: "10:30"},
+  {taldeizena: "2-1a", taldeizena2: "2-1b"},
+  {taldeizena: "2-2", taldeizena2: "2-2b"},
+{taldeizena: "2-3a", taldeizena2: "2-3b"},
+{taldeizena: "2-4a", taldeizena2: "2-4b"}]}
+  
+]}
+
+<table>
+  {{#each orduak}}
+<tr>
+    {{#each saioak}}
+    
+       <td>{{taldeizena}} <br />{{taldeizena2}}</td> 
+
+    {{/each}}
+</tr> 
+  {{/each}}
+</table>
+</div>

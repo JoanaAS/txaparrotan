@@ -1,0 +1,69 @@
+<div class="jumbotron">
+        <h2>Taldeak</h2>
+      </div>
+<div class="container">
+
+
+<div class="row marketing">
+</br>
+<p align="center"> Taldearen izena: {{taldeak.taldeizena}}</p>
+<p align="center">{{taldeak.kategoria}}</p>
+<p align="center">{{taldeak.sexua}}</p>
+<p align="center">{{taldeak.herria}}</p>
+<p align="center">{{taldeak.emailard}}</p>
+<p align="center">{{taldeak.telefonoard}}</p>
+<p align="center" >{{taldeak.DNIard}}</p>
+<p align="center">{{taldeak.izenaard}}</p>
+<p align="center">{{taldeak.telefonoard}}</p>
+<p align="center">{{taldeak.emailaard}}</p>
+        <div class="col-lg-6">
+       <!-- {{#each data}}  
+                    <p align="center"> Taldearen izena: {{taldeak.taldeizena}}</p>
+                    <p align="center">{{kategoria}}</p>
+                    <p align="center">{{sexua}}</p>
+                    <p align="center">{{herria}}</p>
+                    <p align="center">{{emailard}}</p>
+                    <p align="center">{{telefonoard}}</p>
+                    <p align="center" >{{DNIard}}</p>
+                    <p align="center">{{izenaard}}</p>
+                   <p align="center">{{telefonoard}}</p>
+                   <p align="center">{{emailaard}}</p>
+            {{/each}} -->
+          
+            <table class="table table-striped">
+            <tr>
+                    <th>Izena</th>
+                    <th>Emaila</th>
+                    <th>Telefonoa</th>
+                    <th>Kamiseta neurria</th>
+                    <th>Editatu</th>
+                    <th>Borratu</th>
+
+                </tr>                               
+            {{#each data}}
+                  <tr>
+                    <td>{{jokalariizena}}</td>
+                    <td>{{emailaj}}</td>
+                    <td>{{telefonoaj}}</td>
+                    <td>{{kamisetaneurria}}</td>
+                     <td>
+                        <a class="a-inside edit" href="../customers/edit/<%=data[i].id%>">Editatu</a>
+                    </td>
+                    <td>
+                        <a class="a-inside delete" href="../customers/delete/<%=data[i].id%>">Ezabatu</a> 
+                    </td>
+                    
+                </tr>
+            {{/each}}
+          </table>
+        </div>
+        <form class="form-horizontal newsletterForm" role="form" action="/jokalariagehitu" method="POST">
+        <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+         <div class="form-group">
+            <!--<div class="col-sm-offset-2 col-sm-4"> -->
+                <button type="submit" class="btn btn-default">Gehitu</button>
+            <!--</div>-->
+        </div>
+        </form>
+      </div>
+</div>

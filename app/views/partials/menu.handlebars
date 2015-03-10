@@ -1,0 +1,39 @@
+
+      <div class="header">
+       <!-- <h3 class="text-muted">Txaparrotan</h3> -->
+       <!-- <ul class="nav nav-pills pull-right"> -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li><a href="/">Gaur egun</a></li>
+          <li><a href="/izenematea"><b>IZEN-EMATEA</b></a></li>
+          {{#if taldeizena}}
+              <li><a href="/jokalariak">Zure taldea</a></li>
+            {{else}}
+              <li><a href="/taldeak">Taldeak</a></li> 
+            {{/if}} 
+          
+          {{#if taldeizena}}
+              <li><a href="/taldepartiduak"><b>PARTIDUAK</b></a></li>
+            {{else}}
+              <li><a href="/partiduak"><b>PARTIDUAK</b></a></li>
+            {{/if}}
+
+          {{#if taldeizena}}
+              <li><a href="/taldeordutegia">Ordutegia</a></li>
+            {{else}}
+              <li><a href="/ordutegia">Ordutegia</a></li> 
+            {{/if}}
+
+          {{#if taldeizena}}
+              <li><a href="/taldesailkapena"><b>SAILKAPENAK</b></a></li>
+            {{else}}
+              <li><a href="/sailkapenak"><b>SAILKAPENAK</b></a></li>
+            {{/if}} 
+
+          <li><a href="/arauak">Arauak</a></li>
+          <li><a href="/argazkiak"><b>ARGAZKIAK</b></a></li>
+          <li><a target="_blank" href="/kontaktua">Kontaktua</a></li>
+        </ul>
+        
+      </div>
+
+      

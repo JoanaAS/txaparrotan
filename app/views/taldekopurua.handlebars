@@ -1,0 +1,28 @@
+{{> menuadmin}}
+ <div class="jumbotron">
+        <h2>Talde kopuruak</h2>
+      </div>
+  
+      </br>
+      
+      <div class="row marketing">
+        <div class="col-lg-5 col-sm-offset-1">
+        <table class="table table-striped">
+                <tr>
+                    <th>Kategoria</th>
+                    <th>Kopurua</th>
+                </tr> 
+                {{#each data2}}
+                   <tr>
+                    <td>{{mailaizena}}</td> 
+                    <td>{{guztira}}</td>                
+                   </tr>                           
+                {{/each}}  
+                <tr>
+                    <td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GUZTIRA</b></td> 
+                    <td><b>{{taldetot}}</b></td>                
+                   </tr>               
+          </table>
+        </div>
+        
+      </div>

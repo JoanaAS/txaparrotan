@@ -1,0 +1,28 @@
+{{> menuadmin}}
+
+<div class="jumbotron">
+        <h2>Sarien zozketa</h2>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-5 col-md-offset-1" >
+
+        <table class="table table-condensed">
+            <tr class = "active">
+                    <th>Jokalariaren izena</th>
+                    <th>Taldearen izena</th>
+                    <th>Kategoria</th>
+                    <th>Sexua</th>
+                
+                </tr>                               
+            {{#each data}}
+                  <tr>
+                    <td>{{jokalariizena}}</td>  
+                    <td>{{taldeizena}}</td> 
+                    <td> {{kategoria}}</td>
+                    <td> {{sexua}} </td>
+                  </tr>
+            {{/each}}
+          </table>
+        </div>
+      </div>

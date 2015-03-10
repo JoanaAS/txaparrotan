@@ -1,0 +1,71 @@
+<div class="container">
+
+<div class="col-sm-6 col-sm-offset-3">
+
+  <h1><span class="fa fa-sign-in"></span> Pasahitza berritu </h1>
+
+
+  <!-- LOGIN FORM -->
+  <form action="/reset" method="post">
+  
+    <div class="form-group">
+      <label>Pasahitza</label>
+      <input type="password" class="form-control" required id="pasahitza" placeholder="Sartu pasahitza" name="pasahitza">
+    </div>
+    <div class="form-group">
+      <label>Pasahitza</label>
+      <input type="password" class="form-control" required id="pasahitza2" placeholder="Errepikatu pasahitza" name="pasahitza2">
+      <div id="mensaje4" class="errores"> Pasahitza desegokia</div>
+ 
+    </div>
+
+    <button type="submit" class="btn btn-warning btn-lg" id="boton">Aldatu</button>
+  </form>
+
+  <hr>
+</div>
+
+</div>
+
+{{#section 'jquery'}}
+  <script> 
+$('document').ready(function () {
+    $('h1').html('jQuery Works');
+    alert("AAA" +passw+repass);
+    $("#mensaje4").fadeIn("slow");
+
+    $("#boton").click(function (){ //función para el boton de enviar
+        var passw = $("#pasahitza").val();
+        var repass = $("#pasahitza2").val();
+        alert("AAA" +passw+repass);
+                    if(passw != repass){
+                        $("#mensaje4").fadeOut("slow");
+                        alert("eoeoeoe" +passw+repass);
+                        return false;
+                    }   
+        }
+ 
+    });//fin click
+ 
+    var valido=false;
+    $("#pasahitza2").keyup(function(e) {
+        var pass = $("#pasahitza").val();
+        var re_pass=$("#pasahitza2").val();
+ 
+        if(pass != re_pass)
+        {
+            $("#pasahitza2").css({"background":"#F22" }); //El input se pone rojo
+            valido=true;
+        }
+        else if(pass == re_pass)
+        {
+            $("#pasahitza2").css({"background":"#8F8"}); //El input se ponen verde
+            $("#mensaje4").fadeOut();
+            valido=true;
+        }
+    });//fin keyup repass
+ 
+});//fin ready
+
+  </script>
+{{/section}}

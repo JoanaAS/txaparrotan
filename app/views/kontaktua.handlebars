@@ -1,0 +1,121 @@
+    {{> menu}}
+
+      <div class="jumbotron">
+        <h2>Kontaktua</h2>
+      </div>
+
+      <div class="formContainer">
+    <form class="form-horizontal newsletterForm" role="form" action="/kontaktuabidali" method="POST">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+        <div class="form-group">
+            <label for="izenabizen" class="col-sm-2 control-label">Izen-abizenak</label>
+            <div class="col-sm-4">
+                <textarea name="izenabizen" rows="1" cols="40" class="form-control">  {{izenabizen}}</textarea>
+             <!--   <input type="text" class="form-control" autofocus name="izenabizen" value={{izenabizen}}> -->
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="col-sm-2 control-label">Emaila</label>
+            <div class="col-sm-4">
+                <input type="email" class="form-control" required id="email" name="email" placeholder="Derrigorrezkoa" value={{email}} >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="telef" class="col-sm-2 control-label">Telefonoa</label>
+            <div class="col-sm-4">
+                <input type="tel" class="form-control" name="telef" pattern = "\d{9}" value={{telef}} >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="herri" class="col-sm-2 control-label">Herria</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="herri" value={{herri}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="azalpena" class="col-sm-2 control-label">Azalpena</label>
+            <div class="col-sm-4">
+                <!--<input type="textarea" class="form-control" required id="azalpena" name="azalpena">-->
+                <textarea name="azalpena" rows="10" cols="40" class="form-control" required id="azalpena" placeholder="Derrigorrezkoa" value={{azalpena}}>  {{azalpena}}</textarea>
+
+            </div>
+
+        </div>
+        <div class="form-group">
+        <div class="col-sm-offset-2">
+                        <input type="text" id="txtCaptcha" 
+                            style="background-image:url(/img/1.jpg); text-align:center; border:none;
+                            font-weight:bold; font-family:Modern" />
+                        
+
+  
+                        <input type="text" id="txtInput"/>    
+
+        </div>                
+        </div>
+         <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-default" id="boton">Bidali</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{{#section 'jquery'}}
+<script>
+        $(document).ready(function(){        
+            DrawCaptcha();
+            $("#boton").on('click',function (){ 
+                   var str1 = removeSpaces(document.getElementById('txtCaptcha').value);
+                    var str2 = removeSpaces(document.getElementById('txtInput').value);
+                    if (str1 != str2){
+                        alert("ADI! Kodea ondo sartu!");      
+                        return false;
+                    }  
+
+            });
+            
+        });
+        
+    </script>
+
+
+<script type="text/javascript">
+
+   //Created / Generates the captcha function    
+    function DrawCaptcha()
+    {
+        var a = Math.ceil(Math.random() * 10)+ '';
+        var b = Math.ceil(Math.random() * 10)+ '';       
+        var c = Math.ceil(Math.random() * 10)+ '';  
+        var d = Math.ceil(Math.random() * 10)+ '';  
+        var e = Math.ceil(Math.random() * 10)+ '';  
+        var f = Math.ceil(Math.random() * 10)+ '';  
+        var g = Math.ceil(Math.random() * 10)+ '';  
+        var code = a + ' ' + b + ' ' + ' ' + c + ' ' + d + ' ' + e + ' '+ f + ' ' + g;
+        document.getElementById("txtCaptcha").value = code
+    }
+
+    // Validate the Entered input aganist the generated security code function   
+    function ValidCaptcha(){
+        var str1 = removeSpaces(document.getElementById('txtCaptcha').value);
+        var str2 = removeSpaces(document.getElementById('txtInput').value);
+        if (str1 != str2){
+            alert("ADI! Kodea ondo sartu!");      
+            return false;
+        }  
+        
+        
+    }
+
+    // Remove the spaces from the entered and generated code
+    function removeSpaces(string)
+    {
+        return string.split(' ').join('');
+    }
+    
+ 
+    </script>
+{{/section}}
+
+      

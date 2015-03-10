@@ -1,0 +1,247 @@
+{{> menuadmin}}
+
+<div class="jumbotron">
+        <h2>Kalkuluak</h2>
+      </div>
+
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="multzoak" >1. - Multzoak</label>
+</div>
+<div class="col-lg-5">
+<form class="form-horizontal" role="form" action="/admin/multzoakegin" method="POST">
+<input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
+        <select name="kategoria" id="kategoria"></select>
+      <!--  <input type="text" size="10" required id="multzokop" name="multzokop" placeholder="Multzo kopurua" value={{multzokop}}> -->
+	<button type="submit" class="btn btn-default">Egin</button>
+</form>
+
+</div>
+<div class="col-lg-4">
+
+</div>
+<div class="col-lg-4">
+  </div>
+</br>
+</br>
+
+
+<div class="col-lg-5 col-md-offset-3">
+<form class="form-horizontal" role="form" action="/admin/multzoakbete" method="POST">
+        <input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
+        <select name="kategoria2" id="kategoria2"></select>
+      <!--  <input type="text" size="10" required id="multzokop2" name="multzokop2" placeholder="Multzo kopurua" value={{multzokop2}}> -->
+  <button type="submit" class="btn btn-default">Bete</button>
+  
+</form>
+</div>
+
+</br>
+</br>
+
+<div class="col-lg-5 col-md-offset-8">
+<form class="form-horizontal" role="form" action="/admin/multzoakreset" method="POST">        
+        <input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
+
+        <select id="kategoria3" name="kategoria3"></select>
+
+  <button type="submit" class="btn btn-default" id="reset1" >MULTZOAK Reset</button>
+  
+</form>
+</div>
+
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="partiduak" > - Partiduak</label>
+</div>
+<div class="col-lg-1">
+<form class="form-horizontal" role="form" action="/admin/partiduaksortu" method="POST">
+	<button type="submit" class="btn btn-default">Sortu</button>
+</form>
+</div>
+<div class="col-lg-1 col-md-offset-6">
+<form class="form-horizontal" role="form" action="/admin/partiduakreset" method="POST">
+  <button type="submit" class="btn btn-default">PARTIDUAK Reset</button>
+</form>
+</div>
+<div class="col-lg-8">
+
+</div>
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="ordutegia" > - Ordutegia</label>
+</div>
+<div class="col-lg-9">
+<form class="form-horizontal" role="form" action="/admin/ordutegiasortu" method="POST">
+	<button type="submit" class="btn btn-default">Egin</button>
+</form>
+</div>
+
+
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="finalak" > - Finalak</label>
+</div>
+<div class="col-lg-5">
+<form class="form-horizontal" role="form" action="/admin/finalakegin" method="POST">
+<input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
+        <select name="kategoriaf" id="kategoriaf"></select>
+  <button type="submit" class="btn btn-default">Multzoak</button>
+</form>
+
+</div>
+<div class="col-lg-4">
+
+</div>
+<div class="col-lg-4">
+  </div>
+</br>
+</br>
+
+<div class="col-lg-5 col-md-offset-3">
+<form class="form-horizontal" role="form" action="/admin/finalpartiduak" method="POST">
+<input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
+        <select name="kategoriaf2" id="kategoriaf2"></select>
+  <button type="submit" class="btn btn-default">Partiduak</button>
+</form>
+</div>
+</br>
+</br>
+
+<div class="col-lg-5 col-md-offset-3">
+<form class="form-horizontal" role="form" action="/admin/finalordutegia" method="POST">
+<input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
+        
+  <button type="submit" class="btn btn-default">Ordutegia</button>
+</form>
+</div>
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="finalak" >2.   - Finalak osatu</label>
+</div>
+<div class="col-lg-5">
+<form class="form-horizontal" role="form" action="/admin/finalakosatu" method="POST">
+<input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
+        <select name="kategoriaf3" id="kategoriaf3"></select>
+  <button type="submit" class="btn btn-default">Finalak osatu</button>
+</form>
+</div>
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="kamisetak" >3. - Kamiseten kalkulua</label>
+</div>
+<div class="col-lg-9">
+<form class="form-horizontal" role="form" action="/admin/kamisetak" method="POST">
+	<button type="submit" class="btn btn-default">Egin</button>
+</form>
+</div>
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="multzoak" > - Sarien zozketa</label>
+</div>
+<div class="col-lg-7">
+<form class="form-horizontal" role="form" action="/admin/sariak" method="POST">
+        <select id="kategoria4" name="kategoria4"></select>
+  <button type="submit" class="btn btn-default">Egin</button>
+</form>
+  </div>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="mezuak" > - ADI mezuak</label>
+</div>
+<div class="col-lg-7">
+<form class="form-horizontal" role="form" action="/admin/mezuakbidali" method="POST">
+        
+        <select id="mezumota" name="mezumota">
+          <option value="jokgabe">Jokalaririk gabe</option> <option value="ordgabe">Ordaindu gabeak</option>
+          <option value="prest">Txapelketa prest</option> 
+        </select>
+
+        <label>
+            <strong>&nbsp&nbsp&nbsp Bidali? &nbsp   </strong>
+            <input type="checkbox" name="bidali" id="bidali" value="true"> 
+        </label>
+         
+        <button type="submit" class="btn btn-default">Ikusi</button>
+  </form>
+  </div>  
+
+  <div class="col-lg-2 col-md-offset-1">
+<label for="mezuak" > - Emaitzen orriak</label>
+</div>
+<div class="col-lg-9">
+<form class="form-horizontal" role="form" action="/admin/emaitzenorriak" method="POST">    
+        <button type="submit" class="btn btn-default">Egin</button>
+  </form>
+  </div>
+
+
+
+
+</br>
+</br>
+</br>
+
+{{#section 'jquery'}}
+<script>
+
+   $("#reset1").on('click',function (){ 
+        myFunction(); 
+   });
+            
+
+function myFunction() {
+    var x;
+    if (confirm("Seguru al zaude multzoak desegin nahi dituzula?") == true) {
+        location.href = "/admin/multzoakreset";
+    } else {
+        x = "You pressed Cancel!";
+    }
+    document.getElementById("demo").innerHTML = x;
+}
+</script>
+
+{{/section}}
+
+<script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $(document).ready(function(){
+        socket.emit('mailak', $('#idtxapelketa').val());
+        return false;
+      });
+      socket.on('mailak', function(data){
+        var totTal = data.length;
+        kategoria.length = totTal;
+        kategoria2.length = totTal;
+        kategoria3.length = totTal;
+        kategoria4.length = totTal;
+        kategoriaf.length = totTal;
+        kategoriaf2.length = totTal;
+        kategoriaf3.length = totTal;
+
+        for (var i = 0; i< totTal; i++){
+            kategoria.options[i] = new Option (data[i].mailaizena, data[i].idmaila);
+            kategoria2.options[i] = new Option (data[i].mailaizena, data[i].idmaila);
+            kategoria3.options[i] = new Option (data[i].mailaizena, data[i].idmaila);
+            kategoria4.options[i] = new Option (data[i].mailaizena, data[i].idmaila);
+            kategoriaf.options[i] = new Option (data[i].mailaizena, data[i].idmaila);
+            kategoriaf2.options[i] = new Option (data[i].mailaizena, data[i].idmaila);
+            kategoriaf3.options[i] = new Option (data[i].mailaizena, data[i].idmaila);
+        };
+        
+      });
+    </script>

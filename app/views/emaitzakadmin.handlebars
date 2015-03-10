@@ -1,0 +1,44 @@
+{{> menuadmin}}
+
+<div class="jumbotron">
+        <h2>Emaitzak sartu</h2>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-10 col-sm-offset-1">
+        {{#if sartugabe}}
+            <a href="/admin/emaitzaguztiak" class="btn btn-primary btn-sm" role="button">Emaitza guztiak ikusi</a>
+        {{else}}
+            <a href="/admin/emaitzak" class="btn btn-primary btn-sm" role="button">Sartugabeko emaitzak</a>
+        {{/if}}
+        </br></br>
+        <table class="table table-striped">
+            <tr>
+                <th align="center">Jardunaldia</th>
+                <th align="center" width="10%">Eguna</th>
+                <th align="center">Ordua</th>
+                <th align="center">Zelaia</th>
+                <th align="center">Multzoa</th>
+                <th align="center">A taldea</th>
+                <th align="center">B taldea</th>
+                <th align="center">Emaitza</th>
+                <th></th>
+            </tr>  
+        {{#each data2}} 
+            <tr>
+                <td align="center" width="5%">{{jardunaldia}}</td>
+                <td>{{pareguna}}</td>
+                <td>{{parordua}}</td>
+                <td align="center">{{zelaia}}</td>
+                <td align="center">{{multzo}}</td>
+                <td>{{izenafinala1}}</td>      
+                <td>{{izenafinala2}}</td> 
+                <td align="center" width="5%">{{emaitza1}}-{{emaitza2}}</td>      
+                <td align="center" width="12%"> <a class="a-inside edit" href="/admin/emaitza/{{idpartidu}}">Emaitza sartu</a> </td>         
+            </tr>
+        {{/each}}
+        </table>
+        </div>
+      </div>
+
+      

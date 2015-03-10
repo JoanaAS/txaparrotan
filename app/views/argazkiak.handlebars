@@ -1,0 +1,22 @@
+	{{> menu}}
+      <div class="jumbotron">
+        <h2>Argazkiak</h2>
+      </div>
+
+      <div class="row marketing">
+        
+        
+
+  
+          {{#each irudiak}}
+          <div class="col-lg-4">
+             <a href="/data/argazkiak/{{idtxapelketa}}/{{files}}" class="thumbnail">
+          		<img src="/data/argazkiak/{{idtxapelketa}}/{{files}}" alt="Txaparrotan argazkia"  ref="/data/argazkiak/{{idtxapelketa}}/{{files}}" class="thumbnail"> </img> </a>
+          </div>
+          {{/each}} 
+        
+        
+        
+      </div>
+
+     

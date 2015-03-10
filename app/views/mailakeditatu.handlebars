@@ -1,0 +1,54 @@
+{{> menuadmin}}
+
+      <div class="jumbotron">
+        <h2>Maila editatu</h2>
+      </div>
+
+<div class="formContainer">
+{{#each data}}
+    <form class="form-horizontal newsletterForm" role="form" action="/admin/mailakaldatu/{{idmaila}}" method="POST">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+       
+        <div class="form-group">
+            <label for="mailaizena" class="col-sm-2 control-label">Mailaren izena</label>
+            <div class="col-sm-4">
+                <textarea name="mailaizena" rows="1" cols="40" class="form-control">{{mailaizena}}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="akronimoa" class="col-sm-2 control-label">Akronimoa</label>
+            <div class="col-sm-4">
+                <textarea name="akronimoa" rows="1" cols="40" class="form-control">{{akronimoa}}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="mailazki" class="col-sm-2 control-label">Mailaren zenbakia</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" id="mailazki" name="mailazki" value={{mailazki}}>
+            </div>
+        </div>   
+        <div class="form-group">
+            <label for="multzokop" class="col-sm-2 control-label">Multzo kopurua</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" id="multzokop" name="multzokop" value={{multzokop}}>
+            </div>
+        </div>
+        <div class="form-group"> 
+            <label for="multzokop" class="col-sm-2 control-label">Finalak</label>
+            <div class="col-sm-4">    
+                <select id="finalak" name="finalak">
+                     <option value="16">Hamaseirenak</option> <option value="8">Zortzirenak</option>
+                     <option value="4">Laurdenak</option> <option value="2">Erdiak</option> <option value="1">Finalak</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-default">Gorde</button>
+            </div>
+        </div>
+    </form>
+    {{/each}}
+</div>
+
+      </div>

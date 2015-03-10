@@ -1,0 +1,52 @@
+{{> menuadmin}}
+<div class="jumbotron">
+        <h2>Partidu ordua aldatu</h2>
+      </div>
+<div class="col-lg-12">
+{{#each data}}
+<h2 style="color:#0000FF"> {{taldeizena1}}-{{taldeizena2}}</h2>
+
+
+<div class="formContainer col-sm-offset-1">
+    <form class="form-horizontal newsletterForm" role="form" action="/admin/partiduorduaaldatu/{{idpartidu}}" method="POST">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+        
+        <div class="form-group">
+            <label for="pareguna" class="col-sm-2 control-label">Partidu eguna</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" required id="pareguna" name="pareguna" value={{pareguna}}>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="parordua" class="col-sm-2 control-label">Partidu ordua</label>
+            <div class="col-sm-4">
+                <input type="time" class="form-control" required id="parordua" name="parordua" value={{parordua}}>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="zelaia" class="col-sm-2 control-label">Zelaia</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" required id="zelaia" name="zelaia" value={{zelaia}}>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-default">Aldatu</button>
+            </div>
+        </div>
+        
+
+    </form>
+</div>
+
+
+
+          
+        
+
+{{/each}}
+
+</div>

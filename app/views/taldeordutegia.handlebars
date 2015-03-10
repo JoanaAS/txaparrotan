@@ -1,0 +1,39 @@
+
+  {{> menu}}
+
+
+<div class="jumbotron">
+        <h2>Taldearen partiduak</h2>
+      </div>
+    
+    <a href="/ordutegia" class="btn btn-primary btn-sm" role="button">Ordutegi osoa ikusi</a>
+    </br>
+    </br>
+
+      <div class="row marketing">
+
+        <div class="col-lg-6 col-sm-offset-1">
+
+
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Eguna</th>
+                                <th>Ordua</th>
+                                <th>Zelaia</th>
+                                <th>A taldea</th>
+                                <th>B taldea</th>
+                            </tr>  
+                        {{#each data}}
+                            
+                            <tr>
+                                <td> {{pareguna}} </td>
+                                <td>{{parordua}}</td>
+                                <td >{{zelaiizena}}</td>
+                                <td >{{taldeizena1}}</td>
+                                <td >{{taldeizena2}}</td>       
+                            </tr>
+                        {{/each}} 
+                        </table>
+                   
+        </div>
+      </div>

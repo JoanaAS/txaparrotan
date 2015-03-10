@@ -1,0 +1,53 @@
+{{> menu}}
+
+      <div class="jumbotron">
+        <h2>Jokalariak editatu</h2>
+      </div>
+
+<div class="formContainer">
+{{#each data}}
+    <form class="form-horizontal newsletterForm" role="form" action="/jokalariakaldatu/{{idjokalari}}" method="POST">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+        
+        <p> JOKALARIAK (6-8) </p>
+        <div class="form-group">
+            <label for="jokalariizena" class="col-sm-2 control-label">Izen-abizenak</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" required id="jokalariizena" name="jokalariizena" value={{jokalariizena}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="emaila" class="col-sm-2 control-label">Emaila</label>
+            <div class="col-sm-4">
+                <input type="email" class="form-control" id="emaila" name="emaila" value={{emailaj}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="telefonoa" class="col-sm-2 control-label">Telefonoa</label>
+            <div class="col-sm-4">
+                <input type="tel" class="form-control" id="telefonoa" name="telefonoa" pattern="\d{9}" value={{telefonoaj}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="kamisetaneurria" class="col-sm-2 control-label">Kamisetaren neurria</label>
+            <div class="col-sm-4">
+        <select id="kamisetaneurria" name="kamisetaneurria" value= {{kamisetaneurria}}>
+         <option value="11-13">11-13</option> <option value="12-14">12-14</option>
+          <option value="S">S</option> <option value="M">M</option><option value="L">L</option><option value="XL">XL</option><option value="XXL">XXL</option>
+        </select>
+            </div>
+        </div>
+        <hr align="left" noshade="noshade" size="2" width="100%" />
+         
+        
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-default">Gorde</button>
+            </div>
+        </div>
+    </form>
+    {{/each}}
+</div>
+
+      </div>

@@ -1,0 +1,40 @@
+{{#if menuadmin}}
+  {{> menuadmin}}
+{{else}}
+  {{> menu}}
+{{/if}} 
+
+<div class="jumbotron">
+        <h2>Ordutegia</h2>
+      </div>
+      {{#if menuadmin}}
+        {{else}}
+            <a href="/taldeordutegia" class="btn btn-primary btn-sm" role="button">Zure taldearen ordutegia ikusi</a>  
+        {{/if}}
+      </br></br>
+      <div class="row marketing">
+        <div class="col-lg-10 col-sm-offset-1">
+        <div class="table-responsive">
+        <table class="table table-condensed">
+            <tr>
+                 {{#each data}}
+    
+                        <td><b>{{zelaiizena}}</b></td> 
+
+                    {{/each}}   
+
+                </tr>                               
+            {{#each data2}}
+                <tr>
+                    {{#each partiduak}}
+    
+                        <td> {{#if akronimoa}} {{akronimoa}} <br/>{{/if}}{{taldeizena1}}<b>-</b><br/>&nbsp{{taldeizena2}}</td>
+
+                    {{/each}}
+                </tr> 
+            {{/each}}
+                  
+          </table>
+          </div>
+        </div>
+      </div>

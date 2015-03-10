@@ -1,0 +1,87 @@
+{{> menu}}
+
+<div class="jumbotron">
+        <h2>Taldeko jokalariak</h2>
+      </div>
+
+     <div class="container">
+  <a href="/taldeak" class="btn btn-primary btn-sm" role="button">Talde guztiak ikusi</a>
+
+<div class="row marketing">
+
+<h3 style="color:#0000FF"> Taldearen datuak</h3>
+<div class="table-responsive">
+        
+          <table class="table table-striped">
+            <tr>
+                    <th>Taldearen izena</th>
+                    <th>Kategoria</th>
+                    <th>Herria</th>
+                    <th>Arduradunaren izena</th>
+                    <th>Emaila</th>
+                    <th>Telefonoa</th>
+                    <th> </th>
+                    
+                </tr>                               
+            {{#each data2}}
+                  <tr>
+                    <td>{{taldeizena}}</td>
+                    <td>{{kategoria}}</td>
+                    <td>{{herria}}</td>
+                    <td>{{izenaard}}</td>
+                    <td>{{emailard}}</td>
+                    <td>{{telefonoard}}</td>  
+                    <td>
+                      <a class="a-inside edit" href="../taldeaeditatu">Aldatu</a>
+                    </td>                
+                    
+                </tr>
+            {{/each}}
+          </table>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="col-lg-2">
+          <h3 style="color:#0000FF"> Jokalariak </h3>
+          <form class="form-horizontal newsletterForm" role="form" action="/jokalariagehitu" method="POST">
+        <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+          </div>
+         <div class="form-group">
+            <div class="col-sm-offset-3"> 
+                <br/>
+                <button type="submit" class="btn btn-default">Gehitu</button>
+            </div>
+        </div>
+        </form> 
+            <table class="table table-striped">
+            <tr>
+                    <th>Izena</th>
+                    <th>Emaila</th>
+                    <th>Telefonoa</th>
+                    <th>Kamiseta neurria</th>
+                    <th></th>
+                    <th></th>
+
+                </tr>                               
+            {{#each data}}
+                  <tr>
+                    <td>{{jokalariizena}}</td>
+                    <td>{{emailaj}}</td>
+                    <td>{{telefonoaj}}</td>
+                    <td>{{kamisetaneurria}}</td>
+                     <td>
+                        <a class="a-inside edit" href="../jokalariakeditatu/{{idjokalari}}">Aldatu</a>
+                    </td>
+                    <td>
+                        <a class="a-inside delete" href="../jokalariakezabatu/{{idjokalari}}">Ezabatu</a> 
+                    </td>
+                    
+                </tr>
+            {{/each}}
+          </table>
+        </div>
+
+        
+      </div>
+      
+</div>

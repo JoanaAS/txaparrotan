@@ -1,0 +1,38 @@
+	{{> menu}}
+    {{#each data2}}
+      <div class="jumbotron">
+        <h2>{{txapelketaizena}}</h2>
+      </div>
+      {{/each}}
+      <div class="row marketing">
+        <div class="col-lg-8">
+          {{#each data}}
+          		<h3 style="color:#0000FF">{{izenburua}}</h3>
+          		{{testua}}
+              <!-- <textarea readonly cols="100">{{testua}}</textarea> -->
+
+              <hr align="left" noshade="noshade" size="4" width="100%" />
+          {{/each}}
+
+        </div>
+
+
+        <div class="col-lg-4">
+          {{#each data2}}
+              <h4 align="center" style="color:#0000FF">{{txapelketaizena}}</h4>
+              <p><b> Datak: </b> {{hasierakoeguna}} - {{bukaerakoeguna}} </p>
+              <p><b>Apuntatzeko epea: </b>{{inskripziohasierae}} arte</p>
+              <p><b>Prezioa: </b>{{prezioa}} euro</p>
+              
+          {{/each}}
+          </br>
+          <h3 style="color:#0000FF"> Twitter </h3>
+              <a class="twitter-timeline"  width="300" height="500"
+              href="https://twitter.com/txaparrotan" 
+              data-widget-id="525292625360736256"> @txaparrotan -eko txioak</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          
+        </div>
+      </div>
+
+      

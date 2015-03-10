@@ -1,0 +1,72 @@
+{{#if menuadmin}}
+  {{> menuadmin}}
+{{else}}
+  {{> menu}}
+{{/if}}
+
+<div class="jumbotron">
+        <h2>Partiduak</h2>
+      </div>
+      {{#if menuadmin}}
+        {{else}}
+            {{#if taldekoa}} 
+                <a href="/partiduak" class="btn btn-primary btn-sm" role="button">Partidu guztiak ikusi</a>
+            {{else}}
+                <a href="/taldepartiduak" class="btn btn-primary btn-sm" role="button">Zure multzoaren partiduak ikusi</a>
+            {{/if}}
+            
+        {{/if}}
+      <div class="row marketing">
+        <div class="col-lg-11 col-sm-offset-1">
+            
+        {{#each data2}}
+                  
+                    <h2 style="color:#0000FF">{{mailaizena}}</h2>  
+                    
+                    {{#each multzoak}} 
+                        <h3>{{multzo}} </h3>  
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Jardun.</th>
+                                <th>A taldea</th>
+                                <th>B taldea</th>
+                                {{#if admin}}
+                                    <th>Eguna</th>
+                                    <th>Ordua</th>
+                                    <th>Zelaia</th>
+                                    <th> </th>
+                                    <th>1.zatia</th>
+                                    <th>Urrezko1.</th>
+                                    <th>2.zatia</th>
+                                    <th>Urrezko2.</th>
+                                    <th>Shut out</th>
+                                {{/if}}
+                                <th>Emaitza</th>
+                            </tr>   
+                        {{#each partiduak}}
+                            <tr>
+                                <td align="center" width="5%">{{jardunaldia}}</td>
+                                <td>{{taldeizena1}}</td>      
+                                <td>{{taldeizena2}}</td>
+                                {{#if admin}}
+                                    <td>{{pareguna}}</td>
+                                    <td>{{parordua}}</td>
+                                    <td>{{zelaia}}-{{zelaiizena}}</td>
+                                    <td align="center" width="8%"> <a class="a-inside edit" href="/admin/partidua/{{idpartidu}}">Aldatu</a> </td> 
+                                    <td>{{golak1a}}-{{golak1b}}</td>
+                                    <td width="15%">{{goldeoro1}}</td>
+                                    <td>{{golak2a}}-{{golak2b}}</td>
+                                    <td>{{goldeoro2}}</td>
+                                    <td>{{shutout}}</td>
+                                {{/if}}
+                                <td width="5%">{{emaitza1}}-{{emaitza2}}</td>               
+                            </tr>
+                        {{/each}} 
+                      </table>
+                    {{/each}} 
+                
+            {{/each}}
+        </div>
+      </div>
+
+      

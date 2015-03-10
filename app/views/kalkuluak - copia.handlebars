@@ -1,0 +1,111 @@
+{{> menuadmin}}
+
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="multzoak" >Multzoak</label>
+</div>
+<div class="col-lg-5">
+<form class="form-horizontal" role="form" action="/admin/multzoakegin" method="POST">
+        <select id="kategoria" name="kategoria">
+          <option value="Benjaminak">Benjaminak (LH 3-4)</option> <option value="Alebinak">Alebinak (LH 5-6)</option>
+          <option value="Infantilak">Infantilak (DBH 1-2)</option> <option value="Helduak">Helduak</option>
+        </select>
+        <select id="sexua" name="sexua">
+          <option value="Neska">Neska</option> <option value="Mutila">Mutila</option>
+          <option value="Mixtoa">Mixtoa</option> 
+        </select>
+        <input type="text" size="10" required id="multzokop" name="multzokop" pattern = "\d{1}" placeholder="Multzo kopurua" value={{multzokop}}>
+	<button type="submit" class="btn btn-default">Egin</button>
+</form>
+<form class="form-horizontal" role="form" action="/admin/multzoakbete" method="POST">
+        <select id="kategoria2" name="kategoria2">
+          <option value="Benjaminak">Benjaminak (LH 3-4)</option> <option value="Alebinak">Alebinak (LH 5-6)</option>
+          <option value="Infantilak">Infantilak (DBH 1-2)</option> <option value="Helduak">Helduak</option>
+        </select>
+        <select id="sexua2" name="sexua2">
+          <option value="Neska">Neska</option> <option value="Mutila">Mutila</option>
+          <option value="Mixtoa">Mixtoa</option> 
+        </select>
+        <input type="text" size="10" required id="multzokop2" name="multzokop2" pattern = "\d{1}" placeholder="Multzo kopurua" value={{multzokop2}}>
+  <button type="submit" class="btn btn-default">Bete</button>
+  <div class="col-lg-3">
+  </div>
+</form>
+
+</div>
+<div class="col-lg-4">
+<form class="form-horizontal" role="form" action="/1" method="POST">
+	<button type="submit" class="btn btn-default">Reset</button>
+</form>
+</div>
+<div class="col-lg-4">
+  </div>
+</br>
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="partiduak" >Partiduak</label>
+</div>
+<div class="col-lg-1">
+<form class="form-horizontal" role="form" action="/admin/partiduaksortu" method="POST">
+	<button type="submit" class="btn btn-default">Sortu</button>
+</form>
+</div>
+<div class="col-lg-8">
+<form class="form-horizontal" role="form" action="/3" method="POST">
+	<button type="submit" class="btn btn-default">Reset</button>
+</form>
+</div>
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="ordutegia" >Ordutegia</label>
+</div>
+<div class="col-lg-1">
+<form class="form-horizontal" role="form" action="/4" method="POST">
+	<button type="submit" class="btn btn-default">Egin</button>
+</form>
+</div>
+<div class="col-lg-8">
+<form class="form-horizontal" role="form" action="/5" method="POST">
+	<button type="submit" class="btn btn-default">Reset</button>
+</form>
+</div>
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="kamisetak" >Kamiseten kalkulua</label>
+</div>
+<div class="col-lg-9">
+<form class="form-horizontal" role="form" action="/admin/kamisetak" method="POST">
+	<button type="submit" class="btn btn-default">Egin</button>
+</form>
+</div>
+</br>
+</br>
+
+<div class="col-lg-2 col-md-offset-1">
+<label for="multzoak" >Emaitza orriak</label>
+</div>
+<div class="col-lg-9">
+<form class="form-horizontal" role="form" action="/6" method="POST">
+	<button type="submit" class="btn btn-default">Atera</button>
+</form>
+</div>
+</br>
+</br>
+</br>
+
+<div class="col-lg-11 col-md-offset-1">
+<div class="checkbox">
+  <label>
+    <input type="checkbox" value="">
+    <strong>Txapelketa prest</strong>
+  </label>
+</div>
+</div>

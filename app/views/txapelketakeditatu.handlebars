@@ -1,0 +1,137 @@
+{{> menuadmin}}
+
+     <div class="jumbotron">
+        <h2>Txapelketa editatu</h2>
+      </div>
+
+<a href="/admin/zelaiak" class="btn btn-primary btn-sm" role="button">Zelaiak</a>
+<a href="/admin/mailak" class="btn btn-primary btn-sm" role="button">Mailak</a>
+<br/>
+<br/>
+
+<div class="formContainer col-sm-offset-1">
+    <form class="form-horizontal newsletterForm" role="form" action="/txapelketakaldatu" method="POST">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+        <div class="form-group">
+            <label for="txapelketaizena" class="col-sm-2 control-label">Txapelketaren izena</label>
+            <div class="col-sm-4">
+             <!--   <input type="text" class="form-control" required id="txapelketa izenaizena" name="txapelketaizena" value={{txapelketaizena}}> -->
+                <textarea name="txapelketaizena" rows="1" cols="40" class="form-control" required id="txapelketaizena"  >  {{txapelketaizena}}</textarea>
+            </div>
+        </div>
+         <div class="form-group">
+            <label for="zelaikop" class="col-sm-2 control-label">Zelai kopurua</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" required id="zelaikop" name="zelaikop" value={{zelaikop}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="taldekopmax" class="col-sm-2 control-label">Talde kopuru maximoa</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" required id="taldekopmax" name="taldekopmax" value={{taldekopmax}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="partidukopmin" class="col-sm-2 control-label">Partidu kopuru minimoa</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" required id="partidukopmin" name="partidukopmin" value={{partidukopmin}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="hasierakoeguna" class="col-sm-2 control-label">Hasierako eguna</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" required id="hasierakoeguna" name="hasierakoeguna" value={{hasierakoeguna}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="hasierakoordua" class="col-sm-2 control-label">Hasierako ordua</label>
+            <div class="col-sm-4">
+                <input type="time" class="form-control" required id="hasierakoordua" name="hasierakoordua" value={{hasierakoordua}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="bukaerakoeguna" class="col-sm-2 control-label">Bukaerako eguna</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" required id="bukaerakoeguna" name="bukaerakoeguna" value={{bukaerakoeguna}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="bukaerakoordua" class="col-sm-2 control-label">Bukaerako ordua</label>
+            <div class="col-sm-4">
+                <input type="time" class="form-control" required id="bukaerakoordua" name="bukaerakoordua" value={{bukaerakoordua}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="hastekosexua" class="col-sm-2 control-label">Hasteko sexua</label>
+            <div class="col-sm-4">
+        <select id="hastekosexua" name="hastekosexua" value={{hastekosexua}}>
+          <option value="Neskak">Neskak</option> <option value="Mutilak">Mutilak</option>
+          <option value="Mistoa">Mistoa</option> 
+        </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="partidudenbora" class="col-sm-2 control-label">Partiduen denbora</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" required id="partidudenbora" name="partidudenbora" value={{partidudenbora}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inskripziohasierae" class="col-sm-2 control-label">Inskripzio hasieraren eguna</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" required id="inskripziohasierae" name="inskripziohasierae" value={{inskripziohasierae}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inskripziohasierao" class="col-sm-2 control-label">Inskripzio hasieraren ordua</label>
+            <div class="col-sm-4">
+                <input type="time" class="form-control" required id="inskripziohasierao" name="inskripziohasierao" value={{inskripziohasierao}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inskripziobukaerae" class="col-sm-2 control-label">Inskripzio bukaeraren eguna</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" required id="inskripziobukaerae" name="inskripziobukaerae" value={{inskripziobukaerae}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inskripziobukaerao" class="col-sm-2 control-label">Inskripzio bukaeraren ordua</label>
+            <div class="col-sm-4">
+                <input type="time" class="form-control" required id="inskripziobukaerao" name="inskripziobukaerao" value={{inskripziobukaerao}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="prezioa" class="col-sm-2 control-label">Prezioa</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" required id="prezioa" name="prezioa" value={{prezioa}}>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="buelta" class="col-sm-2 control-label">Buelta kopurua</label>
+            <div class="col-sm-4">
+                <input type="number" class="form-control" required id="buelta" name="buelta" value={{buelta}}>
+            </div>
+        </div>
+        
+        <!--<div class="form-group">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="">
+                <strong>Txapelketa prest</strong>
+              </label>
+            </div>
+        </div>-->
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-default">Bidali</button>
+            </div>
+        </div>
+        
+
+    </form>
+</div>
+
+      </div>
+
+ 
