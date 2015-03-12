@@ -28,6 +28,8 @@ app.set('views', path.join(__dirname, 'views'));
 // set up handlebars view engine
 var handlebars = require('express3-handlebars').create({
     defaultLayout:'main',
+    layoutsDir: "app/views/layouts/",
+    partialsDir: "app/views/partials/",
     //extname: '.hbs',
     helpers: {
         section: function(name, options){
@@ -48,9 +50,18 @@ app.set('view engine', 'handlebars');
 //app.use(express.urlencoded());
 //app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require('body-parser')());
-app.use(require('cookie-parser')(credentials.cookieSecret));
-app.use(require('express-session')());
+//app.use(require('body-parser')); DEPRECATED
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+//app.use(require('express-session')()); DEPRECATED
+//app.use(require('cookie-parser')(credentials.cookieSecret)); DEPRECATED
+var session = require('express-session');
+app.use(session({
+  secret: credentials.cookieSecret,
+  resave: false,
+  saveUninitialized: true
+}));
 // development only
 /*if ('development' == app.get('env')) {
   app.use(express.errorHandler());
