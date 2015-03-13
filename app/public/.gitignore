@@ -1,5 +1,5 @@
 # switching to using LESS; removing CSS from repo
-css
+# css
 
 # ignore minified js
-js.min
+# js.min

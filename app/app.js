@@ -70,17 +70,19 @@ app.use(session({
     connection peer, register as middleware
     type koneksi : single,pool and request 
 -------------------------------------------*/
-app.use(
+
+  app.use(
     
     connection(mysql,{
         
-        host: 'localhost',
+        host: process.env.DATABASE_URL || 'localhost',
         user: 'root',
         password : 'joanaagi',
         port : 3306, //port mysql
         database:'txaparrotan'
     },'request')
-);
+ );
+  
 
 // flash message middleware
 app.use(function(req, res, next){
@@ -273,7 +275,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 });
 
 var cliente = mysql.createConnection({
-    host: 'localhost',
+    host: process.env.DATABASE_URL || 'localhost',
     user: 'root',
     password : 'joanaagi',
     port : 3306, //port mysql
