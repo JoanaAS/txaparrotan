@@ -70,18 +70,32 @@ app.use(session({
     connection peer, register as middleware
     type koneksi : single,pool and request 
 -------------------------------------------*/
-
+if ('development' == app.get('env')) {
   app.use(
     
     connection(mysql,{
         
-        host: process.env.DATABASE_URL || 'localhost',
+        host: 'localhost',
         user: 'root',
         password : 'joanaagi',
         port : 3306, //port mysql
         database:'txaparrotan'
     },'request')
  );
+}
+else{
+  app.use(
+    
+    connection(mysql,{
+        
+        host: 'us-cdbr-iron-east-02.cleardb.net',
+        user: 'b52372483fde60',
+        password : '4d96016a',
+      //  port : 3306, //port mysql
+        database:'heroku_4efa3ee4ff6c16c'
+    },'request')
+ );
+}
   
 
 // flash message middleware
@@ -273,15 +287,24 @@ app.post('/admin/mezuakbidali', adminonartua, txapelketak.mezuakbidali);
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-
+if ('development' == app.get('env')) {
 var cliente = mysql.createConnection({
-    host: process.env.DATABASE_URL || 'localhost',
+    host: 'localhost',
     user: 'root',
     password : 'joanaagi',
     port : 3306, //port mysql
     database:'txaparrotan'
 });
-
+}
+else{
+  var cliente = mysql.createConnection({
+    host: 'us-cdbr-iron-east-02.cleardb.net',
+    user: 'b52372483fde60',
+    password : '4d96016a',
+    //  port : 3306, //port mysql
+    database:'heroku_4efa3ee4ff6c16c'
+});
+}
 //cliente.query("USE txaparrotan");
 var io = require('socket.io').listen(server);
 
