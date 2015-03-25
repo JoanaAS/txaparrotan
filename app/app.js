@@ -82,6 +82,7 @@ if ('development' == app.get('env')) {
         database:'txaparrotan'
     },'request')
  );
+              console.log("localhost1" );
 }
 else{
   app.use(
@@ -95,6 +96,7 @@ else{
         database:'heroku_4efa3ee4ff6c16c'
     },'request')
  );
+              console.log("heroku1" );
 }
   
 
@@ -295,6 +297,7 @@ var cliente = mysql.createConnection({
     port : 3306, //port mysql
     database:'txaparrotan'
 });
+            console.log("localhost2" );
 }
 else{
   var cliente = mysql.createConnection({
@@ -304,6 +307,7 @@ else{
     //  port : 3306, //port mysql
     database:'heroku_4efa3ee4ff6c16c'
 });
+              console.log("heroku2" );
 }
 //2015-03-24
 cliente.connect(function(err) {
