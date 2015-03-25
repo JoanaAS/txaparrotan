@@ -52,6 +52,10 @@ exports.sortu = function(req,res){
   };
 
     req.getConnection(function (err, connection) {
+      //2015-03-24
+      if (err)
+              console.log("Error connection : %s ",err ); 
+            //
 
       connection.query('SELECT * FROM taldeak where taldeizena = ?',[req.body.taldeizena],function(err,rows)  {
           

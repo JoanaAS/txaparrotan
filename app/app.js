@@ -305,6 +305,17 @@ else{
     database:'heroku_4efa3ee4ff6c16c'
 });
 }
+//2015-03-24
+cliente.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+
+  console.log('connected as id ' + cliente.threadId);
+});
+//
+
 //cliente.query("USE txaparrotan");
 var io = require('socket.io').listen(server);
 
@@ -324,6 +335,7 @@ io.sockets.on("connection", function(socket) {
 
         cliente.query("SELECT idtxapelketa, txapelketaizena FROM txapelketa ", function(err, rows, field) {
             if (err) {cliente.end(); return;}
+            console.log("txapelketak :" + rows);
             socket.emit("txapelketak", rows);
         });
     });
