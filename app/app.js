@@ -70,7 +70,9 @@ app.use(session({
     connection peer, register as middleware
     type koneksi : single,pool and request 
 -------------------------------------------*/
-if ('development' == app.get('env')) {
+console.log("environment " + process.env.NODE_ENV);
+//if ('development' == app.get('env')) {
+if (process.env.NODE_ENV != 'production'){
   app.use(
     
     connection(mysql,{
@@ -289,7 +291,8 @@ app.post('/admin/mezuakbidali', adminonartua, txapelketak.mezuakbidali);
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-if ('development' == app.get('env')) {
+//if ('development' == app.get('env')) {
+if (process.env.NODE_ENV != 'production'){  
 var cliente = mysql.createConnection({
     host: 'localhost',
     user: 'root',
