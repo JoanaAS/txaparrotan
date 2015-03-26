@@ -331,7 +331,8 @@ io.sockets.on("connection", function(socket) {
     socket.on('taldeak', function(data) {
      var id = data;
      cliente.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and emailard = ? ',[id],function(err,rows)     {
-        if (err) {cliente.end(); return;}        
+        if (err) {cliente.end(); return;}   
+                    console.log("taldeak :" + rows);     
         socket.emit("taldeak", rows);
     });
     });
