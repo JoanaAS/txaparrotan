@@ -313,14 +313,14 @@ else{
               console.log("heroku2" );
 }
 //2015-03-24
-cliente.connect(function(err) {
+/*cliente.connect(function(err) {
   if (err) {
     console.error('error connecting: ' + err.stack);
     return;
   }
 
   console.log('connected as id ' + cliente.threadId);
-});
+});*/
 //
 
 //cliente.query("USE txaparrotan");
