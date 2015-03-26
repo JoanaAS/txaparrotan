@@ -348,7 +348,7 @@ io.sockets.on("connection", function(socket) {
         });
     });
 
-
+/*
 io.sockets.on("connection", function(socket) {      
     
     socket.on('zelaiak', function(data) {
@@ -360,6 +360,7 @@ io.sockets.on("connection", function(socket) {
     });
    
 });
+*/
 
 io.sockets.on("connection", function(socket) {      
     
