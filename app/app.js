@@ -325,8 +325,7 @@ else{
 
 //cliente.query("USE txaparrotan");
 var io = require('socket.io').listen(server);
-
-io.sockets.on("connection", function(socket) {      
+/*io.sockets.on("connection", function(socket) {      
     
     socket.on('taldeak', function(data) {
      var id = data;
@@ -338,6 +337,7 @@ io.sockets.on("connection", function(socket) {
     });
    
 });
+*/
 io.sockets.on("connection", function(socket) { 
         //var id = data.id;
 
@@ -360,7 +360,6 @@ io.sockets.on("connection", function(socket) {
     });
    
 });
-*/
 
 io.sockets.on("connection", function(socket) {      
     
@@ -374,3 +373,4 @@ io.sockets.on("connection", function(socket) {
     });
    
 });
+*/
