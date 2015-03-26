@@ -375,11 +375,6 @@ io.sockets.on("connection", function(socket) {
    
 });
 */
-io.configure(function () {
-    io.set("transports", ["xhr-polling"]);
-    io.set("polling duration", 10);
-    io.set("log level", 1);
-});
 
 io.sockets.on("connection", function(socket) { 
         //var id = data.id;
@@ -395,6 +390,21 @@ io.sockets.on("connection", function(socket) {
         if (err) {cliente.end(); return;}   
                     console.log("taldeak :" + rows);     
         socket.emit("taldeak", rows);
+     });
+    });
+    socket.on('zelaiak', function(data) {
+     var id = data;
+     cliente.query('SELECT idzelaia, zelaiizena FROM zelaia where idtxapelz = ? ',[id],function(err,rows)     {
+        if (err) {cliente.end(); return;}        
+        socket.emit("zelaiak", rows);
+     });
+    });
+    socket.on('mailak', function(data) {
+     var id = data;
+     cliente.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[id],function(err,rows)     {
+        if (err) {cliente.end(); return;}
+        console.log("Socketmailak" +data+"-"+ rows );        
+        socket.emit("mailak", rows);
      });
     });
 });
