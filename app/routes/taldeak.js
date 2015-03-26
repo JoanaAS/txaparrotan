@@ -259,7 +259,7 @@ exports.izenematea = function(req,res){
     res.locals.flash = null;
     var now= new Date();
     var vHasiera,aHasiera,hasiera,vBukaera,aBukaera,bukaera;
-
+           console.log("IdTxaelketa : %s ",req.session.idtxapelketa );
     req.getConnection(function(err,connection){
       connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
@@ -268,7 +268,7 @@ exports.izenematea = function(req,res){
         connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= ? and balidatuta != "admin" ',[req.session.idtxapelketa],function(err,rowsg)     {
           if(err)
            console.log("Error Selecting : %s ",err );
-
+        if(rows.length != 0) {
           vHasiera = new Date();
           hasiera = rows[0].inskripziohasierae;
 
@@ -310,7 +310,7 @@ exports.izenematea = function(req,res){
             message: 'Talde kopurua beteta.',
           };
          }
-        
+        }        
         if(res.locals.flash != null){
          //res.redirect(303,'/');
           res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa});
