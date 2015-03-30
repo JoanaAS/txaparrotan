@@ -237,10 +237,10 @@ app.get('/admin/berriak', adminonartua,function(req, res){
 });
 app.post('/berriaksortu',adminonartua,txapelketak.berriaksortu); 
 
-app.get('/admin/kalkuluak', adminonartua,function(req, res){
+/*app.get('/admin/kalkuluak', adminonartua,function(req, res){
     res.render('kalkuluak.handlebars', {title : 'Txaparrotan-Kalkuluak egin', taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa});
-});
-
+});*/
+app.get('/admin/kalkuluak', adminonartua, kudeaketa.kalkuluak);
 app.get('/admin/taldekopurua', adminonartua, kudeaketa.taldekopurua);
 app.post('/admin/multzoakegin', adminonartua, kudeaketa.multzoakegin);
 app.post('/admin/multzoakbete', adminonartua, kudeaketa.multzoakbete);

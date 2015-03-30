@@ -11,7 +11,11 @@
 <div class="col-lg-5">
 <form class="form-horizontal" role="form" action="/admin/multzoakegin" method="POST">
 <input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
-        <select name="kategoria" id="kategoria"></select>
+        <select name="kategoria" id="kategoria">
+            {{#each mailak}}
+                <option value="{{idmaila}}">{{mailaizena}}</option>
+            {{/each}}
+        </select>
       <!--  <input type="text" size="10" required id="multzokop" name="multzokop" placeholder="Multzo kopurua" value={{multzokop}}> -->
 	<button type="submit" class="btn btn-default">Egin</button>
 </form>
@@ -29,7 +33,11 @@
 <div class="col-lg-5 col-md-offset-3">
 <form class="form-horizontal" role="form" action="/admin/multzoakbete" method="POST">
         <input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
-        <select name="kategoria2" id="kategoria2"></select>
+        <select name="kategoria2" id="kategoria2">
+            {{#each mailak}}
+                <option value="{{idmaila}}">{{mailaizena}}</option>
+            {{/each}}
+        </select>
       <!--  <input type="text" size="10" required id="multzokop2" name="multzokop2" placeholder="Multzo kopurua" value={{multzokop2}}> -->
   <button type="submit" class="btn btn-default">Bete</button>
   
@@ -43,7 +51,11 @@
 <form class="form-horizontal" role="form" action="/admin/multzoakreset" method="POST">        
         <input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
 
-        <select id="kategoria3" name="kategoria3"></select>
+        <select id="kategoria3" name="kategoria3">
+            {{#each mailak}}
+                <option value="{{idmaila}}">{{mailaizena}}</option>
+            {{/each}}
+        </select>
 
   <button type="submit" class="btn btn-default" id="reset1" >MULTZOAK Reset</button>
   
@@ -91,7 +103,11 @@
 <div class="col-lg-5">
 <form class="form-horizontal" role="form" action="/admin/finalakegin" method="POST">
 <input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
-        <select name="kategoriaf" id="kategoriaf"></select>
+        <select name="kategoriaf" id="kategoriaf">
+            {{#each mailak}}
+                <option value="{{idmaila}}">{{mailaizena}}</option>
+            {{/each}}
+        </select>
   <button type="submit" class="btn btn-default">Multzoak</button>
 </form>
 
@@ -107,7 +123,11 @@
 <div class="col-lg-5 col-md-offset-3">
 <form class="form-horizontal" role="form" action="/admin/finalpartiduak" method="POST">
 <input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
-        <select name="kategoriaf2" id="kategoriaf2"></select>
+        <select name="kategoriaf2" id="kategoriaf2">
+            {{#each mailak}}
+                <option value="{{idmaila}}">{{mailaizena}}</option>
+            {{/each}}
+        </select>
   <button type="submit" class="btn btn-default">Partiduak</button>
 </form>
 </div>
@@ -130,7 +150,11 @@
 <div class="col-lg-5">
 <form class="form-horizontal" role="form" action="/admin/finalakosatu" method="POST">
 <input type="hidden" class="form-control" required id="idtxapelketa" name="idtxapelketa" value={{idtxapelketa}}>
-        <select name="kategoriaf3" id="kategoriaf3"></select>
+        <select name="kategoriaf3" id="kategoriaf3">
+            {{#each mailak}}
+                <option value="{{idmaila}}">{{mailaizena}}</option>
+            {{/each}}
+        </select>
   <button type="submit" class="btn btn-default">Finalak osatu</button>
 </form>
 </div>
@@ -153,7 +177,11 @@
 </div>
 <div class="col-lg-7">
 <form class="form-horizontal" role="form" action="/admin/sariak" method="POST">
-        <select id="kategoria4" name="kategoria4"></select>
+        <select id="kategoria4" name="kategoria4">
+            {{#each mailak}}
+                <option value="{{idmaila}}">{{mailaizena}}</option>
+            {{/each}}
+        </select>
   <button type="submit" class="btn btn-default">Egin</button>
 </form>
   </div>
@@ -215,7 +243,9 @@ function myFunction() {
 
 {{/section}}
 
-<script src="/socket.io/socket.io.js"></script> 
+<!-- SOCKET GABE 
+
+ <script src="/socket.io/socket.io.js"></script> 
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       var socket = io();
@@ -245,3 +275,4 @@ function myFunction() {
         
       });
     </script>
+-->

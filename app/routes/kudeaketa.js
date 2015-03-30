@@ -79,6 +79,20 @@ exports.taldekopurua2 = function(req, res){
   
 };
 
+exports.kalkuluak = function(req, res){
+  var id = req.session.idtxapelketa;
+  req.getConnection(function (err, connection) {
+      if (err)
+              console.log("Error connection : %s ",err ); 
+      connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[id],function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err ); 
+        console.log("mailak : " + JSON.stringify(rows)); 
+        res.render('kalkuluak.handlebars', {title : 'Txaparrotan-Kalkuluak egin', taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa, mailak : rows});
+      });   
+  });  
+};
+
 exports.multzoakegin = function(req, res){
   var id = req.session.idtxapelketa;
   var vKategoria = req.body.kategoria;
