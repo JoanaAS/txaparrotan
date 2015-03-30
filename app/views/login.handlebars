@@ -1,3 +1,24 @@
+<script src="/socket.io/socket.io.js"></script>
+<!-- <script src="http://code.jquery.com/jquery-1.11.1.js"></script> -->
+    <script>
+      alert ("script");
+      var socket = io();
+      $(document).ready(function(){
+       alert ("ready");
+      $('#emailaard').change(function(){
+        alert ("socket"); 
+        socket.emit('taldeak', $('#emailaard').val());
+        return false;
+      });
+      });
+      socket.on('taldeak', function(data){
+        var totTal = data.length;
+        sTaldeak.length = totTal;
+        for (var i = 0; i< totTal; i++){
+           sTaldeak.options[i] = new Option (data[i].taldeizena, data[i].idtaldeak)
+         };
+      });
+    </script>
 
 <div class="container">
 
@@ -36,28 +57,9 @@
   <p>Izen-eman nahi? <a href="/izenematea">Izena-eman</a></p>
   <p>Edo hasierara <a href="/">Hasiera</a>.</p>
 
+</div 
 </div>
 
-</div>
-<script src="/socket.io/socket.io.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.1.js"></script> 
-    <script>
-      var socket = io();
-      $(document).ready(function(){
-      $('#emailaard').change(function(){
-        alert ("socket"); 
-        socket.emit('taldeak', $('#emailaard').val());
-        return false;
-      });
-      });
-      socket.on('taldeak', function(data){
-        var totTal = data.length;
-        sTaldeak.length = totTal;
-        for (var i = 0; i< totTal; i++){
-           sTaldeak.options[i] = new Option (data[i].taldeizena, data[i].idtaldeak)
-         };
-      });
-    </script>
 
 
 
