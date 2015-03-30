@@ -44,6 +44,7 @@
     <script>
       var socket = io();
       $('#emailaard').change(function(){
+        alert ("socket"); 
         socket.emit('taldeak', $('#emailaard').val());
         return false;
       });
