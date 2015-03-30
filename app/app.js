@@ -221,9 +221,10 @@ app.get('/admin/txapelketak', admintxapelketaonartua, function(req, res){
 app.post('/txapelketaksortu', admintxapelketaonartua, txapelketak.sortu);
 app.get('/txapelketakeditatu', adminonartua,txapelketak.editatu);
 app.post('/txapelketakaldatu', adminonartua,txapelketak.aldatu);
-app.get('/txapelketak', function(req, res){
+/*app.get('/txapelketak', function(req, res){
     res.render('txapelketakaukeratu.handlebars', {title : 'Txaparrotan-Txapelketak aukeratu'});
-});
+});*/
+app.get('/txapelketak', txapelketak.aukeratzeko);
 app.post('/txapelketakaukeratu', txapelketak.aukeratu);
 app.get('/admin/argazkiak', adminonartua,function(req, res){
     res.render('argazkiakigo.handlebars', {title : 'Txaparrotan-Argazkiak igo', idtxapelketa: req.session.idtxapelketa, taldeizena: req.session.txapelketaizena});
@@ -378,12 +379,13 @@ io.sockets.on("connection", function(socket) {
 
 io.sockets.on("connection", function(socket) { 
         //var id = data.id;
-
+    /*
         cliente.query("SELECT idtxapelketa, txapelketaizena FROM txapelketa ", function(err, rows, field) {
             if (err) {cliente.end(); return;}
             console.log("txapelketak :" + rows);
             socket.emit("txapelketak", rows);
         });
+    */    
     socket.on('taldeak', function(data) {
      var id = data;
      cliente.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and emailard = ? ',[id],function(err,rows)     {

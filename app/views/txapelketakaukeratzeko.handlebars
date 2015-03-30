@@ -1,0 +1,29 @@
+<div class="container">
+
+<div class="col-sm-6 col-sm-offset-3">
+
+  <h1><span class="fa fa-sign-in"></span> Ongi etorri! </h1>
+  <h4> <b> Aukeratu ezazu txapelketa bat, informazioa ikusi ahal izateko. </b></h4>
+
+  </br>
+  <!-- LOGIN FORM -->
+  <form action="/txapelketakaukeratu" method="post">
+
+    <div class="form-group">
+      <label for="sTxapelketak">Txapelketak</label>
+      <select name="sTxapelketak" id="sTxapelketak">
+
+            {{#each txapelketak}}
+                <option value="{{idtxapelketa}}">{{txapelketaizena}}</option>
+            {{/each}}
+            
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-warning btn-lg">Aukeratu</button>
+  </form>
+
+</div>
+
+</div>
+

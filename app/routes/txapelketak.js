@@ -14,6 +14,20 @@ var argazkiakDir = path.join(dataDir, 'argazkiak');
 fs.existsSync(dataDir) || fs.mkdirSync(dataDir); 
 fs.existsSync(argazkiakDir) || fs.mkdirSync(argazkiakDir);
 
+exports.aukeratzeko = function(req, res){
+
+  req.getConnection(function (err, connection) {
+      if (err)
+              console.log("Error connection : %s ",err ); 
+      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa',function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err ); 
+        console.log("txapelketak : " + JSON.stringify(rows)); 
+        res.render('txapelketakaukeratzeko.handlebars', {title : 'Txaparrotan-Txapelketa aukeratzeko', txapelketak : rows});
+      });   
+  });  
+};
+
 exports.aukeratu = function(req, res){
 
   var input = JSON.parse(JSON.stringify(req.body));
