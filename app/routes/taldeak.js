@@ -115,6 +115,20 @@ exports.aldatu = function(req,res){
   //}
 };
 
+exports.saioahasteko = function(req, res){
+  var id = req.session.idtxapelketa;
+  req.getConnection(function (err, connection) {
+      if (err)
+              console.log("Error connection : %s ",err ); 
+      //connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and emailard = ? ',[id],function(err,rows)     {
+      connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and idtxapeltalde = ?',[id],function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err ); 
+        console.log("taldeak : " + JSON.stringify(rows)); 
+        res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.taldeizena, taldeak : rows});
+      });   
+  });  
+};
 
 exports.login = function(req, res){
 

@@ -177,9 +177,10 @@ app.get('/jokalariakezabatu/:idjokalari', jokalariak.ezabatu);
 app.get('/jokalariakeditatu/:idjokalari', jokalariak.editatu);
 app.post('/jokalariakaldatu/:idjokalari', jokalariak.aldatu);
 
-app.get('/login', function(req, res){
+/*app.get('/login', function(req, res){
     res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.taldeizena});
-});
+});*/
+app.get('/login', taldeak.saioahasteko);
 app.post('/login', taldeak.login);
 app.get('/logout', function(req, res){
   console.log('Serving request for url [GET] ' + req.session.idtalde);
@@ -325,6 +326,7 @@ else{
 //
 
 //cliente.query("USE txaparrotan");
+/*
 var io = require('socket.io').listen(server);
 
 io.sockets.on("connection", function(socket) {      
