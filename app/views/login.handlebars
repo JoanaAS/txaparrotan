@@ -43,10 +43,12 @@
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script> 
     <script>
       var socket = io();
+      $(document).ready(function(){
       $('#emailaard').change(function(){
         alert ("socket"); 
         socket.emit('taldeak', $('#emailaard').val());
         return false;
+      });
       });
       socket.on('taldeak', function(data){
         var totTal = data.length;
