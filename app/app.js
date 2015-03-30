@@ -326,7 +326,7 @@ else{
 
 //cliente.query("USE txaparrotan");
 var io = require('socket.io').listen(server);
-/*
+
 io.sockets.on("connection", function(socket) {      
     
     socket.on('taldeak', function(data) {
@@ -339,7 +339,7 @@ io.sockets.on("connection", function(socket) {
     });
    
 });
-
+/*
 io.sockets.on("connection", function(socket) { 
         //var id = data.id;
 
@@ -376,16 +376,16 @@ io.sockets.on("connection", function(socket) {
    
 });
 */
-
+/*
 io.sockets.on("connection", function(socket) { 
         //var id = data.id;
-    /*
+    
         cliente.query("SELECT idtxapelketa, txapelketaizena FROM txapelketa ", function(err, rows, field) {
             if (err) {cliente.end(); return;}
             console.log("txapelketak :" + rows);
             socket.emit("txapelketak", rows);
         });
-    */    
+        
     socket.on('taldeak', function(data) {
      var id = data;
      cliente.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and emailard = ? ',[id],function(err,rows)     {
@@ -410,3 +410,4 @@ io.sockets.on("connection", function(socket) {
      });
     });
 });
+*/
