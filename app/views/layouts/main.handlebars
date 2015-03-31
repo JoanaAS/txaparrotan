@@ -78,8 +78,8 @@
       </footer>
       </div> <!-- /container -->        
 
-<!--        <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>   
-    <script>window.jQuery || document.write('<script src="{{static '/vendor/js/jquery-2.1.1.min.js'}}"><\/script>')</script>   -->
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>   
+    <script>window.jQuery || document.write('<script src="{{static '/vendor/js/jquery-2.1.1.min.js'}}"><\/script>')</script>   
     {{! since we've move jquery to the end of the body (instead of in head), we should really rename this bundle
       to something other than "head", but i'm leaving it for consistency with the book. }}
     {{#each _bundles.js.head}}
@@ -129,7 +129,6 @@
     {{/if}}
 
     <script src="{{static '/vendor/bootstrap/js/bootstrap.min.js'}}"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="{{static '/js/main.js'}}"></script>
     </body>
 </html>

@@ -26,7 +26,11 @@
         <div class="form-group">
             <label for="kategoria" class="col-sm-2 control-label">Kategoria</label>
             <div class="col-sm-4">
-            <select name="kategoria" id="kategoria"></select>
+            <select name="kategoria" id="kategoria">
+                {{#each mailak}}
+                    <option value="{{idmaila}}">{{mailaizena}}</option>
+                {{/each}}
+            </select>
             </div>
         </div>
 
@@ -101,7 +105,7 @@
 
 
 
-
+<! SOCKET GABE
 <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
@@ -118,4 +122,4 @@
             kategoria.options[i] = new Option (data[i].mailaizena, data[i].idmaila)
         };
       });
-    </script>
+    </script> -->

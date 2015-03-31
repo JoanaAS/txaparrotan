@@ -168,7 +168,7 @@ exports.login = function(req, res){
              req.session.flash = {
              type: 'danger',
              intro: 'Adi!',
-             message: 'Emaila edo pasahitza ez da zuzena.',
+             message: 'Emaila, taldea edo pasahitza ez da zuzena.',
           };
           return res.redirect(303, '/login');
   
@@ -331,7 +331,12 @@ exports.izenematea = function(req,res){
 
         }
         else{
-          res.render('taldeaksortu.handlebars', {title : 'Txaparrotan-Izen-ematea', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa});
+          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+            if(err)
+              console.log("Error Selecting : %s ",err );
+
+          res.render('taldeaksortu.handlebars', {title : 'Txaparrotan-Izen-ematea', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, mailak:rowsm});
+         });
         }
       });
      });
