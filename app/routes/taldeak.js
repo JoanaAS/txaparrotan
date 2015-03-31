@@ -121,7 +121,7 @@ exports.saioahasteko = function(req, res){
       if (err)
               console.log("Error connection : %s ",err ); 
       //connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and emailard = ? ',[id],function(err,rows)     {
-      connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and idtxapeltalde = ?',[id],function(err,rows)  {
+      connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and idtxapeltalde = ? order by taldeizena',[id],function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
         console.log("taldeak : " + JSON.stringify(rows)); 
@@ -287,16 +287,16 @@ exports.izenematea = function(req,res){
           hasiera = rows[0].inskripziohasierae;
 
           aHasiera = hasiera.split("-");
-          vHasiera.setDate(aHasiera[0]);
+          vHasiera.setDate(aHasiera[2]);
           vHasiera.setMonth(aHasiera[1] - 1);
-          vHasiera.setYear(aHasiera[2]);
+          vHasiera.setYear(aHasiera[0]);
 
           vBukaera = new Date();
           bukaera = rows[0].inskripziobukaerae;
           aBukaera = bukaera.split("-");
-          vBukaera.setDate(aBukaera[0]);
+          vBukaera.setDate(aBukaera[2]);
           vBukaera.setMonth(aBukaera[1] - 1);
-          vBukaera.setYear(aBukaera[2]);  
+          vBukaera.setYear(aBukaera[0]);  
 
         if(vHasiera > now) {
           if(req.xhr) return res.json({ error: 'Invalid hasiera' });
