@@ -313,7 +313,7 @@ exports.argazkiakigo = function(req, res){
             intro: 'Oso ondo!',
             message: 'Argazkia igo da.',
         };
-        return res.redirect(303, '/argazkiak');
+        return res.redirect(303, '/admin/argazkiak');
     });
 };
 
@@ -743,7 +743,7 @@ exports.mezuakbidali = function(req,res){
          
         if(input.mezumota == "prest"){
 
-            connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
+            connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? and balidatuta > 0 order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
               if(err)
                 console.log("Error Selecting : %s ",err );
               var subj = req.session.txapelketaizena+ " txapelketa prest";
@@ -761,7 +761,7 @@ exports.mezuakbidali = function(req,res){
 
         else if(input.mezumota == "ordgabe"){
 
-              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 4',[id],function(err,rows)
+              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta < 5 and balidatuta > 0',[id],function(err,rows)
               {
 
                 if(err)
@@ -782,7 +782,7 @@ exports.mezuakbidali = function(req,res){
 
         else if(input.mezumota == "jokgabe"){
 
-              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by idtaldeak',[req.session.idtxapelketa],function(err,rows)     {
+              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta > 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by idtaldeak',[req.session.idtxapelketa],function(err,rows)     {
               if(err)
                 console.log("Error Selecting : %s ",err );
 

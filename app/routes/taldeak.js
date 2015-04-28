@@ -454,18 +454,29 @@ exports.sortu = function(req,res){
   
           if (err)
               console.log("Error inserting : %s ",err );
+          connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {
+            
+              if(err)
+                console.log("Error inserting : %s ",err );
+
 
         //Enkriptatu talde zenbakia. Zenbaki hau aldatuz gero, taldea balidatu ere aldatu!
          var taldezenbakia= rows.insertId * 3456789;
             
          var to = input.emailard;
          var subj = "Ongi-etorri " + data.izenaard;
-         var body = "Taldea balidatu ahal izateko klik egin: http://localhost:3000/taldeabalidatu/" + taldezenbakia + "\n Ondoren, saioa hasi eta zure jokalariak gehitu. Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!";
+         var hosta = req.hostname;
+         if (puertoa){
+          hosta += ":"+puertoa;
+         }
+         var body = "Taldea balidatu ahal izateko klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia;
+         body += "\n Ondoren, saioa hasi eta zure jokalariak gehitu. Hori egindakoan, ondorengo kontu korrontean " +rowst[0].kontukorrontea+ " "+rowst[0].prezioa+ "euro sartu." 
+         body += "Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!";
           req.session.idtalde = rows.insertId;
           emailService.send(to, subj, body);
           //res.redirect('/taldeak');
           res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, emailard:data.emailard});
-          
+          });
         }); 
       });
     });
