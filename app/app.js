@@ -24,8 +24,7 @@ var mysql = require('mysql');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
-var puertoa = app.get('port');
-console.log("Puertoa: "+puertoa);
+
 app.set('views', path.join(__dirname, 'views'));
 // set up handlebars view engine
 var handlebars = require('express3-handlebars').create({

@@ -492,8 +492,8 @@ exports.sortu = function(req,res){
          var to = input.emailard;
          var subj = "Ongi-etorri " + data.izenaard;
          var hosta = req.hostname;
-         if (puertoa){
-          hosta += ":"+puertoa;
+         if (process.env.NODE_ENV != 'production'){ 
+          hosta += ":"+ (process.env.PORT || 3000);
          }
          console.log("Hosta : %s ",hosta );
          var body = "Taldea balidatu ahal izateko klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia;
