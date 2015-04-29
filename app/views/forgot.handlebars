@@ -15,7 +15,8 @@
 
     <div class="form-group">
       <label for="sTaldeak">Taldearen izena</label>
-      <select name="sTaldeak" id="sTaldeak"></select>
+      <select name="sTaldeak" id="sTaldeak">
+      </select>
     </div>
   
 
@@ -25,6 +26,33 @@
 </div>
 
 </div>
+
+{{#section 'jquery'}}
+<script>
+  $(document).ready(function(){        
+
+    $('#emailaard').change(function(){
+
+      var data = 'id=' + $('#emailaard').val();
+
+      $.get('taldemail/'+$('#emailaard').val(), function(resp) {
+        var totTal = resp.length;
+
+        sTaldeak.length = totTal;
+        for (var i = 0; i < totTal; i++){
+
+           sTaldeak.options[i] = new Option (resp[i].taldeizena, resp[i].idtaldeak)
+         };
+      });
+    });
+  });
+            
+</script> 
+        
+{{/section}}
+
+
+<!-- socket EZ 
 
 <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -43,6 +71,5 @@
       });
     </script>
 
-
-
+-->
 

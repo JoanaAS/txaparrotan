@@ -206,7 +206,14 @@ var zuretaldekoa = (req.path == "/taldesailkapena");
       connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-
+        if(rows.length == 0){
+           res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Inskripzio amaiera egunaren ondoren izango dira sailakpenak ikusgai!',
+           };
+           return res.redirect('/'); 
+        };
         for (var i in rows) { 
          if(((rows[i].idgrupo == req.session.idgrupo) && zuretaldekoa) || !zuretaldekoa)
          {
@@ -537,7 +544,14 @@ var multzoizena;
 
         if(err)
            console.log("Error Selecting : %s ",err );
-
+        if(rows.length == 0){
+           res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Inskripzio amaiera egunaren ondoren izango dira partiduak ikusgai!',
+           };
+           return res.redirect('/'); 
+        }; 
         for (var i in rows) {
           if(rows[i].pareguna != null){
             data = rows[i].pareguna;
@@ -968,7 +982,14 @@ var admin = (req.path == "/admin/ordutegia");
       
           if(err)
            console.log("Error Selecting : %s ",err );
-
+          if(rowsf.length == 0){
+            res.locals.flash = {
+             type: 'danger',
+             intro: 'Adi!',
+             message: 'Inskripzio amaiera egunaren ondoren izango da ordutegia ikusgai!',
+            };
+            return res.redirect('/'); 
+          };
           for (var i in rowsf) {  
           //ADIIII!!
           //if ((vEguna != rows[i].pareguna) || (vOrdua != rows[i].parordua)){ 

@@ -21,9 +21,10 @@
       <label for="sTaldeak">Taldearen izena</label>
       <select name="sTaldeak" id="sTaldeak">
 
-            {{#each taldeak}}
+    <!--    {{#each taldeak}}
                 <option value="{{idtaldeak}}">{{taldeizena}}</option>
             {{/each}}
+    -->
 
       </select>
     </div>
@@ -44,6 +45,28 @@
 
 </div 
 </div>
+
+{{#section 'jquery'}}
+<script>
+  $(document).ready(function(){        
+
+    $('#emailaard').change(function(){
+
+      var data = 'id=' + $('#emailaard').val();
+
+      $.get('taldemail/'+$('#emailaard').val(), function(resp) {
+        var totTal = resp.length;
+        sTaldeak.length = totTal;
+        for (var i = 0; i < totTal; i++){
+           sTaldeak.options[i] = new Option (resp[i].taldeizena, resp[i].idtaldeak)
+         };
+      });
+    });
+  });
+            
+</script> 
+        
+{{/section}}
 
 <!-- SOCKET GABE
 <script src="/socket.io/socket.io.js"></script>

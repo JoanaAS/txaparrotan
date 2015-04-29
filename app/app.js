@@ -170,6 +170,7 @@ app.post('/taldeasortu',taldeak.sortu);
 app.get('/taldeabalidatu/:id', taldeak.balidatu);
 app.get('/taldeaeditatu', taldeak.editatu);
 app.post('/taldeaaldatu', taldeak.aldatu);
+app.get('/taldemail/:emaila', taldeak.taldemail);
 app.get('/jokalariak', authorize, taldeak.bilatu);
 app.post('/jokalariasortu', jokalariak.sortu);
 app.post('/jokalariagehitu', function(req, res){

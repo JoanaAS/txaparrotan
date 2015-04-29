@@ -13,10 +13,17 @@ var k = 0;
 var vKategoria, postua;
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and balidatuta = 1 and idtxapeltalde = ? order by mailazki',[req.session.idtxapelketa],function(err,rows)     {
+    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by mailazki',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-
+        if(rows.length == 0){
+           res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Inskripzio epea zabalik bada, izena eman'
+           };
+           return res.redirect('/izenematea'); 
+        };
         for (var i in rows) { 
          
            if(vKategoria != rows[i].kategoria){
@@ -56,6 +63,26 @@ var vKategoria, postua;
   });
 }
 
+
+
+exports.taldemail = function(req, res){
+
+  var id = req.params.emaila;
+
+  req.getConnection(function(err,connection){
+       
+     connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta >= 1) and emailard = ? and idtxapeltalde = ?',[id,req.session.idtxapelketa],function(err,rows)     
+     
+        {
+            if(err)
+                console.log("Error Selecting : %s ",err );
+
+            //res.render('forgot.handlebars', {title : 'Txaparrotan-Forgot', emailaard : id, taldeak : rows });
+            res.json(rows);
+         });
+                  
+  }); 
+};
 
 exports.editatu = function(req, res){
 
@@ -410,13 +437,13 @@ exports.sortu = function(req,res){
             
         if(err || rows.length != 0){
         //  res.redirect('/izenematea');
-        res.locals.flash = {
-          type: 'danger',
-          intro: 'Adi!',
-          message: 'Beste talde izen bat sartu!',
-        };
+          res.locals.flash = {
+           type: 'danger',
+            intro: 'Adi!',
+           message: 'Beste talde izen bat sartu!',
+          };
 
-        return res.render('taldeaksortu.handlebars', {
+          return res.render('taldeaksortu.handlebars', {
             taldeizena: req.body.taldeizena,
             kategoria   : req.body.kategoria,
             herria   : req.body.herria,
@@ -428,9 +455,13 @@ exports.sortu = function(req,res){
 
           } );
         }
+        connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {
+            
+            if(err)
+                console.log("Error inserting : %s ",err );
         // Generate password hash
-        var salt = bcrypt.genSaltSync();
-        var password_hash = bcrypt.hashSync(input.pasahitza, salt);
+            var salt = bcrypt.genSaltSync();
+            var password_hash = bcrypt.hashSync(input.pasahitza, salt);
 
           
 
@@ -447,18 +478,13 @@ exports.sortu = function(req,res){
             pasahitza:   password_hash,     //input.pasahitza,
             sortzedata : now,
             lehentasuna : 99
-        };
+           };
 
-        var query = connection.query("INSERT INTO taldeak set ? ",data, function(err, rows)
-        {
+           var query = connection.query("INSERT INTO taldeak set ? ",data, function(err, rows)
+           {
   
-          if (err)
+            if (err)
               console.log("Error inserting : %s ",err );
-          connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {
-            
-              if(err)
-                console.log("Error inserting : %s ",err );
-
 
         //Enkriptatu talde zenbakia. Zenbaki hau aldatuz gero, taldea balidatu ere aldatu!
          var taldezenbakia= rows.insertId * 3456789;
@@ -469,6 +495,7 @@ exports.sortu = function(req,res){
          if (puertoa){
           hosta += ":"+puertoa;
          }
+         console.log("Hosta : %s ",hosta );
          var body = "Taldea balidatu ahal izateko klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia;
          body += "\n Ondoren, saioa hasi eta zure jokalariak gehitu. Hori egindakoan, ondorengo kontu korrontean " +rowst[0].kontukorrontea+ " "+rowst[0].prezioa+ "euro sartu." 
          body += "Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!";
