@@ -252,7 +252,7 @@ exports.bilatu = function(req, res){
   req.getConnection(function(err,connection){
     
     
-     connection.query('SELECT * FROM taldeak where idtaldeak = ?',[id],function(err,rows)     {
+     connection.query('SELECT * FROM taldeak,maila where idmaila = kategoria and idtaldeak = ?',[id],function(err,rows)     {
             
         if(err)
 
@@ -495,14 +495,13 @@ exports.sortu = function(req,res){
          if (process.env.NODE_ENV != 'production'){ 
           hosta += ":"+ (process.env.PORT || 3000);
          }
-         console.log("Hosta : %s ",hosta );
          var body = "Taldea balidatu ahal izateko klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia;
-         body += "\n Ondoren, saioa hasi eta zure jokalariak gehitu. Hori egindakoan, ondorengo kontu korrontean " +rowst[0].kontukorrontea+ " "+rowst[0].prezioa+ "euro sartu." 
+         body += ". Ondoren, saioa hasi eta zure jokalariak gehitu. Hori egindakoan, ondorengo kontu korrontean " +rowst[0].kontukorrontea+ " "+rowst[0].prezioa+ "euro sartu." 
          body += "Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!";
           req.session.idtalde = rows.insertId;
           emailService.send(to, subj, body);
           //res.redirect('/taldeak');
-          res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, emailard:data.emailard});
+          res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, txapelketaizena:req.session.txapelketaizena, kk:rowst[0].kontukorrontea, prezio: rowst[0].prezioa, emailard:data.emailard});
           });
         }); 
       });
@@ -540,13 +539,17 @@ exports.balidatu = function(req,res){
 };
 
 exports.forgot = function(req,res){
-    
+    var hosta = req.hostname;
+    if (process.env.NODE_ENV != 'production'){ 
+          hosta += ":"+ (process.env.PORT || 3000);
+    }
     var input = JSON.parse(JSON.stringify(req.body));
-         var to = input.emailaard;
-         var subj ="Pasahitza ahaztu al duzu?";
-         var body = "Klik egin http://localhost:3000/reset/" +req.body.sTaldeak ;
-        
-          emailService.send(to, subj, body);
+    var to = input.emailaard;
+    var subj ="Pasahitza ahaztu al duzu?";
+    var body = "<h2>Klik egin http://"+hosta+"/reset/" +req.body.sTaldeak "eta pasahitza berria bi aldiz sartu</h2>";
+    body += "<h2>eta pasahitza berria bi aldiz sartu</h2>";
+    
+    emailService.send(to, subj, body);
 
     res.redirect('/login');
     };

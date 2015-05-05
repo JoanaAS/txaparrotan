@@ -225,8 +225,13 @@ exports.berriaksortu = function(req,res){
     var input = JSON.parse(JSON.stringify(req.body));
     console.log("Bidali:" + input.bidali);
     var id = req.session.idtxapelketa;
-    
     var now= new Date();
+
+    var hosta = req.hostname;
+    if (process.env.NODE_ENV != 'production'){ 
+          hosta += ":"+ (process.env.PORT || 3000);
+    }
+
     req.getConnection(function (err, connection) {
         
         var data = {
@@ -237,7 +242,7 @@ exports.berriaksortu = function(req,res){
             idtxapel : id
         };
         
-        console.log(data);
+  
         var query = connection.query("INSERT INTO berriak set ? ",data, function(err, rows)
         {
   
@@ -252,7 +257,7 @@ exports.berriaksortu = function(req,res){
                   var subj = req.session.txapelketaizena+ "-n berria: "+input.izenburua;
                   var body = "<h2>"+input.izenburua+"</h2>\n" + 
                               "<p>"+ input.testua+ "</p> \n"+
-                              "<h3> Gehiago jakin nahi baduzu, sartu: http://www.txaparrotan.eus</h3>" ;
+                              "<h3> Gehiago jakin nahi baduzu, sartu: http://"+hosta+"</h3>" ;
                   emailService.send(to, subj, body);
                 }
               });
