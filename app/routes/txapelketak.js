@@ -164,6 +164,7 @@ exports.editatu = function(req,res){
               inskripziobukaerae   : rows[0].inskripziobukaerae,
               inskripziobukaerao    : rows[0].inskripziobukaerao,
               prezioa : rows[0].prezioa,
+              kontukorrontea : rows[0].kontukorrontea,
               prest : rows[0].prest,
               buelta : rows[0].buelta,
               taldeizena: req.session.txapelketaizena
@@ -200,6 +201,7 @@ exports.aldatu = function(req,res){
             inskripziobukaerae   : input.inskripziobukaerae,
             inskripziobukaerao    : input.inskripziobukaerao,
             prezioa : input.prezioa,
+            kontukorrontea: input.kontukorrontea,
             buelta : input.buelta
         };
         

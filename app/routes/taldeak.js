@@ -546,7 +546,7 @@ exports.forgot = function(req,res){
     var input = JSON.parse(JSON.stringify(req.body));
     var to = input.emailaard;
     var subj ="Pasahitza ahaztu al duzu?";
-    var body = "<h2>Klik egin http://"+hosta+"/reset/" +req.body.sTaldeak+ "eta pasahitza berria bi aldiz sartu</h2>";
+    var body = "<h2>Klik egin http://"+hosta+"/reset/" +req.body.sTaldeak+"</h2>";
     body += "<h2>eta pasahitza berria bi aldiz sartu</h2>";
     
     emailService.send(to, subj, body);
