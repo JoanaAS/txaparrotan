@@ -442,8 +442,9 @@ exports.sortu = function(req,res){
    }
   
 //  req.getConnection(function (err, connection) {
+//      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
 
-      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
+      connection.query('SELECT * FROM taldeak where taldeizena = ?',[req.body.taldeizena],function(err,rows)  {
             
          if(err || rows.length != 0){
         //  res.redirect('/izenematea');
@@ -474,7 +475,7 @@ exports.sortu = function(req,res){
            });
           });         
         }
-        connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {
+        connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {          
             
             if(err)
                 console.log("Error inserting : %s ",err );
