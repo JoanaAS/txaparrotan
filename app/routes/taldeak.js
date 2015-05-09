@@ -417,12 +417,11 @@ exports.sortu = function(req,res){
   }
 
   req.getConnection(function (err, connection) {
+   connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+      if(err)
+        console.log("Error Selecting : %s ",err ); 
 
-   if(res.locals.flash != null){
-
-      connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
-         if(err)
-            console.log("Error Selecting : %s ",err );
+      if(res.locals.flash != null){
 
          return res.render('taldeaksortu.handlebars', {
             title : 'Txaparrotan-Izen-ematea',
@@ -438,25 +437,22 @@ exports.sortu = function(req,res){
             emailard   : req.body.emailard
 
           } );
-      });         
-   }
+      }
   
 //  req.getConnection(function (err, connection) {
+
 //      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
 
       connection.query('SELECT * FROM taldeak where taldeizena = ?',[req.body.taldeizena],function(err,rows)  {
             
-         if(err || rows.length != 0){
+        if(err || rows.length != 0){
         //  res.redirect('/izenematea');
-          res.locals.flash = {
-           type: 'danger',
+           res.locals.flash = {
+            type: 'danger',
             intro: 'Adi!',
-           message: 'Beste talde izen bat sartu!',
-          };
+            message: 'Beste talde izen bat sartu!',
+           };
 
-          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
-           if(err)
-            console.log("Error Selecting : %s ",err );
 
            return res.render('taldeaksortu.handlebars', {
             title : 'Txaparrotan-Izen-ematea',
@@ -473,7 +469,6 @@ exports.sortu = function(req,res){
             pasahitza: req.body.pasahitza
 
            });
-          });         
         }
         connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {          
             
@@ -526,6 +521,7 @@ exports.sortu = function(req,res){
         }); 
       });
     });
+  });
 };
 
 
