@@ -416,9 +416,9 @@ exports.sortu = function(req,res){
    // return res.redirect(303, '/izenematea');
   }
 
+  req.getConnection(function (err, connection) {
 
-
-  if(res.locals.flash != null){
+   if(res.locals.flash != null){
 
       connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
          if(err)
@@ -441,7 +441,7 @@ exports.sortu = function(req,res){
       });         
    }
   
-  req.getConnection(function (err, connection) {
+//  req.getConnection(function (err, connection) {
 
       connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
             
