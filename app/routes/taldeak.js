@@ -441,9 +441,9 @@ exports.sortu = function(req,res){
   
 //  req.getConnection(function (err, connection) {
 
-//      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
+      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
 
-      connection.query('SELECT * FROM taldeak where taldeizena = ?',[req.body.taldeizena],function(err,rows)  {
+ //     connection.query('SELECT * FROM taldeak where taldeizena = ?',[req.body.taldeizena],function(err,rows)  {
             
         if(err || rows.length != 0){
         //  res.redirect('/izenematea');
@@ -503,20 +503,26 @@ exports.sortu = function(req,res){
 
         //Enkriptatu talde zenbakia. Zenbaki hau aldatuz gero, taldea balidatu ere aldatu!
          var taldezenbakia= rows.insertId * 3456789;
-            
+         var mailaizena;   
          var to = input.emailard;
          var subj = "Ongi-etorri " + data.izenaard;
          var hosta = req.hostname;
          if (process.env.NODE_ENV != 'production'){ 
           hosta += ":"+ (process.env.PORT || 3000);
          }
-         var body = "Taldea balidatu ahal izateko klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia;
-         body += ". Ondoren, saioa hasi eta zure jokalariak gehitu. Hori egindakoan, ondorengo kontu korrontean " +rowst[0].kontukorrontea+ " "+rowst[0].prezioa+ "euro sartu." 
-         body += "Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!";
+         for(var i in rowsm ){
+          if(data.kategoria == rowsm[i].idmaila){
+            mailaizena = rowsm[i].mailaizena;
+          }
+         }
+         var body = "<p>"+data.taldeizena+" "+req.session.txapelketaizena+" "+mailaizena+" mailan taldea balidatu ahal izateko, </p>";
+         body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
+         body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rowst[0].kontukorrontea+ " kontu korrontean  "+rowst[0].prezioa+ "euro sartu eta kontzeptu bezala "+data.taldeizena+"-"+data.izenaard+"jarri.</p>";
+         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p>";
           req.session.idtalde = rows.insertId;
           emailService.send(to, subj, body);
           //res.redirect('/taldeak');
-          res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, txapelketaizena:req.session.txapelketaizena, kk:rowst[0].kontukorrontea, prezio: rowst[0].prezioa, emailard:data.emailard});
+          res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, txapelketaizena:req.session.txapelketaizena, kk:rowst[0].kontukorrontea, prezio: rowst[0].prezioa, emailard:data.emailard, izenaard: data.izenaard,mailaizena: mailaizena});
           });
         }); 
       });

@@ -1525,18 +1525,20 @@ exports.taldeaaldatu = function(req,res){
     
     var input = JSON.parse(JSON.stringify(req.body));
     var idtaldea = req.params.talde;
-    
     req.getConnection(function (err, connection) {
 
         var data = {
             
             taldeizena : input.taldeizena,
-            idgrupot : input.idgrupot,
             balidatuta   : input.balidatuta,
             berezitasunak : input.berezitasunak,
             lehentasuna  : input.lehentasuna
 
         };
+
+        if(input.idgrupot != null && input.idgrupot != ""){
+          data.idgrupot = input.idgrupot;
+        }
         
         connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,idtaldea], function(err, rows)
         {
