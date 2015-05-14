@@ -97,8 +97,8 @@ exports.editatu = function(req, res){
           connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
             if(err)
               console.log("Error Selecting : %s ",err );
-         
-            res.render('taldeaeditatu.handlebars', {page_title:"Taldea aldatu",data:rows,taldeizena: req.session.taldeizena, mailak:rowsm});
+            rows[0].mailak = rowsm;
+            res.render('taldeaeditatu.handlebars', {title:"Taldea aldatu",data:rows,taldeizena: req.session.taldeizena});
                            
           });
      });                 

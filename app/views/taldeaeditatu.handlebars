@@ -21,11 +21,9 @@
             <div class="col-sm-4">
             <select name="kategoria" id="kategoria">
                 {{#each mailak}}
-                    {{#if {{idmaila}} == kategoria}}
-                         <option value="{{idmaila}}" selected>{{mailaizena}}</option>
-                    {{else}}
+
                          <option value="{{idmaila}}">{{mailaizena}}</option>
-                    {{/if}}
+
                 {{/each}}
             </select>
             </div>
@@ -69,3 +67,12 @@
 </div>
 
       </div>
+
+<script>
+
+Handlebars.registerHelper('mailaBerdina',function(kategoria, idmaila){
+  return kategoria  == idmaila;
+});
+
+
+</script>
