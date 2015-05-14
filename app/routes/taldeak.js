@@ -97,6 +97,16 @@ exports.editatu = function(req, res){
           connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
             if(err)
               console.log("Error Selecting : %s ",err );
+
+            for(var i in rowsm ){
+               if(rows[0].kategoria == rowsm[i].idmaila){
+                  mailaizena = rowsm[i].mailaizena;
+                  rowsm[i].aukeratua = true;
+               }
+               else
+                  rowsm[i].aukeratua = false;
+            }
+
             rows[0].mailak = rowsm;
             res.render('taldeaeditatu.handlebars', {title:"Taldea aldatu",data:rows,taldeizena: req.session.taldeizena});
                            
@@ -423,6 +433,15 @@ exports.sortu = function(req,res){
       if(err)
         console.log("Error Selecting : %s ",err ); 
 
+      for(var i in rowsm ){
+          if(req.body.kategoria == rowsm[i].idmaila){
+            mailaizena = rowsm[i].mailaizena;
+            rowsm[i].aukeratua = true;
+          }
+          else
+            rowsm[i].aukeratua = false;
+      }
+ 
       if(res.locals.flash != null){
 
          return res.render('taldeaksortu.handlebars', {

@@ -27,11 +27,15 @@
             <label for="kategoria" class="col-sm-2 control-label">Kategoria</label>
             <div class="col-sm-4">
             <select name="kategoria" id="kategoria">
+
                 {{#each mailak}}
-
+                     {{#if aukeratua}}
+                         <option value="{{idmaila}}" selected>{{mailaizena}}</option>
+                     {{else}}
                          <option value="{{idmaila}}">{{mailaizena}}</option>
-
+                     {{/if}}
                 {{/each}}
+                
             </select>
             </div>
         </div>
