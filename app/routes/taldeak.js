@@ -92,15 +92,17 @@ exports.editatu = function(req, res){
        
      connection.query('SELECT * FROM taldeak WHERE idtaldeak = ?',[id],function(err,rows)
         {
-            
+          if(err)
+              console.log("Error Selecting : %s ",err );          
+          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
             if(err)
-                console.log("Error Selecting : %s ",err );
-          
-            res.render('taldeaeditatu.handlebars', {page_title:"Taldea aldatu",data:rows,taldeizena: req.session.taldeizena});
+              console.log("Error Selecting : %s ",err );
+         
+            res.render('taldeaeditatu.handlebars', {page_title:"Taldea aldatu",data:rows,taldeizena: req.session.taldeizena, mailak:rowsm});
                            
-         });
-                 
-    }); 
+          });
+     });                 
+  }); 
 };
 
 exports.aldatu = function(req,res){
@@ -148,7 +150,7 @@ exports.saioahasteko = function(req, res){
       if (err)
               console.log("Error connection : %s ",err ); 
       //connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and emailard = ? ',[id],function(err,rows)     {
-      connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and idtxapeltalde = ? order by taldeizena',[id],function(err,rows)  {
+      connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by taldeizena',[id],function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
         console.log("taldeak : " + JSON.stringify(rows)); 
@@ -185,7 +187,7 @@ exports.login = function(req, res){
 
 
       //PASAHITZA ENKRIPTATUTA    
-      connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = idtxapelketa and emailard = ? and  (balidatuta = 1 or balidatuta = "admin") and idtaldeak = ? ',
+      connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = idtxapelketa and emailard = ? and  (balidatuta >= 1 or balidatuta = "admin") and idtaldeak = ? ',
       [req.body.emailaard,req.body.sTaldeak],function(err,rows)     {
         if(err || rows.length == 0 || !(bcrypt.compareSync(req.body.pasahitza, rows[0].pasahitza))){
 
@@ -515,7 +517,7 @@ exports.sortu = function(req,res){
             mailaizena = rowsm[i].mailaizena;
           }
          }
-         var body = "<p>"+data.taldeizena+" "+req.session.txapelketaizena+" "+mailaizena+" mailan taldea balidatu ahal izateko, </p>";
+         var body = "<p>"+data.taldeizena+" "+mailaizena+" mailan taldea balidatu ahal izateko, </p>";
          body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
          body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rowst[0].kontukorrontea+ " kontu korrontean  "+rowst[0].prezioa+ "euro sartu eta kontzeptu bezala "+data.taldeizena+"-"+data.izenaard+"jarri.</p>";
          body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p>";
@@ -561,14 +563,18 @@ exports.balidatu = function(req,res){
 };
 
 exports.forgot = function(req,res){
-    var hosta = req.hostname;
+
+    //ADI! reset-en aldatu balio hau aldatuz gero
+    var idEnkript = req.body.sTaldeak * 2345678;
+
+    var hosta = req.hostname; 
     if (process.env.NODE_ENV != 'production'){ 
           hosta += ":"+ (process.env.PORT || 3000);
     }
     var input = JSON.parse(JSON.stringify(req.body));
     var to = input.emailaard;
     var subj ="Pasahitza ahaztu al duzu?";
-    var body = "<h2>Klik egin http://"+hosta+"/reset/" +req.body.sTaldeak+"</h2>";
+    var body = "<h2>Klik egin http://"+hosta+"/reset/" + idEnkript +"</h2>";
     body += "<h2>eta pasahitza berria bi aldiz sartu</h2>";
     
     emailService.send(to, subj, body);
@@ -579,8 +585,10 @@ exports.forgot = function(req,res){
 exports.reset = function(req,res){
     
     var input = JSON.parse(JSON.stringify(req.body));
-    var id = req.params.idtalde;
-    //var id = 17;
+    var idEnkript = req.params.idtalde;
+
+    //ADI! forgot-en aldatu balio hau aldatuz gero
+    var id = idEnkript / 2345678;
 
     if(input.pasahitza != input.pasahitza2){
       res.redirect('/reset/' +id);

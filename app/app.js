@@ -179,10 +179,10 @@ app.get('/jokalariakezabatu/:idjokalari', jokalariak.ezabatu);
 app.get('/jokalariakeditatu/:idjokalari', jokalariak.editatu);
 app.post('/jokalariakaldatu/:idjokalari', jokalariak.aldatu);
 
-/*app.get('/login', function(req, res){
-    res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.taldeizena});
-});*/
-app.get('/login', authorize2, taldeak.saioahasteko);
+app.get('/login', authorize2, function(req, res){
+    res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.txapelketaizena});
+});
+//app.get('/login', authorize2, taldeak.saioahasteko);
 app.post('/login', taldeak.login);
 app.get('/logout', function(req, res){
   console.log('Serving request for url [GET] ' + req.session.idtalde);

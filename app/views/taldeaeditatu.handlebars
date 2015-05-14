@@ -15,24 +15,22 @@
                 <input type="text" class="form-control" required id="taldeizena" name="taldeizena" value={{taldeizena}}>
             </div>
         </div>
+
         <div class="form-group">
             <label for="kategoria" class="col-sm-2 control-label">Kategoria</label>
             <div class="col-sm-4">
-        <select id="kategoria" name="kategoria">
-          <option value="Benjaminak">Benjaminak (LH 3-4)</option> <option value="Alebinak">Alebinak (LH 5-6)</option>
-          <option value="Infantilak">Infantilak (DBH 1-2)</option> <option value="Helduak">Helduak</option>
-        </select>
+            <select name="kategoria" id="kategoria">
+                {{#each mailak}}
+                    {{#if {{idmaila}} == kategoria}}
+                         <option value="{{idmaila}}" selected>{{mailaizena}}</option>
+                    {{else}}
+                         <option value="{{idmaila}}">{{mailaizena}}</option>
+                    {{/if}}
+                {{/each}}
+            </select>
             </div>
         </div>
-        <div class="form-group">
-            <label for="sexua" class="col-sm-2 control-label">Sexua</label>
-            <div class="col-sm-4">
-        <select id="sexua" name="sexua">
-          <option value="Neska">Neska</option> <option value="Mutila">Mutilak</option>
-          <option value="Mixtoa">Mixtoa</option> 
-        </select>
-            </div>
-        </div>
+
         <div class="form-group">
             <label for="herria" class="col-sm-2 control-label">Herria</label>
             <div class="col-sm-4">

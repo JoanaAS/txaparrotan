@@ -286,7 +286,7 @@ exports.berriakikusi = function(req, res){
           if(err)
            console.log("Error Selecting : %s ",err );
          
-          res.render('index.handlebars',{title: "Txaparrotan", taldeizena: req.session.taldeizena, data:rows, data2: rowst});
+          res.render('index.handlebars',{title: "Txaparrotan", taldeizena: req.session.txapelketaizena, data:rows, data2: rowst});
         });                        
       });   
   });

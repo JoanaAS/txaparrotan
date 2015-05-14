@@ -28,7 +28,11 @@
             <div class="col-sm-4">
             <select name="kategoria" id="kategoria">
                 {{#each mailak}}
-                    <option value="{{idmaila}}">{{mailaizena}}</option>
+                    {{#if {{idmaila}} == kategoria}}
+                         <option value="{{idmaila}}" selected>{{mailaizena}}</option>
+                    {{else}}
+                         <option value="{{idmaila}}">{{mailaizena}}</option>
+                    {{/if}}
                 {{/each}}
             </select>
             </div>
@@ -54,7 +58,7 @@
         <div class="form-group">
             <label for="izenaard" class="col-sm-2 control-label">Izen-abizenak</label>
             <div class="col-sm-4">
-                <textarea name="izenaard" rows="1" cols="40" class="form-control" required>  {{izenaard}}</textarea>
+                <textarea name="izenaard" rows="1" cols="40" class="form-control" required>{{izenaard}}</textarea>
                <!-- <input type="text" class="form-control" required id="izenaard" name="izenaard" value={{izenaard}}> -->
             </div>
         </div>
@@ -113,4 +117,4 @@
             kategoria.options[i] = new Option (data[i].mailaizena, data[i].idmaila)
         };
       });
-    </script> -->
+    </script>        -->
