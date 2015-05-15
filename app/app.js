@@ -180,7 +180,7 @@ app.get('/jokalariakeditatu/:idjokalari', jokalariak.editatu);
 app.post('/jokalariakaldatu/:idjokalari', jokalariak.aldatu);
 
 app.get('/login', authorize2, function(req, res){
-    res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.txapelketaizena});
+    res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.taldeizena});
 });
 //app.get('/login', authorize2, taldeak.saioahasteko);
 app.post('/login', taldeak.login);
