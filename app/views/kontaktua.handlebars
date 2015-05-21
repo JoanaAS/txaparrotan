@@ -1,12 +1,15 @@
     {{> menu}}
 
       <div class="jumbotron">
-        <h2>Kontaktua</h2>
+        <h2>{{aditestua}}</h2>
       </div>
 
       <div class="formContainer">
     <form class="form-horizontal newsletterForm" role="form" action="/kontaktuabidali" method="POST">
     <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+
+    <h2> Idatzi zure zalantza eta erantzuna ahal bezain laster zure emailean jasoko duzu! </h2>
+    </br>
         <div class="form-group">
             <label for="izenabizen" class="col-sm-2 control-label">Izen-abizenak</label>
             <div class="col-sm-4">
@@ -36,7 +39,7 @@
             <label for="azalpena" class="col-sm-2 control-label">Azalpena</label>
             <div class="col-sm-4">
                 <!--<input type="textarea" class="form-control" required id="azalpena" name="azalpena">-->
-                <textarea name="azalpena" rows="10" cols="40" class="form-control" required id="azalpena" placeholder="Derrigorrezkoa" value={{azalpena}}>  {{azalpena}}</textarea>
+                <textarea name="azalpena" rows="10" cols="40" class="form-control" required id="azalpena" placeholder="Idatzi zure zalantza." value={{azalpena}}>{{azalpena}}</textarea>
 
             </div>
 

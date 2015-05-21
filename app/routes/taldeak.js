@@ -108,6 +108,7 @@ exports.editatu = function(req, res){
             }
 
             rows[0].mailak = rowsm;
+            console.log("Taldea:"+rows[0].taldeizena);
             res.render('taldeaeditatu.handlebars', {title:"Taldea aldatu",data:rows,taldeizena: req.session.taldeizena});
                            
           });
@@ -311,7 +312,7 @@ exports.izenematea = function(req,res){
 
     res.locals.flash = null;
     var now= new Date();
-    var vHasiera,aHasiera,hasiera,vBukaera,aBukaera,bukaera;
+    var vHasiera,aHasiera,hasiera,vBukaera,aBukaera,bukaera,aditestua;
            console.log("IdTxaelketa : %s ",req.session.idtxapelketa );
     req.getConnection(function(err,connection){
       connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rows)     {
@@ -344,6 +345,7 @@ exports.izenematea = function(req,res){
             intro: 'Adi!',
             message: rows[0].inskripziohasierae + ' irekitzen da izen-ematea.',
           };
+          aditestua = "Oraindik apuntatzeko epea ireki gabe.";
         }
 
         else if(vBukaera < now) {
@@ -353,6 +355,7 @@ exports.izenematea = function(req,res){
             intro: 'Adi!',
             message: rows[0].inskripziobukaerae + ' bukatu zen izen-ematea.',
           };
+          aditestua = "Apuntatzeko epea bukatuta!"
         }
 
         else if(rowsg[0].guztira >= rows[0].taldekopmax) {
@@ -362,11 +365,13 @@ exports.izenematea = function(req,res){
             intro: 'Adi!',
             message: 'Talde kopurua beteta.',
           };
+          aditestua = "Talde kopurua beteta!";
          }
+         
         }        
         if(res.locals.flash != null){
          //res.redirect(303,'/');
-          res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa});
+          res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, aditestua:aditestua});
 
         }
         else{
@@ -538,7 +543,7 @@ exports.sortu = function(req,res){
          }
          var body = "<p>"+data.taldeizena+" "+mailaizena+" mailan taldea balidatu ahal izateko, </p>";
          body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
-         body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rowst[0].kontukorrontea+ " kontu korrontean  "+rowst[0].prezioa+ "euro sartu eta kontzeptu bezala "+data.taldeizena+"-"+data.izenaard+"jarri.</p>";
+         body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rowst[0].kontukorrontea+ " kontu korrontean  "+rowst[0].prezioa+ "euro sartu eta kontzeptu bezala "+data.taldeizena+"-"+data.izenaard+" jarri.</p>";
          body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p>";
           req.session.idtalde = rows.insertId;
           emailService.send(to, subj, body);

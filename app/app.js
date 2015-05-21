@@ -207,7 +207,7 @@ app.get('/arauak', function(req, res){
 app.get('/argazkiak', txapelketak.argazkiakikusi);
 
 app.get('/kontaktua', function(req, res){
-    res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena});
+    res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, aditestua: "Kontaktua"});
 });
 app.post('/kontaktuabidali',txapelketak.kontaktuabidali); 
 

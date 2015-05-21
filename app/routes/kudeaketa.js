@@ -154,7 +154,7 @@ exports.multzoakbete = function(req, res){
           imultzo[rowsg[j].multzo] = rowsg[j].idgrupo;
         }
 
-     connection.query('SELECT * FROM taldeak where balidatuta = 1 and idtxapeltalde = ? and kategoria = ? order by lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {
+     connection.query('SELECT * FROM taldeak where balidatuta >= 1 and idtxapeltalde = ? and kategoria = ? order by lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {
             
         if(err)
            console.log("Error Selecting : %s ",err );
