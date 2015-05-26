@@ -5,7 +5,7 @@
       </div>
 
 <div class="col-md-offset-1" align="center">
-    <p><b> Jarraitu behar dituzun urratsak hauek dira: </b></p>
+    <h4><b> Jarraitu behar dituzun urratsak hauek dira: </b></h4>
     <img src="/img/izenaeman.jpg" alt="Izen-ematea" height="100" width="800"></img>
     <br/>
     <br/>
@@ -14,7 +14,8 @@
 <div class="formContainer col-sm-offset-1">
     <form class="form-horizontal newsletterForm" role="form" action="/taldeasortu" method="POST">
     <input type="hidden" name="_csrf" value="{{_csrfToken}}">
-    
+        <h4><b> Urrats hauek egin ondoren, zure taldearen izena "Taldeak" atalean agertzen ez bada, jarri kontaktuan gurekin. </b></h4>
+        </br>
         <div class="form-group">
             <label for="taldeizena" class="col-sm-2 control-label">Taldearen izena</label>
             <div class="col-sm-4">
@@ -73,7 +74,13 @@
         <div class="form-group">
             <label for="emailard" class="col-sm-2 control-label">Emaila</label>
             <div class="col-sm-4">
-                <input type="email" class="form-control" required id="emailard" name="emailard" placeholder="Sartu zure emaila" value={{emailard}} >
+                <input type="email" class="form-control" required id="emailard" name="emailard" placeholder="Erabiltzen duzun emaila jarri" value={{emailard}} >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="emailard2" class="col-sm-2 control-label">Emaila</label>
+            <div class="col-sm-4">
+                <input type="email" class="form-control" required id="emailard2" name="emailard2" placeholder="Errepikatu emaila" value={{emailard2}} >
             </div>
         </div>
         <div class="form-group">
@@ -109,7 +116,7 @@ Handlebars.registerHelper('mailaBerdina',function(kategoria, idmaila){
 
 </script>
 
-<! SOCKET GABE
+<!-- SOCKET GABE
 <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>

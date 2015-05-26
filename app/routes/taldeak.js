@@ -433,6 +433,16 @@ exports.sortu = function(req,res){
    // return res.redirect(303, '/izenematea');
   }
 
+  else if(req.body.emailard != req.body.emailard2) {
+    if(req.xhr) return res.json({ error: 'Invalid mail' });
+    res.locals.flash = {
+      type: 'danger',
+      intro: 'Adi!',
+      message: 'Emailak ez dira berdinak',
+    };
+   // return res.redirect(303, '/izenematea');
+  }
+
   req.getConnection(function (err, connection) {
    connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
       if(err)
@@ -460,7 +470,8 @@ exports.sortu = function(req,res){
             DNIard    : req.body.DNIard,
             izenaard   : req.body.izenaard,
             telefonoard   : req.body.telefonoard,
-            emailard   : req.body.emailard
+            emailard   : req.body.emailard,
+            emailard2 : req.body.emailard2
 
           } );
       }
@@ -492,7 +503,7 @@ exports.sortu = function(req,res){
             izenaard   : req.body.izenaard,
             telefonoard   : req.body.telefonoard,
             emailard   : req.body.emailard,
-            pasahitza: req.body.pasahitza
+            emailard2 : req.body.emailard2
 
            });
         }
