@@ -1556,6 +1556,7 @@ exports.taldeaaldatu = function(req,res){
 exports.finalakegin = function (req,res){ 
 
 var input = JSON.parse(JSON.stringify(req.body));
+var id = req.session.idtxapelketa;
 
   req.getConnection(function(err,connection){
     connection.query('SELECT * FROM maila where idtxapelm = ? and mailaizena = ?  ',[id,input.kategoriaf],function(err,rowsg)     {

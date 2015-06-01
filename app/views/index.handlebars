@@ -7,12 +7,32 @@
       <div class="row marketing">
       
         <div class="col-lg-8">
+          {{#each data2}}
+              <p style="color:#0000FF"><b> Txapelketa eguna: </b> {{hasierakoeguna}}tik {{bukaerakoeguna}}ra </p>
+              <p style="color:#0000FF"><b>Apuntatzeko epea: </b>{{inskripziohasierae}}tik {{inskripziobukaerae}}ra</p>
+              <p style="color:#0000FF"><b>Prezioa: </b>{{prezioa}} euro</p>
+              <hr align="left" noshade="noshade" size="4" width="100%" />
+              
+          {{/each}}
+
+        </div>
+
+
+        <div class="col-lg-4">
+          
           <h3 style="color:#0000FF">Izena-emateko laguntza</h3>
           <p> Laguntza behar baduzu, <a href="/img/laguntza.pdf" target="_blank">klik egin hemen.</a> </p>
-          <hr align="left" noshade="noshade" size="4" width="100%" />
+          
+          
+        </div>
+      </div>
+
+      <div class="row marketing">
+      
+        <div class="col-lg-8">
           {{#each data}}
-          		<h3 style="color:#0000FF">{{izenburua}}</h3>
-          		{{testua}}
+              <h3 style="color:#0000FF">{{izenburua}}</h3>
+              {{testua}}
               <!-- <textarea readonly cols="100">{{testua}}</textarea> -->
 
               <hr align="left" noshade="noshade" size="4" width="100%" />
@@ -22,14 +42,6 @@
 
 
         <div class="col-lg-4">
-          {{#each data2}}
-              <h4 align="center" style="color:#0000FF">{{txapelketaizena}}</h4>
-              <p><b> Datak: </b> {{hasierakoeguna}} - {{bukaerakoeguna}} </p>
-              <p><b>Apuntatzeko epea: </b>{{inskripziohasierae}} - {{inskripziobukaerae}}</p>
-              <p><b>Prezioa: </b>{{prezioa}} euro</p>
-              
-          {{/each}}
-          </br>
           <h3 style="color:#0000FF"> Twitter </h3>
               <a class="twitter-timeline"  width="300" height="500"
               href="https://twitter.com/txaparrotan" 
