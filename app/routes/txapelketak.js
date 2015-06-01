@@ -18,8 +18,9 @@ exports.aukeratzeko = function(req, res){
 
   req.getConnection(function (err, connection) {
       if (err)
-              console.log("Error connection : %s ",err ); 
-      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa',function(err,rows)  {
+              console.log("Error connection : %s ",err );
+      //Txapelketa bat pruebetako ixkutatuta 
+      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
         console.log("txapelketak : " + JSON.stringify(rows)); 
