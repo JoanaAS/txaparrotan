@@ -1328,13 +1328,15 @@ exports.emaitzasartu = function(req, res){
   
                   if (err)
                     console.log("Error Updating : %s ",err );
+
                 });
 
       }
      });
      }); 
   });
-  res.redirect(303, '/admin/emaitzak');
+  //res.redirect(303, '/admin/emaitzak');
+  res.redirect(303, '/admin/berriak');
 };
 
 exports.emaitzakikusi = function (req,res){ 
@@ -1452,7 +1454,6 @@ exports.partiduakreset = function(req, res){
 
         
         };
-        debugger;
         //Update taldea ta delete grupoak.
         connection.query("UPDATE taldeak set ? WHERE idtxapeltalde = ?  ",[data,id], function(err, rowst)
         {
