@@ -1335,8 +1335,7 @@ exports.emaitzasartu = function(req, res){
      });
      }); 
   });
-  //res.redirect(303, '/admin/emaitzak');
-  res.redirect(303, '/admin/berriak');
+  res.redirect(303, '/admin/emaitzak');
 };
 
 exports.emaitzakikusi = function (req,res){ 
