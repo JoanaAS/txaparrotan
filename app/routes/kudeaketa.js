@@ -1091,7 +1091,8 @@ exports.partiduordua = function(req, res){
   var idpar = req.params.partidu;
 
   req.getConnection(function(err,connection){
-      connection.query('SELECT *,t1.taldeizena taldeizena1,t2.taldeizena taldeizena2 FROM partiduak p,taldeak t1,taldeak t2 where t1.idtaldeak=p.idtalde1 and t2.idtaldeak=p.idtalde2 and t1.idtxapeltalde = ? and t2.idtxapeltalde = ? and idpartidu = ?',[id, id,idpar],function(err,rows)     {
+      //connection.query('SELECT *,t1.taldeizena taldeizena1,t2.taldeizena taldeizena2 FROM partiduak p,taldeak t1,taldeak t2 where t1.idtaldeak=p.idtalde1 and t2.idtaldeak=p.idtalde2 and t1.idtxapeltalde = ? and t2.idtxapeltalde = ? and idpartidu = ?',[id, id,idpar],function(err,rows)     {
+      connection.query('SELECT * FROM partiduak where idpartidu = ?',[idpar],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         console.log(rows);
@@ -1102,6 +1103,9 @@ exports.partiduordua = function(req, res){
 };
 
 function emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout){
+  emaitza1f=0;
+  emaitza2f=0;
+
   if(golak1a > golak1b && golak2a > golak2b){
     emaitza1f=70;
     emaitza2f=0;
@@ -1166,7 +1170,7 @@ exports.emaitzasartu = function(req, res){
   var id = req.session.idtxapelketa;
   var idpar = req.params.partidu;
   var idparti,izenafinala,idtalde;
-  
+
   var golak1a = req.body.golak1a,
       golak1b = req.body.golak1b,
       golak2a = req.body.golak2a,
@@ -1559,7 +1563,8 @@ var input = JSON.parse(JSON.stringify(req.body));
 var id = req.session.idtxapelketa;
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT * FROM maila where idtxapelm = ? and mailaizena = ?  ',[id,input.kategoriaf],function(err,rowsg)     {
+    //connection.query('SELECT * FROM maila where idtxapelm = ? and mailaizena = ?  ',[id,input.kategoriaf],function(err,rowsg)     {
+    connection.query('SELECT * FROM maila where idtxapelm = ? and idmaila = ?  ',[id,input.kategoriaf],function(err,rowsg)     {
       if(err)
            console.log("Error Selecting : %s ",err );  
       console.log("mailaizena: "+rowsg[0].mailaizena+" "+rowsg[0].finalak);  
