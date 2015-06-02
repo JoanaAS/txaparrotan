@@ -1340,7 +1340,6 @@ exports.emaitzasartu = function(req, res){
 
 exports.emaitzakikusi = function (req,res){ 
 var sartugabeak = (req.path == "/admin/emaitzak");
-console.log("Path "+ req.path);
 var id = req.session.idtxapelketa;
 var partiduak = [];
 var j=0;
