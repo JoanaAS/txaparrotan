@@ -1291,6 +1291,7 @@ exports.emaitzasartu = function(req, res){
   
                   if (err)
                     console.log("Error Updating : %s ",err );
+                  res.redirect('/admin/emaitzak');
                 });
             });
         });
@@ -1328,14 +1329,14 @@ exports.emaitzasartu = function(req, res){
   
                   if (err)
                     console.log("Error Updating : %s ",err );
-
+                  res.redirect('/admin/emaitzak');
                 });
 
       }
      });
      }); 
   });
-  res.redirect(303, '/admin/emaitzak');
+  //res.redirect(303, '/admin/emaitzak');
 };
 
 exports.emaitzakikusi = function (req,res){ 
