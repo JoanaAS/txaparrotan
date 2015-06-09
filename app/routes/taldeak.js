@@ -274,7 +274,7 @@ exports.bilatu = function(req, res){
 
            console.log("Error Selecting : %s ",err );
 
-        vBukaera = new Date();
+        /*vBukaera = new Date();
         bukaera = rows[0].inskripziobukaerae;
         aBukaera = bukaera.split("-");
         vBukaera.setDate(aBukaera[2]);
@@ -285,18 +285,18 @@ exports.bilatu = function(req, res){
         }
         else{
           aldaketabai = false;
-        }
+        }*/
          
         taldea = rows;
-        taldea.aldaketabai = aldaketabai;
-        aldaketa.aldaketabai = aldaketabai;
+        //taldea.aldaketabai = aldaketabai;
+        //aldaketa.aldaketabai = aldaketabai;
    
-        connection.query('SELECT *,aldaketabai FROM jokalariak where idtaldej= ?',[id],function(err,rows)     {
+        connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rows)     {
             
           if(err)
            console.log("Error Selecting : %s ",err );
          
-          res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:taldea , data:rows, taldeizena: req.session.taldeizena, aldaketa:aldaketa} );
+          res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:taldea , data:rows, taldeizena: req.session.taldeizena} );
 
                            
          });
