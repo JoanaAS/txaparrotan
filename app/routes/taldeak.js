@@ -261,24 +261,42 @@ exports.login = function(req, res){
 exports.bilatu = function(req, res){
   var taldea;
   var id = req.session.idtalde;
+  var now= new Date();
   //var id = req.params.id;
+  var bukaera,aBukaera, vBukaera,aldaketabai;
+  var aldaketa = {};
   req.getConnection(function(err,connection){
     
     
-     connection.query('SELECT * FROM taldeak,maila where idmaila = kategoria and idtaldeak = ?',[id],function(err,rows)     {
+     connection.query('SELECT * FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
             
         if(err)
 
            console.log("Error Selecting : %s ",err );
+
+        vBukaera = new Date();
+        bukaera = rows[0].inskripziobukaerae;
+        aBukaera = bukaera.split("-");
+        vBukaera.setDate(aBukaera[2]);
+        vBukaera.setMonth(aBukaera[1] - 1);
+        vBukaera.setYear(aBukaera[0]);
+        if(vBukaera < now){
+          aldaketabai = true;
+        }
+        else{
+          aldaketabai = false;
+        }
          
-        taldea = rows;       
+        taldea = rows;
+        taldea.aldaketabai = aldaketabai;
+        aldaketa.aldaketabai = aldaketabai;
    
-        connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rows)     {
+        connection.query('SELECT *,aldaketabai FROM jokalariak where idtaldej= ?',[id],function(err,rows)     {
             
           if(err)
            console.log("Error Selecting : %s ",err );
          
-          res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:taldea , data:rows, taldeizena: req.session.taldeizena} );
+          res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:taldea , data:rows, taldeizena: req.session.taldeizena, aldaketa:aldaketa} );
 
                            
          });
