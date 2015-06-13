@@ -268,13 +268,13 @@ exports.bilatu = function(req, res){
   req.getConnection(function(err,connection){
     
     
-     connection.query('SELECT * FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
+     connection.query('SELECT *,  FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
             
         if(err)
 
            console.log("Error Selecting : %s ",err );
 
-        /*vBukaera = new Date();
+        vBukaera = new Date();
         bukaera = rows[0].inskripziobukaerae;
         aBukaera = bukaera.split("-");
         vBukaera.setDate(aBukaera[2]);
@@ -285,11 +285,11 @@ exports.bilatu = function(req, res){
         }
         else{
           aldaketabai = false;
-        }*/
+        }
          
         taldea = rows;
-        //taldea.aldaketabai = aldaketabai;
-        //aldaketa.aldaketabai = aldaketabai;
+        taldea.aldaketabai = aldaketabai;
+        aldaketa.aldaketabai = aldaketabai;
    
         connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rows)     {
             
@@ -383,7 +383,7 @@ exports.izenematea = function(req,res){
             intro: 'Adi!',
             message: 'Talde kopurua beteta.',
           };
-          aditestua = "Talde kopurua beteta!";
+          aditestua = "Talde kopurua beteta! Txapelketa itxita dago! Hala ere, idatzi zuen taldearen izena eta zein mailetakoak zareten (sexua barne) eta posible izanez gero, zuekin kontaktuan jarriko gara!";
          }
          
         }        
