@@ -268,7 +268,7 @@ exports.bilatu = function(req, res){
   req.getConnection(function(err,connection){
     
     
-     connection.query('SELECT *,  FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
+     connection.query('SELECT * FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
             
         if(err)
 
