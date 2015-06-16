@@ -92,7 +92,7 @@ exports.jokalarikopurua = function(req, res){
           totala += rowsg[i].guztira;
          }
 
-        res.render('jokalarikopurua.handlebars', {title : 'Txaparrotan-Taldeak', data2:rowsg, jokalaritot: totala,taldeizena: req.session.txapelketaizena} );
+        res.render('jokalarikopurua.handlebars', {title : 'Txaparrotan-Jokalariak', data2:rowsg, jokalaritot: totala,taldeizena: req.session.txapelketaizena} );
      });
   });       
 };
