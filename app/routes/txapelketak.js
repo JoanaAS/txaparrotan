@@ -465,6 +465,17 @@ var date = new Date();
   });
 }
 
+exports.jokalariakikusi = function(req,res){
+
+  req.getConnection(function(err,connection){
+      connection.query('SELECT * FROM taldeak, jokalariak WHERE idtaldeak = idtaldej and idtxapeltalde = ? order by jokalariizena, idtaldeak',[req.session.idtxapelketa],function(err,rows)     {
+        if(err)
+           console.log("Error Selecting : %s ",err );
+
+        res.render('jokalariakadmin.handlebars', {title : 'Txaparrotan-JokalariakAdmin', data2:rows, taldeizena: req.session.txapelketaizena} );
+    });
+  });
+}
 
 exports.mantenimentu = function(req, res){
   var now= new Date();

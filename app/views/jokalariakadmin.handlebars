@@ -1,0 +1,44 @@
+{{> menuadmin}}
+
+   <div class="jumbotron">
+        <h2>Jokalariak izenez</h2>
+      </div>
+
+      </br>
+      <div class="row marketing">
+        <div class="col-lg-12">
+        
+        <table class="table table-condensed">
+            <tr>
+                    <th>Jokalarien izenak</th>
+                    <th>Jokalarien emailak</th>
+                    <th>Jokalarien telefonoak</th>
+                    <th>Kamiseta neurriak</th>
+                    <th  width="15%">Taldearen izena</th>
+                    <th>Herria</th>
+                    <th>Izena</th>
+                    <th>Telefonoa</th>
+                    <th>Emaila</th>
+                    <th>Data</th>
+                    <th>B</th>
+
+                </tr>                               
+            {{#each data2}}
+                  <tr class="active">
+                    <td>{{jokalariizena}} </td>   
+                    <td>{{emailaj}}</td> 
+                    <td>{{telefonoaj}}</td> 
+                    <td>{{kamisetaneurria}}</td>
+                    <td>{{taldeizena}}</td>  
+                    <td>{{herria}}</td>  
+                    <td>{{izenaard}}</td>   
+                    <td>{{telefonoard}}</td> 
+                    <td>{{emailard}}</td>     
+                    <td>{{sortzedata}}</td>   
+                    <td>{{balidatuta}}</td> 
+ 
+                </tr>
+            {{/each}}
+          </table>
+        </div>
+      </div>

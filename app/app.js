@@ -243,8 +243,6 @@ app.post('/berriaksortu',adminonartua,txapelketak.berriaksortu);
     res.render('kalkuluak.handlebars', {title : 'Txaparrotan-Kalkuluak egin', taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa});
 });*/
 app.get('/admin/kalkuluak', adminonartua, kudeaketa.kalkuluak);
-app.get('/admin/taldekopurua', adminonartua, kudeaketa.taldekopurua);
-app.get('/admin/jokalarikopurua', adminonartua, kudeaketa.jokalarikopurua);
 app.post('/admin/multzoakegin', adminonartua, kudeaketa.multzoakegin);
 app.post('/admin/multzoakbete', adminonartua, kudeaketa.multzoakbete);
 app.post('/admin/multzoakreset', adminonartua, kudeaketa.multzoakreset);
@@ -271,6 +269,9 @@ app.post('/admin/emaitzenorriak', adminonartua, kudeaketa.emaitzenorriak);
 app.get('/admin/taldeakikusi', adminonartua, txapelketak.taldeakikusi);
 app.get('/admin/taldea/:talde', adminonartua, kudeaketa.taldeaeditatu);
 app.post('/admin/taldeaaldatu/:talde', adminonartua, kudeaketa.taldeaaldatu);
+app.get('/admin/taldekopurua', adminonartua, kudeaketa.taldekopurua);
+app.get('/admin/jokalarikopurua', adminonartua, kudeaketa.jokalarikopurua);
+app.get('/admin/jokalariakikusi', adminonartua, txapelketak.jokalariakikusi);
 app.get('/admin/mantenimentu', adminonartua, txapelketak.mantenimentu);
 app.get('/admin/zelaiak', adminonartua, txapelketak.zelaiakbilatu);
 app.post('/admin/zelaiaksortu', adminonartua, txapelketak.zelaiaksortu);
