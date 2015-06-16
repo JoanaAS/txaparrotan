@@ -164,7 +164,7 @@ function admintxapelketaonartua(req, res, next){
 });*/
 app.get('/', authorize2, txapelketak.berriakikusi);
 app.get('/taldeak', taldeak.ikusi);
-app.get('/izenematea', taldeak.izenematea);
+app.get('/izenematea', authorize2, taldeak.izenematea);
 app.post('/taldeasortu',taldeak.sortu); 
 app.get('/taldeabalidatu/:id', taldeak.balidatu);
 app.get('/taldeaeditatu', taldeak.editatu);

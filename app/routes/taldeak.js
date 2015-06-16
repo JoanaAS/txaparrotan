@@ -13,7 +13,7 @@ var k = 0;
 var vKategoria, postua;
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by mailazki',[req.session.idtxapelketa],function(err,rows)     {
+    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         if(rows.length == 0){
