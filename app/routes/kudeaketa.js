@@ -79,6 +79,24 @@ exports.taldekopurua2 = function(req, res){
   
 };
 
+exports.jokalarikopurua = function(req, res){
+  var id = req.session.idtxapelketa;
+  var totala=0;
+
+  req.getConnection(function(err,connection){
+    connection.query('SELECT taldeizena,balidatuta,count(*) as guztira FROM taldeak,jokalariak where idtxapeltalde= ? and idtaldeak = idtaldej group by taldeizena ORDER BY taldeizena',[id],function(err,rowsg)     {
+        if(err)
+           console.log("Error Selecting : %s ",err );
+
+         for(var i in rowsg){
+          totala += rowsg[i].guztira;
+         }
+
+        res.render('jokalarikopurua.handlebars', {title : 'Txaparrotan-Taldeak', data2:rowsg, jokalaritot: totala,taldeizena: req.session.txapelketaizena} );
+     });
+  });       
+};
+
 exports.kalkuluak = function(req, res){
   var id = req.session.idtxapelketa;
   req.getConnection(function (err, connection) {

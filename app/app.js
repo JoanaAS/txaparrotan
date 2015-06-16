@@ -244,6 +244,7 @@ app.post('/berriaksortu',adminonartua,txapelketak.berriaksortu);
 });*/
 app.get('/admin/kalkuluak', adminonartua, kudeaketa.kalkuluak);
 app.get('/admin/taldekopurua', adminonartua, kudeaketa.taldekopurua);
+app.get('/admin/jokalarikopurua', adminonartua, kudeaketa.jokalarikopurua);
 app.post('/admin/multzoakegin', adminonartua, kudeaketa.multzoakegin);
 app.post('/admin/multzoakbete', adminonartua, kudeaketa.multzoakbete);
 app.post('/admin/multzoakreset', adminonartua, kudeaketa.multzoakreset);
