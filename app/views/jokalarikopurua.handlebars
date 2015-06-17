@@ -11,11 +11,15 @@
                 <tr>
                     <th>Talde izenak</th>
                     <th>Kopurua</th>
+                    <th>Berezitasunak</th>
+                    <th>Balidatuta</th>
                 </tr> 
                 {{#each data2}}
                    <tr>
-                    <td>{{taldeizena}}</td> 
-                    <td>{{guztira}}</td> 
+                    <td>{{taldeizena}}</td>
+                    <td>{{guztira}}</td>
+                    <td>{{berezitasunak}}</td>   
+                    <td>{{balidatuta}}</td> 
                     <td><a class="a-inside edit" href="/admin/taldea/{{idtaldeak}}">Aldatu</a></td>               
                    </tr>                           
                 {{/each}}  
