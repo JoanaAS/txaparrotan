@@ -84,7 +84,7 @@ exports.jokalarikopurua = function(req, res){
   var totala=0;
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT taldeizena,idtaldeak,count(*) as guztira FROM taldeak,jokalariak where idtxapeltalde= ? and idtaldeak = idtaldej group by taldeizena ORDER BY taldeizena',[id],function(err,rowsg)     {
+    connection.query('SELECT taldeizena,idtaldeak,berezitasunak,balidatuta,count(*) as guztira FROM taldeak,jokalariak where idtxapeltalde= ? and idtaldeak = idtaldej group by taldeizena ORDER BY taldeizena',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
 
