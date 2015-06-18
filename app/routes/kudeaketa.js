@@ -1568,7 +1568,8 @@ exports.taldeaaldatu = function(req,res){
           if (err)
               console.log("Error Updating : %s ",err );
          
-          res.redirect('/admin/taldeakikusi');
+          //res.redirect('/admin/taldeakikusi');
+          res.redirect('/admin/jokalarikopurua');
           
         });
     

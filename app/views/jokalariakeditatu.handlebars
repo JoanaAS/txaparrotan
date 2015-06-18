@@ -31,10 +31,21 @@
         <div class="form-group">
             <label for="kamisetaneurria" class="col-sm-2 control-label">Kamisetaren neurria</label>
             <div class="col-sm-4">
-        <select id="kamisetaneurria" name="kamisetaneurria" value= {{kamisetaneurria}}>
+
+<!--        <select id="kamisetaneurria" name="kamisetaneurria" value= {{kamisetaneurria}}>
          <option value="11-13">11-13</option> <option value="12-14">12-14</option>
           <option value="S">S</option> <option value="M">M</option><option value="L">L</option><option value="XL">XL</option><option value="XXL">XXL</option>
+-->
+       <select id="kamisetaneurria" name="kamisetaneurria" >
+                {{#each neurriak}}
+                     {{#if aukeratua}}
+                         <option value="{{neurria}}" selected>{{neurria}}</option>
+                     {{else}}
+                         <option value="{{neurria}}">{{neurria}}</option>
+                     {{/if}}
+                {{/each}}
         </select>
+
             </div>
         </div>
         <hr align="left" noshade="noshade" size="2" width="100%" />
