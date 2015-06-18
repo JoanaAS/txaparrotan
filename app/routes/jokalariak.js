@@ -38,7 +38,7 @@ exports.add = function(req, res){
   res.render('add_customer',{page_title:"Add Customers-Node.js"});
 };
 exports.editatu = function(req, res){
-  var neurriak = [{neurria:"11-13"}, {neurria:"12-14"}, {neurria:"S"}, {neurria":M"}, {neurria:"L"}, {neurria:"XL"}, {neurria:"XXL"}]
+  var neurriak = [{neurria:"11-13"}, {neurria:"12-14"}, {neurria:"S"}, {neurria:"M"}, {neurria:"L"}, {neurria:"XL"}, {neurria:"XXL"}]
   //var id = req.params.id;
   var id = req.session.idtalde;
   var idjokalari = req.params.idjokalari;
