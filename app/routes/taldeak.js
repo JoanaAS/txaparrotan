@@ -296,7 +296,7 @@ exports.bilatu = function(req, res){
           if(err)
            console.log("Error Selecting : %s ",err );
          
-          res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:taldea , data:rows, taldeizena: req.session.taldeizena} );
+          res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:taldea , data:rows,aldaketabai : aldaketabai, taldeizena: req.session.taldeizena} );
 
                            
          });

@@ -25,10 +25,10 @@ exports.bilatu = function(req, res){
             
         if(err)
            console.log("Error Selecting : %s ",err );
-            console.log(rows);
-            res.render('datuak.handlebars', {title : 'Txaparrotan-Datuak', data:rows, taldeak:rows[0], taldeizena: req.session.taldeizena} );
+        console.log(rows);
+        res.render('datuak.handlebars', {title : 'Txaparrotan-Datuak', data:rows, taldeak:rows[0], taldeizena: req.session.taldeizena} );
                            
-         });
+      });
        
     });
   
