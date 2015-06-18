@@ -414,7 +414,7 @@ var t = 0;
 var vTalde;
 var date = new Date();
   req.getConnection(function(err,connection){
-      connection.query('SELECT * FROM taldeak LEFT JOIN jokalariak ON idtaldeak=idtaldej WHERE idtxapeltalde = ? and balidatuta != "admin" order by taldeizena, idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
+      connection.query('SELECT * FROM taldeak LEFT JOIN jokalariak ON idtaldeak=idtaldej WHERE idtxapeltalde = ? and balidatuta != "admin" order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         for (var i in rows) { 

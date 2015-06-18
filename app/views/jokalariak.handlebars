@@ -31,11 +31,11 @@
                     <td>{{izenaard}}</td>
                     <td>{{emailard}}</td>
                     <td>{{telefonoard}}</td> 
-
+                    {{#if aldaketabai}}
                     <td>
                       <a class="a-inside edit" href="../taldeaeditatu">Aldatu</a>
                     </td>       
-
+                    {{/if}}    
                     
                 </tr>
             {{/each}}
@@ -51,9 +51,10 @@
          <div class="form-group">
             <div class="col-sm-offset-3"> 
                 <br/>
-
+                {{#if aldaketabai}}  
                   <button type="submit" class="btn btn-default">Banaka Gehitu</button>
-  
+                {{/if}}
+
             </div>
         </div>
         </form> 
@@ -73,14 +74,14 @@
                     <td>{{emailaj}}</td>
                     <td>{{telefonoaj}}</td>
                     <td>{{kamisetaneurria}}</td>
-
+                    {{#if aldaketabai}}  
                      <td>
                         <a class="a-inside edit" href="../jokalariakeditatu/{{idjokalari}}">Aldatu</a>
-                    </td>
-                    <td>
+                     </td>
+                     <td>
                         <a class="a-inside delete" href="../jokalariakezabatu/{{idjokalari}}">Ezabatu</a> 
-                    </td>
-                    
+                     </td>
+                    {{/if}}
                 </tr>
             {{/each}}
           </table>

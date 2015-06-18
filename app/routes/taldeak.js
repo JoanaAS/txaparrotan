@@ -265,6 +265,7 @@ exports.bilatu = function(req, res){
   //var id = req.params.id;
   var bukaera,aBukaera, vBukaera,aldaketabai;
   var aldaketa = {};
+  var aldaketarray = [];
   req.getConnection(function(err,connection){
     
     
@@ -280,23 +281,35 @@ exports.bilatu = function(req, res){
         vBukaera.setDate(aBukaera[2]);
         vBukaera.setMonth(aBukaera[1] - 1);
         vBukaera.setYear(aBukaera[0]);
-        if(vBukaera < now){
+
+        if(vBukaera > now){
           aldaketabai = true;
         }
         else{
           aldaketabai = false;
         }
-         
+
         taldea = rows;
-        taldea.aldaketabai = aldaketabai;
+        rows[0].aldaketabai = aldaketabai;
         aldaketa.aldaketabai = aldaketabai;
+        aldaketarray[0] = aldaketa;
+
+        console.log("aldaketabai : %s ",aldaketabai ); 
+        console.log("aldaketa : " + JSON.stringify(aldaketarray)); 
+        console.log("taldea : " + JSON.stringify(rows));
    
-        connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rows)     {
+        connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rowsj)     {
             
           if(err)
            console.log("Error Selecting : %s ",err );
-         
-          res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:taldea , data:rows,aldaketabai : aldaketabai, taldeizena: req.session.taldeizena} );
+
+          for(var i in rowsj ){
+               rowsj[i].aldaketabai = aldaketabai;
+          }
+
+          console.log("jokalariak : " + JSON.stringify(rowsj));
+
+          res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:rows , data:rowsj, aldaketabai : aldaketabai, taldeizena: req.session.taldeizena} );
 
                            
          });
