@@ -800,7 +800,6 @@ var vKategoria = req.body.kategoria4;
                   //vOrdua = rows[k].atsedenaordua;
                   vOrdua = "14:00:00"
                   aOrdua = vOrdua.split(":");
-                  aOrdua = rows[k].atsedenaordua.split(":");
                   vAtsedena.setHours(aOrdua[0]);
                   vAtsedena.setMinutes(aOrdua[1]);
                   vAtsedena.setSeconds(aOrdua[2]);
@@ -815,12 +814,12 @@ var vKategoria = req.body.kategoria4;
                   vEguna.setTime(vEguna.getTime() + vDenbora);
                   console.log("Eguna-bukaera "+vEguna.getTime()+" " +vBukaera.getTime());
 
-                  if(vEguna.getTime() > vAtsedena.getTime() && egunekobehin == 0){
+                  if(vEguna.getTime() >= vAtsedena.getTime() && egunekobehin == 0){
                     egunekobehin = 1;
                     vEguna.setTime(vEguna.getTime() + vAtsedenaDenbora);
                     console.log("Atsedena: "+vEguna+ " "+vAtsedena +" "+vAtsedenaDenbora);
                   }
-                  if(vEguna.getTime() > vBukaera.getTime()){
+                  if(vEguna.getTime() >= vBukaera.getTime()){
 
                     vEguna.setDate(vEguna.getDate()+1);
                     vOrdua = rows[k].hasierakoordua;
