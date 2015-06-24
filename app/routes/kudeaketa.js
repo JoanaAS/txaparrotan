@@ -832,6 +832,14 @@ var vKategoria = req.body.kategoria4;
                     vBukaera.setMinutes(aBukaera[1]);
                     vBukaera.setSeconds(aBukaera[2]);
                     console.log("Bukaera: "+vEguna+ " "+vBukaera);
+
+                    vAtsedena.setDate(vAtsedena.getDate()+1);
+                    //atseordu = rows[k].atsedenaordua;
+                  atseordu = "14:00:00";
+                  aOrdua = atseordu.split(":");
+                  vAtsedena.setHours(aOrdua[0]);
+                  vAtsedena.setMinutes(aOrdua[1]);
+                  vAtsedena.setSeconds(aOrdua[2]);
                     egunekobehin = 0;
                   }
                   orduak= vEguna.getHours();
@@ -903,7 +911,7 @@ exports.finalordutegia = function(req, res){
                   vJardunaldi = rows[k].jardunaldia;
                   vMaila = rows[k].kategoriam;
                   vEguna = new Date(rowsf[0].pareguna);
-                  vBukaera = new Date(rows[k].hasierakoeguna);
+                  vBukaera = new Date(rows[k].pareguna);
                   vOrdua = rowsf[0].parordua;
                   aOrdua = vOrdua.split(":");
                   vEguna.setHours(aOrdua[0]);
