@@ -34,11 +34,21 @@
             </div>
         </div>
         <div class="form-group"> 
-            <label for="multzokop" class="col-sm-2 control-label">Finalak</label>
+            <label for="finalak" class="col-sm-2 control-label">Finalak</label>
             <div class="col-sm-4">    
                 <select id="finalak" name="finalak">
-                     <option value="16">Hamaseirenak</option> <option value="8">Zortzirenak</option>
+
+<!--                     <option value="16">Hamaseirenak</option> <option value="8">Zortzirenak</option>
                      <option value="4">Laurdenak</option> <option value="2">Erdiak</option> <option value="1">Finalak</option>
+-->
+
+                  {{#each azkenak}}
+                     {{#if aukeratua}}
+                         <option value="{{balioa}}" selected>{{textoa}}</option>
+                     {{else}}
+                         <option value="{{balioa}}">{{textoa}}</option>
+                     {{/if}}
+                  {{/each}}                     
                 </select>
             </div>
         </div>

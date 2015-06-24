@@ -755,7 +755,8 @@ var vKategoria = req.body.kategoria4;
   var r = 0;
   var idpar; 
   var vZelaia=0;
-  var vDenbora,vEguna,vOrdua,aOrdua,orduak,minutuak,segunduak,vBukaera,aBukaera;
+  var egunekobehin = 0;
+  var vDenbora,vEguna,vOrdua,aOrdua,orduak,minutuak,segunduak,vBukaera,aBukaera,vAtsedena,vAtsedenaDenbora;
 
   req.getConnection(function(err,connection){
    connection.query('SELECT MAX (jardunaldia) as jardunkop FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo ',[id],function(err,rowsp)     {
@@ -782,6 +783,7 @@ var vKategoria = req.body.kategoria4;
                   vZelaia = 1;
                   vEguna = new Date(rows[k].hasierakoeguna);
                   vBukaera = new Date(rows[k].hasierakoeguna);
+                  vAtsedena = new Date(rows[k].hasierakoeguna);
                   vOrdua = rows[k].hasierakoordua;
                   aOrdua = vOrdua.split(":");
                   vEguna.setHours(aOrdua[0]);
@@ -793,8 +795,17 @@ var vKategoria = req.body.kategoria4;
                   vBukaera.setSeconds(aBukaera[2]);
                   console.log("vEguna: "+vEguna+ "-"+vBukaera);
                   vDenbora= rows[k].partidudenbora * 60 * 1000;
-                  
-                
+
+                  vAtsedena = new Date(rows[k].hasierakoeguna);
+                  //vOrdua = rows[k].atsedenaordua;
+                  vOrdua = "14:00:00"
+                  aOrdua = vOrdua.split(":");
+                  aOrdua = rows[k].atsedenaordua.split(":");
+                  vAtsedena.setHours(aOrdua[0]);
+                  vAtsedena.setMinutes(aOrdua[1]);
+                  vAtsedena.setSeconds(aOrdua[2]);
+                  //vAtsedenaDenbora= rows[k].atsedendenbora * 60 * 1000;                  
+                  vAtsedenaDenbora= 60 * 60 * 1000;
               } 
               else{
                 
@@ -803,7 +814,13 @@ var vKategoria = req.body.kategoria4;
                   vZelaia = 1;
                   vEguna.setTime(vEguna.getTime() + vDenbora);
                   console.log("Eguna-bukaera "+vEguna.getTime()+" " +vBukaera.getTime());
-                  if(vEguna.getTime()> vBukaera.getTime()){
+
+                  if(vEguna.getTime() > vAtsedena.getTime() && egunekobehin == 0){
+                    egunekobehin = 1;
+                    vEguna.setTime(vEguna.getTime() + vAtsedenaDenbora);
+                    console.log("Atsedena: "+vEguna+ " "+vAtsedena +" "+vAtsedenaDenbora);
+                  }
+                  if(vEguna.getTime() > vBukaera.getTime()){
 
                     vEguna.setDate(vEguna.getDate()+1);
                     vOrdua = rows[k].hasierakoordua;
@@ -817,6 +834,7 @@ var vKategoria = req.body.kategoria4;
                     vBukaera.setMinutes(aBukaera[1]);
                     vBukaera.setSeconds(aBukaera[2]);
                     console.log("Bukaera: "+vEguna+ " "+vBukaera);
+                    egunekobehin = 0;
                   }
                   orduak= vEguna.getHours();
                   minutuak = vEguna.getMinutes();
@@ -1574,6 +1592,27 @@ exports.taldeaaldatu = function(req,res){
         });
     
     });
+};
+
+exports.taldeaezabatu = function(req,res){
+          
+     //var id = req.params.id;
+     var id = req.session.idtalde;
+     var idtaldea = req.params.talde;
+    
+     req.getConnection(function (err, connection) {
+        
+        connection.query("DELETE FROM taldeak  WHERE idtaldeak = ? ",[idtaldea], function(err, rows)
+        {
+            
+             if(err)
+                 console.log("Error deleting : %s ",err );
+            
+             res.redirect('/admin/taldeakikusi');
+             
+        });
+        
+     });
 };
 
 exports.finalakegin = function (req,res){ 

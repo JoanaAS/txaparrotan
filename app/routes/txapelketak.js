@@ -650,7 +650,7 @@ exports.mailakbilatu = function(req, res){
 };
 
 exports.mailakeditatu = function(req, res){
-
+  var azkenak = [{balioa:"16", textoa : "Hamaseirenak"}, {balioa:"8", textoa : "Zortzirenakk"}, {balioa:"4", textoa : "Laurdenak"}, {balioa:"2", textoa : "Erdiak"}, {balioa:"1", textoa : "Finalak"}];
   //var id = req.params.id;
   var id = req.session.idtxapelketa;
   var idmaila = req.params.idmaila;
@@ -662,7 +662,16 @@ exports.mailakeditatu = function(req, res){
             
             if(err)
                 console.log("Error Selecting : %s ",err );
-     
+  
+            for(var i in azkenak ){
+               if(rows[0].finalak == azkenak[i].balioa){
+                  azkenak[i].aukeratua = true;
+               }
+               else
+                  azkenak[i].aukeratua = false;
+            }
+            rows[0].azkenak = azkenak;     
+
             res.render('mailakeditatu.handlebars', {page_title:"Maila aldatu",data:rows, taldeizena: req.session.taldeizena});
                            
          });
