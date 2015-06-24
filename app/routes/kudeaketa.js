@@ -756,7 +756,7 @@ var vKategoria = req.body.kategoria4;
   var idpar; 
   var vZelaia=0;
   var egunekobehin = 0;
-  var vDenbora,vEguna,vOrdua,aOrdua,orduak,minutuak,segunduak,vBukaera,aBukaera,vAtsedena,vAtsedenaDenbora;
+  var vDenbora,vEguna,vOrdua,aOrdua,orduak,minutuak,segunduak,vBukaera,aBukaera,vAtsedena,vAtsedenaDenbora,atseordu;
 
   req.getConnection(function(err,connection){
    connection.query('SELECT MAX (jardunaldia) as jardunkop FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo ',[id],function(err,rowsp)     {
@@ -783,7 +783,6 @@ var vKategoria = req.body.kategoria4;
                   vZelaia = 1;
                   vEguna = new Date(rows[k].hasierakoeguna);
                   vBukaera = new Date(rows[k].hasierakoeguna);
-                  vAtsedena = new Date(rows[k].hasierakoeguna);
                   vOrdua = rows[k].hasierakoordua;
                   aOrdua = vOrdua.split(":");
                   vEguna.setHours(aOrdua[0]);
@@ -797,9 +796,9 @@ var vKategoria = req.body.kategoria4;
                   vDenbora= rows[k].partidudenbora * 60 * 1000;
 
                   vAtsedena = new Date(rows[k].hasierakoeguna);
-                  //vOrdua = rows[k].atsedenaordua;
-                  vOrdua = "14:00:00"
-                  aOrdua = vOrdua.split(":");
+                  //atseordu = rows[k].atsedenaordua;
+                  atseordu = "14:00:00";
+                  aOrdua = atseordu.split(":");
                   vAtsedena.setHours(aOrdua[0]);
                   vAtsedena.setMinutes(aOrdua[1]);
                   vAtsedena.setSeconds(aOrdua[2]);
@@ -859,7 +858,7 @@ var vKategoria = req.body.kategoria4;
   
               if (err)                                                                                                                              
                 console.log("Error Updating : %s ",err );
-              console.log("Rowst: " + JSON.stringify(rowst));
+             // console.log("Rowst: " + JSON.stringify(rowst));
             });
             }
           });
