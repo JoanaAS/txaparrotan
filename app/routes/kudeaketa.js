@@ -906,7 +906,7 @@ exports.finalordutegia = function(req, res){
         if(err)
            console.log("Error Selecting : %s ",err );
          console.log("Azkena:"+rowsf[0].pareguna+" "+rowsf[0].parordua)   
-    connection.query('SELECT kategoriam ,count(*) FROM grupoak,partiduak where multzo > 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY COUNT(*) DESC',[id],function(err,rowsg)     {
+    connection.query('SELECT kategoriam ,count(*) FROM grupoak,partiduak,maila where multzo > 900 and idtxapelketam = ? and idgrupop = idgrupo and idmaila = kategoriam group by kategoriam ORDER BY COUNT(*) DESC, mailazki ASC',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         console.log("Rowsg" + JSON.stringify(rowsg));
@@ -926,8 +926,8 @@ exports.finalordutegia = function(req, res){
                   vMaila = rows[k].kategoriam;
                   vEguna = new Date(rowsf[0].pareguna);
                   vBukaera = new Date(rows[k].pareguna);
-                  vOrdua = rowsf[0].parordua;
-                  //vOrdua = "15:00:00";
+                  //vOrdua = rowsf[0].parordua;    ADI behekoa
+                  vOrdua = "15:00:00";
                   aOrdua = vOrdua.split(":");
                   vEguna.setHours(aOrdua[0]);
                   vEguna.setMinutes(aOrdua[1]);
@@ -938,7 +938,7 @@ exports.finalordutegia = function(req, res){
                   vBukaera.setSeconds(aBukaera[2]);
                   console.log("vEguna: "+vEguna+ "-"+vBukaera);
                   vDenbora= rows[k].partidudenbora * 60 * 1000;
-                  vEguna.setTime(vEguna.getTime() + vDenbora);
+                  //vEguna.setTime(vEguna.getTime() + vDenbora);   ADI goikoa
                   orduak= vEguna.getHours();
                   minutuak = vEguna.getMinutes();
                   segunduak = vEguna.getSeconds();
