@@ -84,7 +84,7 @@ exports.jokalarikopurua = function(req, res){
   var totala=0;
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT taldeizena,idtaldeak,berezitasunak,balidatuta,count(*) as guztira FROM taldeak,jokalariak where idtxapeltalde= ? and idtaldeak = idtaldej group by taldeizena ORDER BY taldeizena',[id],function(err,rowsg)     {
+    connection.query('SELECT taldeizena,izenaard,idtaldeak,idgrupot,berezitasunak,balidatuta,lehentasuna,count(*) as guztira FROM taldeak,jokalariak where idtxapeltalde= ? and idtaldeak = idtaldej group by taldeizena ORDER BY taldeizena',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
 
@@ -219,12 +219,13 @@ var multzoizena;
 var vKategoria, vMultzo,postua;
 var admin = (req.path == "/admin/sailkapenak");
 var zuretaldekoa = (req.path == "/taldesailkapena");
+var txapelketaprest = 0;
 
   req.getConnection(function(err,connection){
       connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-        if(rows.length == 0 && !admin){
+        if((rows.length == 0 || !txapelketaprest) && !admin){
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
@@ -286,7 +287,8 @@ var zuretaldekoa = (req.path == "/taldesailkapena");
 
             }
             multzoa = {
-                  multzo    : multzoizena
+                  multzo    : multzoizena,
+                  idgrupo = rows[i].idgrupo
                };
                
           }
@@ -557,6 +559,8 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 var admin = (req.path == "/admin/partiduak");
 var zuretaldekoa = (req.path == "/taldepartiduak");
 var multzoizena;
+var txapelketaprest = 0;
+
   req.getConnection(function(err,connection){
 
       //connection.query('SELECT *,t1.taldeizena taldeizena1,t2.taldeizena taldeizena2 FROM partiduak p,taldeak t1,taldeak t2,grupoak,maila,zelaia where idgrupop=idgrupo and t1.kategoria=idmaila and t1.idtaldeak=p.idtalde1 and t2.idtaldeak=p.idtalde2 and p.zelaia=zelaizki and idtxapelz=t1.idtxapeltalde and t1.idtxapeltalde = ? and t2.idtxapeltalde = ? order by mailazki,multzo,jardunaldia',[id, id],function(err,rows)     {
@@ -564,7 +568,7 @@ var multzoizena;
 
         if(err)
            console.log("Error Selecting : %s ",err );
-        if(rows.length == 0 && !admin){
+        if((rows.length == 0 || !txapelketaprest) && !admin){
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
@@ -796,7 +800,7 @@ var vKategoria = req.body.kategoria4;
                   vDenbora= rows[k].partidudenbora * 60 * 1000;
 
                   vAtsedena = new Date(rows[k].hasierakoeguna);
-                  //atseordu = rows[k].atsedenaordua;
+                  //atseordu = rows[k].atsedenordua;
                   atseordu = "14:00:00";
                   aOrdua = atseordu.split(":");
                   vAtsedena.setHours(aOrdua[0]);
@@ -872,11 +876,11 @@ var vKategoria = req.body.kategoria4;
           });
           }
         } 
-        
+        res.redirect('/admin/kalkuluak');
       }); 
     });
    });
-  res.redirect(303, '/admin/kalkuluak');
+  //res.redirect(303, '/admin/kalkuluak');
 };
 
 exports.finalordutegia = function(req, res){
@@ -913,6 +917,7 @@ exports.finalordutegia = function(req, res){
                   vEguna = new Date(rowsf[0].pareguna);
                   vBukaera = new Date(rows[k].pareguna);
                   vOrdua = rowsf[0].parordua;
+                  //vOrdua = "15:00:00";
                   aOrdua = vOrdua.split(":");
                   vEguna.setHours(aOrdua[0]);
                   vEguna.setMinutes(aOrdua[1]);
@@ -977,17 +982,17 @@ exports.finalordutegia = function(req, res){
   
               if (err)                                                                                                                              
                 console.log("Error Updating : %s ",err );
-              console.log("Rowst: " + JSON.stringify(rowst));
+              //console.log("Rowst: " + JSON.stringify(rowst));
             });
             }
           });
           }
         } 
-        
+        res.redirect('/admin/kalkuluak');
       }); 
     });
    });
-  res.redirect(303, '/admin/kalkuluak');
+  //res.redirect(303, '/admin/kalkuluak');
 };
 
 exports.ordutegiaikusi = function(req, res){
@@ -1009,6 +1014,8 @@ var k = 0;
 var z=0;
 var vOrdua, vEguna;
 var admin = (req.path == "/admin/ordutegia");
+var txapelketaprest = 0;
+
   req.getConnection(function(err,connection){
 
     connection.query('SELECT * FROM zelaia where idtxapelz = ? order by zelaizki,idzelaia',[req.session.idtxapelketa],function(err,rows)     {
@@ -1028,7 +1035,7 @@ var admin = (req.path == "/admin/ordutegia");
       
           if(err)
            console.log("Error Selecting : %s ",err );
-          if(rowsf.length == 0 && !admin){
+          if((rows.length == 0 || !txapelketaprest) && !admin){  
             res.locals.flash = {
              type: 'danger',
              intro: 'Adi!',

@@ -12,16 +12,22 @@
         <table class="table table-striped">
                 <tr>
                     <th>Talde izenak</th>
+                    <th>Talde arduradunak</th>
                     <th>Kopurua</th>
                     <th>Berezitasunak</th>
                     <th>Balidatuta</th>
+                    <th>Multzo</th>
+                    <th>Lehentasuna</th>
                 </tr> 
                 {{#each data2}}
                    <tr>
                     <td>{{taldeizena}}</td>
+                    <td>{{izenaard}}</td>
                     <td>{{guztira}}</td>
                     <td>{{berezitasunak}}</td>   
                     <td>{{balidatuta}}</td> 
+                    <td>{{idgrupot}}</td>   
+                    <td>{{lehentasuna}}</td>
                     <td><a class="a-inside edit" href="/admin/taldea/{{idtaldeak}}">Aldatu</a></td>               
                    </tr>                           
                 {{/each}}  
