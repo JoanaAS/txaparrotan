@@ -288,7 +288,7 @@ var txapelketaprest = 0;
             }
             multzoa = {
                   multzo    : multzoizena,
-                  idgrupo = rows[i].idgrupo
+                  idgrupo   : rows[i].idgrupo
                };
                
           }
