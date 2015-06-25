@@ -876,11 +876,11 @@ var vKategoria = req.body.kategoria4;
           });
           }
         } 
-        res.redirect('/admin/kalkuluak');
+        //res.redirect('/admin/kalkuluak');
       }); 
     });
    });
-  //res.redirect(303, '/admin/kalkuluak');
+  res.redirect('/admin/kalkuluak');
 };
 
 exports.finalordutegia = function(req, res){
@@ -988,11 +988,13 @@ exports.finalordutegia = function(req, res){
           });
           }
         } 
-        res.redirect('/admin/kalkuluak');
+        //res.redirect('/admin/kalkuluak');
       }); 
     });
    });
   //res.redirect(303, '/admin/kalkuluak');
+  res.redirect('/admin/kalkuluak');
+
 };
 
 exports.ordutegiaikusi = function(req, res){
