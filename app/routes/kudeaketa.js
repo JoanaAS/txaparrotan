@@ -1035,7 +1035,7 @@ var txapelketaprest = 0;
       
           if(err)
            console.log("Error Selecting : %s ",err );
-          if((rows.length == 0 || !txapelketaprest) && !admin){  
+          if((rowsf.length == 0 || !txapelketaprest) && !admin){  
             res.locals.flash = {
              type: 'danger',
              intro: 'Adi!',
