@@ -1025,7 +1025,7 @@ var k = 0;
 var z=0;
 var vOrdua, vEguna;
 var admin = (req.path == "/admin/ordutegia");
-var txapelketaprest = 0, eguna;
+var txapelketaprest = 0, data, datastring;
 var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 
   req.getConnection(function(err,connection){
@@ -1068,16 +1068,17 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
               saioak[t] = saioa;
               t++;
             }
-            vEguna = rowsf[i].pareguna;
-            vOrdua = rowsf[i].parordua;
-
-            if(eguna != vEguna){
-                partiduak = [{taldeizena1: rowsf[i].pareguna, taldeizena2: rowsf[i].parordua}];
-                eguna = vEguna;
+            if(vEguna != rowsf[i].pareguna){
+                data = rowsf[i].pareguna;
+                datastring = data.getFullYear() + "/" + (data.getMonth() +1) + "/" + data.getDate();
+                partiduak = [{taldeizena1: datastring, taldeizena2: rowsf[i].parordua}];
             }  
             else {
                 partiduak = [{taldeizena1: rowsf[i].parordua}];
             }
+            vEguna = rowsf[i].pareguna;
+            vOrdua = rowsf[i].parordua;
+
             j=1;
             saioa = {};
                
