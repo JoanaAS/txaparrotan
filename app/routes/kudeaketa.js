@@ -220,6 +220,7 @@ var vKategoria, vMultzo,postua;
 var admin = (req.path == "/admin/sailkapenak");
 var zuretaldekoa = (req.path == "/taldesailkapena");
 var txapelketaprest = 0;
+var grupo;
 
   req.getConnection(function(err,connection){
       connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[req.session.idtxapelketa],function(err,rows)     {
@@ -286,9 +287,15 @@ var txapelketaprest = 0;
                 multzoizena = "Finala";
 
             }
+            if(admin){
+              grupo = rows[i].idgrupo;
+            }
+            else{
+              grupo = "";  
+            }  
             multzoa = {
                   multzo    : multzoizena,
-                  idgrupo   : rows[i].idgrupo
+                  idgrupo   : grupo
                };
                
           }
@@ -768,7 +775,7 @@ var vKategoria = req.body.kategoria4;
            console.log("Error Selecting : %s ",err );
         console.log("Jardunkop: "+rowsp[0].jardunkop);
          
-    connection.query('SELECT kategoriam ,count(*) FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY COUNT(*) DESC',[id],function(err,rowsg)     {
+    connection.query('SELECT kategoriam ,count(*) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         console.log("Rowsg" + JSON.stringify(rowsg));
@@ -802,6 +809,8 @@ var vKategoria = req.body.kategoria4;
                   vAtsedena = new Date(rows[k].hasierakoeguna);
                   //atseordu = rows[k].atsedenordua;
                   atseordu = "14:00:00";
+                  //if (atseordu == "")
+                  //      egunekobehin = 1;
                   aOrdua = atseordu.split(":");
                   vAtsedena.setHours(aOrdua[0]);
                   vAtsedena.setMinutes(aOrdua[1]);
@@ -1016,7 +1025,8 @@ var k = 0;
 var z=0;
 var vOrdua, vEguna;
 var admin = (req.path == "/admin/ordutegia");
-var txapelketaprest = 0;
+var txapelketaprest = 0, eguna;
+var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 
   req.getConnection(function(err,connection){
 
@@ -1060,7 +1070,14 @@ var txapelketaprest = 0;
             }
             vEguna = rowsf[i].pareguna;
             vOrdua = rowsf[i].parordua;
-            partiduak = [{taldeizena1: rowsf[i].parordua}]; 
+
+            if(eguna != vEguna){
+                partiduak = [{taldeizena1: rowsf[i].pareguna, taldeizena2: rowsf[i].parordua}];
+                eguna = vEguna;
+            }  
+            else {
+                partiduak = [{taldeizena1: rowsf[i].parordua}];
+            }
             j=1;
             saioa = {};
                
@@ -1080,7 +1097,9 @@ var txapelketaprest = 0;
                 akronimoa = rowsf[i].akronimoa +" Finala ";
 
             }
-
+           else{ 
+                akronimoa = rowsf[i].akronimoa +" "+ alfabeto[rowsf[i].multzo -1] +" "+ rowsf[i].jardunaldia +".";
+            }
           partiduak[j] = {
                   akronimoa      : akronimoa,
                   taldeizena1    : rowsf[i].izenafinala1,
