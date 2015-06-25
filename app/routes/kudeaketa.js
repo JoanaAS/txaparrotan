@@ -774,8 +774,9 @@ var vKategoria = req.body.kategoria4;
         if(err)
            console.log("Error Selecting : %s ",err );
         console.log("Jardunkop: "+rowsp[0].jardunkop);
-         
-    connection.query('SELECT kategoriam ,count(*) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
+     
+    connection.query('SELECT kategoriam , MAX (jardunaldia) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
+    //connection.query('SELECT kategoriam ,count(*) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         console.log("Rowsg" + JSON.stringify(rowsg));
