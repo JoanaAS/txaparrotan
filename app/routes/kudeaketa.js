@@ -817,7 +817,7 @@ var vKategoria = req.body.kategoria4;
                   vAtsedena.setMinutes(aOrdua[1]);
                   vAtsedena.setSeconds(aOrdua[2]);
                   //vAtsedenaDenbora= rows[k].atsedendenbora * 60 * 1000;                  
-                  vAtsedenaDenbora= 60 * 60 * 1000;
+                  vAtsedenaDenbora= 30 * 60 * 1000;
               } 
               else{
                 
