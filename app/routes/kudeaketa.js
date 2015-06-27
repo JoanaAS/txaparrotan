@@ -1048,7 +1048,7 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
       
           if(err)
            console.log("Error Selecting : %s ",err );
-          if(rowsf.length == 0 || (!txapelketaprest && !admin){  
+          if(rowsf.length == 0 || (!txapelketaprest && !admin)){  
             res.locals.flash = {
              type: 'danger',
              intro: 'Adi!',
