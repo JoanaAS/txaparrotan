@@ -1023,7 +1023,7 @@ var talde1,talde2,akronimoa;
 
 var zelaia;
 var zelaiak = [{zelaiizena: "ORDUA" }];
-console.log("Zelai0:"+ JSON.stringify(zelaiak));
+//console.log("Zelai0:"+ JSON.stringify(zelaiak));
 var j,t=0;
 var k = 0;
 var z=0;
@@ -1036,7 +1036,7 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 
     connection.query('SELECT * FROM zelaia where idtxapelz = ? order by zelaizki,idzelaia',[req.session.idtxapelketa],function(err,rows)     {
 
-      console.log(rows);
+      //console.log(rows);
         for (var i in rows){
           zelaia= {};
           zelaia.zelaiizena = rows[i].zelaiizena;
@@ -1066,7 +1066,7 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
           //if ((vEguna != rows[i].pareguna) || (vOrdua != rows[i].parordua)){ 
            if(vOrdua != rowsf[i].parordua){ 
             if(vEguna !=null){
-              console.log("vOrdu:" +vOrdua);
+              //console.log("vOrdu:" +vOrdua);
               //partidua = partiduak;
               saioa.partiduak = partiduak;
               saioak[t] = saioa;
