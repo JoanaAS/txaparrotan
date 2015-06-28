@@ -929,7 +929,7 @@ exports.finalordutegia = function(req, res){
                   vMaila = rows[k].kategoriam;
                   vEguna = new Date(rowsf[0].pareguna);
                   vBukaera = new Date(rows[k].pareguna);
-                  vOrdua = rowsf[0].finalakordua;    
+                  vOrdua = rows[k].finalakordua;    
                   //vOrdua = "15:00:00";
                   aOrdua = vOrdua.split(":");
                   vEguna.setHours(aOrdua[0]);
