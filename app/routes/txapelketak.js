@@ -166,7 +166,10 @@ exports.editatu = function(req,res){
               inskripziobukaerao    : rows[0].inskripziobukaerao,
               prezioa : rows[0].prezioa,
               kontukorrontea : rows[0].kontukorrontea,
-              prest : rows[0].prest,
+              txapelketaprest : rows[0].txapelketaprest,
+              atsedenordua : rows[0].atsedenordua,
+              atsedendenbora : rows[0].atsedendenbora,
+              finalakordua : rows[0].finalakordua,
               buelta : rows[0].buelta,
               taldeizena: req.session.txapelketaizena
 
@@ -203,7 +206,11 @@ exports.aldatu = function(req,res){
             inskripziobukaerao    : input.inskripziobukaerao,
             prezioa : input.prezioa,
             kontukorrontea: input.kontukorrontea,
-            buelta : input.buelta
+            buelta : input.buelta,
+            txapelketaprest : input.txapelketaprest,
+            atsedenordua : input.atsedenordua,
+            atsedendenbora : input.atsedendenbora,
+            finalakordua : input.finalakordua
         };
         
         console.log(data);
