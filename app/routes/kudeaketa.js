@@ -808,16 +808,16 @@ var vKategoria = req.body.kategoria4;
                   vDenbora= rows[k].partidudenbora * 60 * 1000;
 
                   vAtsedena = new Date(rows[k].hasierakoeguna);
-                  //atseordu = rows[k].atsedenordua;
-                  atseordu = "14:00:00";
-                  //if (atseordu == "")
-                  //      egunekobehin = 1;
+                  atseordu = rows[k].atsedenordua;
+                  //atseordu = "14:00:00";
+                  if (atseordu == "00:00:00")
+                        egunekobehin = 1;
                   aOrdua = atseordu.split(":");
                   vAtsedena.setHours(aOrdua[0]);
                   vAtsedena.setMinutes(aOrdua[1]);
                   vAtsedena.setSeconds(aOrdua[2]);
-                  //vAtsedenaDenbora= rows[k].atsedendenbora * 60 * 1000;                  
-                  vAtsedenaDenbora= 30 * 60 * 1000;
+                  vAtsedenaDenbora= rows[k].atsedendenbora * 60 * 1000;                  
+                  //vAtsedenaDenbora= 30 * 60 * 1000;
               } 
               else{
                 
@@ -848,12 +848,15 @@ var vKategoria = req.body.kategoria4;
                     console.log("Bukaera: "+vEguna+ " "+vBukaera);
 
                     vAtsedena.setDate(vAtsedena.getDate()+1);
-                    //atseordu = rows[k].atsedenaordua;
-                  atseordu = "14:00:00";
+                    atseordu = rows[k].atsedenaordua;
+                  //atseordu = "14:00:00";
                   aOrdua = atseordu.split(":");
                   vAtsedena.setHours(aOrdua[0]);
                   vAtsedena.setMinutes(aOrdua[1]);
                   vAtsedena.setSeconds(aOrdua[2]);
+                   if (atseordu == "00:00:00")
+                        egunekobehin = 1;
+                   else   
                     egunekobehin = 0;
                   }
                   orduak= vEguna.getHours();
@@ -926,8 +929,8 @@ exports.finalordutegia = function(req, res){
                   vMaila = rows[k].kategoriam;
                   vEguna = new Date(rowsf[0].pareguna);
                   vBukaera = new Date(rows[k].pareguna);
-                  //vOrdua = rowsf[0].parordua;    ADI behekoa
-                  vOrdua = "15:00:00";
+                  vOrdua = rowsf[0].finalakordua;    
+                  //vOrdua = "15:00:00";
                   aOrdua = vOrdua.split(":");
                   vEguna.setHours(aOrdua[0]);
                   vEguna.setMinutes(aOrdua[1]);
