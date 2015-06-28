@@ -1074,7 +1074,12 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
             }
             if(vEguna != rowsf[i].pareguna){
                 data = rowsf[i].pareguna;
-                datastring = data.getFullYear() + "/" + (data.getMonth() +1) + "/" + data.getDate();
+                if(data == null){
+                  datastring = "00/00/00";
+                }
+                else{
+                   datastring = data.getFullYear() + "/" + (data.getMonth() +1) + "/" + data.getDate();
+                }
                 partiduak = [{taldeizena1: datastring, taldeizena2: rowsf[i].parordua}];
             }  
             else {
