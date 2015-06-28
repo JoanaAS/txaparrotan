@@ -219,14 +219,14 @@ var multzoizena;
 var vKategoria, vMultzo,postua;
 var admin = (req.path == "/admin/sailkapenak");
 var zuretaldekoa = (req.path == "/taldesailkapena");
-var txapelketaprest = 0;
+//var txapelketaprest = 0;
 var grupo;
 
   req.getConnection(function(err,connection){
-      connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[req.session.idtxapelketa],function(err,rows)     {
+      connection.query('SELECT * FROM taldeak,grupoak,maila,txapelketa where idgrupot=idgrupo and idtxapelketa = idtxapeltalde and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-        if((rows.length == 0 || !txapelketaprest) && !admin){
+        if((rows.length == 0 || !rows[0].txapelketaprest) && !admin){
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
@@ -566,16 +566,16 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 var admin = (req.path == "/admin/partiduak");
 var zuretaldekoa = (req.path == "/taldepartiduak");
 var multzoizena;
-var txapelketaprest = 0;
+//var txapelketaprest = 0;
 
   req.getConnection(function(err,connection){
 
       //connection.query('SELECT *,t1.taldeizena taldeizena1,t2.taldeizena taldeizena2 FROM partiduak p,taldeak t1,taldeak t2,grupoak,maila,zelaia where idgrupop=idgrupo and t1.kategoria=idmaila and t1.idtaldeak=p.idtalde1 and t2.idtaldeak=p.idtalde2 and p.zelaia=zelaizki and idtxapelz=t1.idtxapeltalde and t1.idtxapeltalde = ? and t2.idtxapeltalde = ? order by mailazki,multzo,jardunaldia',[id, id],function(err,rows)     {
-      connection.query('SELECT * FROM partiduak,grupoak,maila,zelaia where idgrupop=idgrupo and kategoriam=idmaila and zelaia=zelaizki and idtxapelz = ? and idtxapelketam = ? order by mailazki,multzo,jardunaldia,pareguna,parordua,zelaia',[id,id],function(err,rows)     {
+      connection.query('SELECT * FROM partiduak,grupoak,maila,zelaia,txapelketa where idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and zelaia=zelaizki and idtxapelz = ? and idtxapelketam = ? order by mailazki,multzo,jardunaldia,pareguna,parordua,zelaia',[id,id],function(err,rows)     {
 
         if(err)
            console.log("Error Selecting : %s ",err );
-        if((rows.length == 0 || !txapelketaprest) && !admin){
+        if((rows.length == 0 || !rows[0].txapelketaprest) && !admin){
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
@@ -1029,7 +1029,7 @@ var k = 0;
 var z=0;
 var vOrdua, vEguna;
 var admin = (req.path == "/admin/ordutegia");
-var txapelketaprest = 0, data, datastring;
+var data, datastring;
 var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 
   req.getConnection(function(err,connection){
@@ -1047,11 +1047,11 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
     });
 
       
-        connection.query('SELECT * FROM partiduak,grupoak,maila where idmaila = kategoriam and idtxapelketam = ? and idgrupop = idgrupo order by pareguna, parordua,zelaia',[req.session.idtxapelketa],function(err,rowsf)     {
+        connection.query('SELECT * FROM partiduak,grupoak,maila,txapelketa where idmaila = kategoriam and idtxapelketa= idtxapelketam and idtxapelketam = ? and idgrupop = idgrupo order by pareguna, parordua,zelaia',[req.session.idtxapelketa],function(err,rowsf)     {
       
           if(err)
            console.log("Error Selecting : %s ",err );
-          if(rowsf.length == 0 || (!txapelketaprest && !admin)){  
+          if(rowsf.length == 0 || (!rows[0].txapelketaprest && !admin)){  
             res.locals.flash = {
              type: 'danger',
              intro: 'Adi!',
