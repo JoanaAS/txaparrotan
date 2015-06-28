@@ -226,7 +226,7 @@ var grupo;
       connection.query('SELECT * FROM taldeak,grupoak,maila,txapelketa where idgrupot=idgrupo and idtxapelketa = idtxapeltalde and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-        if((rows.length == 0 || !rows[0].txapelketaprest) && !admin){
+        if(rows.length == 0 || (rows[0].txapelketaprest == 0 && !admin)){
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
@@ -575,7 +575,7 @@ var multzoizena;
 
         if(err)
            console.log("Error Selecting : %s ",err );
-        if((rows.length == 0 || !rows[0].txapelketaprest) && !admin){
+        if(rows.length == 0 || (rows[0].txapelketaprest== 0 && !admin)){
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
@@ -1051,7 +1051,7 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
       
           if(err)
            console.log("Error Selecting : %s ",err );
-          if(rowsf.length == 0 || (!rows[0].txapelketaprest && !admin)){  
+          if(rowsf.length == 0 || (rowsf[0].txapelketaprest == 0 && !admin)){  
             res.locals.flash = {
              type: 'danger',
              intro: 'Adi!',
