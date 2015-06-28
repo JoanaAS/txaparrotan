@@ -774,6 +774,11 @@ exports.mezuakbidali = function(req,res){
     var id = req.session.idtxapelketa;
     var taldeak2;
 
+    var hosta = req.hostname;
+    if (process.env.NODE_ENV != 'production'){ 
+          hosta += ":"+ (process.env.PORT || 3000);
+    }
+
     req.getConnection(function (err, connection) {
          
         if(input.mezumota == "prest"){
@@ -784,7 +789,7 @@ exports.mezuakbidali = function(req,res){
               var subj = req.session.txapelketaizena+ " txapelketa prest";
               var body = "<h2> Txapelketa prest </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Sartu: http://www.txaparrotan.eus</h3>" ;
+                              "<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://"+hosta+"</h3>" ;
               taldeak2 = mezuaknori(input.bidali,subj,body,rows);
 
               console.log("Taldeak2: "+JSON.stringify(taldeak2));
@@ -796,7 +801,7 @@ exports.mezuakbidali = function(req,res){
 
         else if(input.mezumota == "ordgabe"){
 
-              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta < 5 and balidatuta > 0',[id],function(err,rows)
+              var query = connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = ? and idtxapelketa=idtxapeltalde and balidatuta < 5 and balidatuta > 0',[id],function(err,rows)
               {
 
                 if(err)
@@ -805,7 +810,7 @@ exports.mezuakbidali = function(req,res){
                 var subj = req.session.txapelketaizena+ " txapelketa ordainketa egin mesedez!";
                 var body = "<h2> Ordainketa egin mesedez! </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Sartu dirua kontu zenbaki honetan: .......>" ;
+                              "<h3> Sartu " +rows[0].prezioa+" kontu zenbaki honetan: "+rows[0].kontukorrontea+ "</h3>" ;
                taldeak2 = mezuaknori(input.bidali,subj,body,rows);
 
                console.log("Taldeak2: "+JSON.stringify(taldeak2));
@@ -824,7 +829,7 @@ exports.mezuakbidali = function(req,res){
               var subj = req.session.txapelketaizena+ " txapelketan jokalariak gehitu";
               var body = "<h2> Jokalariak sartzeko dituzue </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Sartu: http://www.txaparrotan.eus eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko</h3>" ;
+                              "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko</h3>" ;
               taldeak2 = mezuaknori(input.bidali,subj,body,rows);
 
               console.log("Taldeak2: "+JSON.stringify(taldeak2));
