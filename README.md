@@ -1,2 +1,2 @@
 # txaparrotan
-OSATZEKOTAN!
+OSATZEKOTAN! bai
