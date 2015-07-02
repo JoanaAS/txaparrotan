@@ -848,7 +848,7 @@ var vKategoria = req.body.kategoria4;
                     console.log("Bukaera: "+vEguna+ " "+vBukaera);
 
                     vAtsedena.setDate(vAtsedena.getDate()+1);
-                    atseordu = rows[k].atsedenaordua;
+                    atseordu = rows[k].atsedenordua;
                   //atseordu = "14:00:00";
                   aOrdua = atseordu.split(":");
                   vAtsedena.setHours(aOrdua[0]);
