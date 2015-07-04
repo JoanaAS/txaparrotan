@@ -1251,15 +1251,16 @@ exports.emaitzasartu = function(req, res){
   var idpar = req.params.partidu;
   var idparti,izenafinala,idtalde;
 
-  var golak1a = req.body.golak1a,
-      golak1b = req.body.golak1b,
-      golak2a = req.body.golak2a,
-      golak2b = req.body.golak2b,
-      goldeoro1 = req.body.goldeoro1,
-      goldeoro2 = req.body.goldeoro2,
-      shutout = req.body.shutout;
-      emaitza1 = req.body.emaitza1;
-      emaitza2 = req.body.emaitza2;
+  var golak1a = parseInt(req.body.golak1a);
+  var golak1b = parseInt(req.body.golak1b);
+  var golak2a = parseInt(req.body.golak2a);
+  var golak2b = parseInt(req.body.golak2b);
+  var goldeoro1 = req.body.goldeoro1;
+  var goldeoro2 = req.body.goldeoro2;
+  var shutout = req.body.shutout;
+  var emaitza1 = req.body.emaitza1;
+  var emaitza2 = req.body.emaitza2;
+
   var bemaitza1,bemaitza2, jokatutakopartiduak, irabazitakopartiduak,puntuak, emaitza1f,emaitza2f;
 
   req.getConnection(function(err,connection){
