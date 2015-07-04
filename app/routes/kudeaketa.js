@@ -1214,6 +1214,10 @@ function emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,sh
     emaitza1f=40;
     emaitza2f=35;
   }
+  else if((goldeoro2=="A" && golak1a < golak1b && shutout=="A") || (goldeoro2=="B" && golak1a > golak1b && shutout=="A") ){
+    emaitza1f=40;
+    emaitza2f=35;
+  }
   if(golak1a < golak1b && golak2a < golak2b){
     emaitza1f=0;
     emaitza2f=70;
@@ -1239,6 +1243,10 @@ function emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,sh
     emaitza2f=45;
   }
   else if((goldeoro1=="B" && golak2a > golak2b && shutout=="B") || (goldeoro1=="A" && golak2a < golak2b && shutout=="B") ){
+    emaitza1f=35;
+    emaitza2f=40;
+  }
+  else if((goldeoro2=="B" && golak1a > golak1b && shutout=="B") || (goldeoro2=="A" && golak1a < golak1b && shutout=="B") ){
     emaitza1f=35;
     emaitza2f=40;
   }
