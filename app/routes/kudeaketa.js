@@ -1316,8 +1316,15 @@ exports.emaitzasartu = function(req, res){
             console.log("Jp:"+jokatutakopartiduak+" ip:" + irabazitakopartiduak+ " pun:"+ puntuak);
             console.log("Emaitza2:"+bemaitza1+"-"+bemaitza2);
             console.log("Emaitza3:"+emaitza1+"-"+emaitza2);
-            if((emaitza1==null && emaitza2==null)||(emaitza1==0 && emaitza2==0)){
+            if(emaitza1==null && emaitza2==null){
               jokatutakopartiduak++;             
+              if(bemaitza1>bemaitza2){
+                irabazitakopartiduak++; 
+              }
+              console.log("5");
+            }
+            if(emaitza1==0 && emaitza2==0){
+              //jokatutakopartiduak++;   ADI ADI if-a goitik ekarrita             
               if(bemaitza1>bemaitza2){
                 irabazitakopartiduak++; 
               }
@@ -2182,6 +2189,7 @@ var vAkronimoa;
          var multzopostu;
          var vJardunaldi,a,f=0,p,idfinala1,idfinala2;
          var partiduenId=[];
+         var aldatutaldea;
 
          var partiduenId = new Array(10); 
          for (var b = 0; b < 10; b++) {
@@ -2223,25 +2231,73 @@ var vAkronimoa;
 
              if(rowsf[i].jardunaldia == 1){
               multzopostu = rowsf[i].izenafinala1.split("-");
-              for (var j=0; j<28;j++){
+              if (multzopostu[0] >= 1 && multzopostu[0] <= 9){
+                postu = multzopostu[0] -1;
+                for (var j=0; j<multzokopuru;j++){
+                 for (var k=j+1; k<multzokopuru;k++){
+                   if(mailak[0].multzoak[j].taldeak[postu].jokatutakopartiduak != mailak[0].multzoak[k].taldeak[postu].jokatutakopartiduak){
+                      console.log("ADI!!Jokatutako partidu ezberdinak");
+                   }
+                   if(mailak[0].multzoak[j].taldeak[postu].irabazitakopartiduak < mailak[0].multzoak[k].taldeak[postu].irabazitakopartiduak){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                   }
+                   else if(mailak[0].multzoak[j].taldeak[postu].irabazitakopartiduak == mailak[0].multzoak[k].taldeak[postu].irabazitakopartiduak){
+                    if(mailak[0].multzoak[j].taldeak[postu].puntuak < mailak[0].multzoak[k].taldeak[postu].puntuak){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                    } 
+                   }    
+                 }
+                }
+                multzo = multzopostu[1] - 1;                 
+              }
+              else{
+               for (var j=0; j<28;j++){
                  if(alfabeto[j]==multzopostu[0]){
                    multzo = j;
                    break;
-                }
-              }
-              postu = multzopostu[1] -1;
+                 }
+               }
+               postu = multzopostu[1] -1;
+              } 
               var izena1 = mailak[0].multzoak[multzo].taldeak[postu].taldeizena;
               var idtalde1 = mailak[0].multzoak[multzo].taldeak[postu].idtaldeak;
               console.log("Izenafinala:"+rowsf[i].izenafinala1+ " "+multzo+" "+postu+" "+izena1);
 
               multzopostu = rowsf[i].izenafinala2.split("-");
-              for (var j=0; j<28;j++){
+              if (multzopostu[0] >= 1 && multzopostu[0] <= 9){
+                postu = multzopostu[0] -1;
+                for (var j=0; j<multzokopuru;j++){
+                 for (var k=j+1; k<multzokopuru;k++){
+                   if(mailak[0].multzoak[j].taldeak[postu].irabazitakopartiduak < mailak[0].multzoak[k].taldeak[postu].irabazitakopartiduak){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                   }
+                   else if(mailak[0].multzoak[j].taldeak[postu].irabazitakopartiduak == mailak[0].multzoak[k].taldeak[postu].irabazitakopartiduak){
+                    if(mailak[0].multzoak[j].taldeak[postu].puntuak < mailak[0].multzoak[k].taldeak[postu].puntuak){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                    } 
+                   }    
+                 }
+                }
+                multzo = multzopostu[1] - 1;                 
+              }
+              else{
+               for (var j=0; j<28;j++){
                  if(alfabeto[j]==multzopostu[0]){
                    multzo = j;
                    break;
-                }
-              }
-              postu = multzopostu[1] -1;
+                 }
+               }
+               postu = multzopostu[1] -1;
+              } 
+
               var izena2 = mailak[0].multzoak[multzo].taldeak[postu].taldeizena;
               var idtalde2 = mailak[0].multzoak[multzo].taldeak[postu].idtaldeak;
               console.log("Izenafinala:"+rowsf[i].izenafinala2+ " "+multzo+" "+postu+" "+izena2)
