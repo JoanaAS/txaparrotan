@@ -1074,7 +1074,8 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
             }
             if(vEguna != rowsf[i].pareguna){
                 data = rowsf[i].pareguna;
-                if(data == null){
+
+                if(data == "0000-00-00"){
                   datastring = "00/00/00";
                 }
                 else{
@@ -1155,11 +1156,40 @@ exports.emaitzapartidu = function(req, res){
   var id = req.session.idtxapelketa;
   var idpar = req.params.partidu;
 
+  var goldeoro1 = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+  var goldeoro2 = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+  var shutout = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+
   req.getConnection(function(err,connection){
       connection.query('SELECT * FROM partiduak,grupoak where idgrupo=idgrupop and idtxapelketam= ? and idpartidu = ?',[id,idpar],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-        console.log(rows);
+        //console.log(rows);
+
+        for(var i in goldeoro1 ){
+               if(rows[0].goldeoro1 == goldeoro1[i].balioa){
+                  goldeoro1[i].aukeratua = true;
+               }
+               else
+                  goldeoro1[i].aukeratua = false;
+        }
+        rows[0].gol1 = goldeoro1;
+        for(var i in goldeoro2 ){
+               if(rows[0].goldeoro2 == goldeoro2[i].balioa){
+                  goldeoro2[i].aukeratua = true;
+               }
+               else
+                  goldeoro2[i].aukeratua = false;
+        }
+        rows[0].gol2 = goldeoro2;
+        for(var i in shutout ){
+               if(rows[0].shutout == shutout[i].balioa){
+                  shutout[i].aukeratua = true;
+               }
+               else
+                  shutout[i].aukeratua = false;
+        }
+        rows[0].shut = shutout;        
 
         res.render('emaitzasartu.handlebars', {title : 'Txaparrotan-Emaitza sartu', data: rows, taldeizena: req.session.txapelketaizena} );
     });
@@ -1271,11 +1301,21 @@ exports.emaitzasartu = function(req, res){
 
   var bemaitza1,bemaitza2, jokatutakopartiduak, irabazitakopartiduak,puntuak, emaitza1f,emaitza2f;
 
+  console.log("Emaitza z: "+emaitza1+" "+emaitza2);
+  bemaitza1 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza1f;
+  bemaitza2 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza2f;   
+  console.log("Emaitza:" +bemaitza1+ "-" +bemaitza2);
+
+  if(bemaitza1 == 0 && bemaitza2 == 0){
+           res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Emaitza 0 - 0 . Berriro sartu.'
+           };
+           return res.render('emaitzasartu.handlebars', {title : 'Txaparrotan-Emaitza sartu',      taldeizena: req.session.txapelketaizena} ); 
+  };
+
   req.getConnection(function(err,connection){
-    console.log("Emaitza z: "+emaitza1+" "+emaitza2);
-    bemaitza1 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza1f;
-    bemaitza2 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza2f;   
-    console.log("Emaitza:" +bemaitza1+ "-" +bemaitza2);
 
     connection.query('SELECT * FROM partiduak,grupoak where idgrupop=idgrupo and idpartidu = ? ',[idpar],function(err,rows)     {
 
@@ -1316,15 +1356,8 @@ exports.emaitzasartu = function(req, res){
             console.log("Jp:"+jokatutakopartiduak+" ip:" + irabazitakopartiduak+ " pun:"+ puntuak);
             console.log("Emaitza2:"+bemaitza1+"-"+bemaitza2);
             console.log("Emaitza3:"+emaitza1+"-"+emaitza2);
-            if(emaitza1==null && emaitza2==null){
+            if((emaitza1==null && emaitza2==null) || (emaitza1==0 && emaitza2==0)){
               jokatutakopartiduak++;             
-              if(bemaitza1>bemaitza2){
-                irabazitakopartiduak++; 
-              }
-              console.log("5");
-            }
-            if(emaitza1==0 && emaitza2==0){
-              //jokatutakopartiduak++;   ADI ADI if-a goitik ekarrita             
               if(bemaitza1>bemaitza2){
                 irabazitakopartiduak++; 
               }
