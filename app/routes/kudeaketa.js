@@ -241,12 +241,12 @@ var grupo;
          {
            if(vKategoria != rows[i].kategoriam){
             if(vKategoria !=null){
-              console.log("vKategoria:" +vKategoria);
+              //console.log("vKategoria:" +vKategoria);
               multzoa.taldeak = taldeak;
               multzoak[t] = multzoa;
               maila.multzoak = multzoak;
               mailak[k] = maila;
-              console.log("Mailak:" +t + JSON.stringify(mailak[k]));
+              //console.log("Mailak:" +t + JSON.stringify(mailak[k]));
               k++;
             }
             vKategoria = rows[i].kategoriam;
@@ -261,10 +261,10 @@ var grupo;
           }
           if(vMultzo != rows[i].idgrupo){
             if(vMultzo !=null){
-              console.log("vMultzo:" +vMultzo);
+              //console.log("vMultzo:" +vMultzo);
               multzoa.taldeak = taldeak;
               multzoak[t] = multzoa;
-              console.log("Multzoak:" +t + JSON.stringify(multzoak[t]));
+              //console.log("Multzoak:" +t + JSON.stringify(multzoak[t]));
               t++;
             }
             vMultzo = rows[i].idgrupo;
@@ -307,19 +307,19 @@ var grupo;
                   puntuak    : rows[i].puntuak
                };
           j++;
-          console.log("Taldeak:" + taldeak[j]);
+          //console.log("Taldeak:" + taldeak[j]);
           
           //console.log(  );
          // console.log("Jokalari" + jokalariak);
          }
         }
         if(vKategoria !=null){
-              console.log("vKategoria:" +vKategoria);
+              //console.log("vKategoria:" +vKategoria);
               multzoa.taldeak = taldeak;
               multzoak[t] = multzoa;
               maila.multzoak = multzoak;
               mailak[k] = maila;
-              console.log("Mailak:" +t + JSON.stringify(mailak));
+              //console.log("Mailak:" +t + JSON.stringify(mailak));
               k++;
             }
         if(admin){
@@ -1311,8 +1311,50 @@ exports.emaitzasartu = function(req, res){
             type: 'danger',
             intro: 'Adi!',
             message: 'Emaitza 0 - 0 . Berriro sartu.'
-           };
-           return res.render('emaitzasartu.handlebars', {title : 'Txaparrotan-Emaitza sartu',      taldeizena: req.session.txapelketaizena} ); 
+           }; 
+           var golde1 = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+           var golde2 = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+           var shutt = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+           var data = [{
+                        idpartidu : req.params.partidu,
+                        izenafinala1 : req.body.izenafinala1,
+                        izenafinala2 : req.body.izenafinala2,
+                        golak1a : req.body.golak1a,
+                        golak1b : req.body.golak1b,
+                        golak2a : req.body.golak2a,
+                        golak2b : req.body.golak2b,
+                        goldeoro1 : req.body.goldeoro1,
+                        goldeoro2 : req.body.goldeoro2,
+                        shutout : req.body.shutout,
+                        emaitza1 : req.body.emaitza1,
+                        emaitza2 : req.body.emaitza2
+           }];
+           for(var i in golde1 ){
+               if(goldeoro1 == golde1[i].balioa){
+                  golde1[i].aukeratua = true;
+               }
+               else
+                  golde1[i].aukeratua = false;
+           }
+           data[0].gol1 = golde1;
+           for(var i in golde2 ){
+               if(goldeoro2 == golde2[i].balioa){
+                  golde2[i].aukeratua = true;
+               }
+               else
+                  golde2[i].aukeratua = false;
+           }
+           data[0].gol2 = golde2;
+           for(var i in shutt ){
+               if(shutout == shutt[i].balioa){
+                  shutt[i].aukeratua = true;
+               }
+               else
+                  shutt[i].aukeratua = false;
+           }
+           data[0].shut = shutt;
+
+           return res.render('emaitzasartu.handlebars', {title : 'Txaparrotan-Emaitza sartu', data : data , taldeizena: req.session.txapelketaizena} ); 
   };
 
   req.getConnection(function(err,connection){
