@@ -745,7 +745,7 @@ exports.kamisetenorriak = function(req, res){
 var id = req.session.idtxapelketa;
 var taldeak = [];
 var taldea = {};
-var j=0,k=1;
+var t=0,k=1;
 var n11 = 0;
 var n12 = 0;
 var s = 0;
