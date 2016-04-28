@@ -741,6 +741,107 @@ var id = req.session.idtxapelketa;
     });
   };
 
+exports.kamisetenorriak = function(req, res){
+var id = req.session.idtxapelketa;
+var taldeak = [];
+var taldea = {};
+var j=0,k=1;
+var n11 = 0;
+var n12 = 0;
+var s = 0;
+var m = 0;
+var l = 0;
+var xl = 0;
+var xxl = 0;
+var totala = 0;
+var vTalde;
+  req.getConnection(function(err,connection){
+      
+     connection.query('SELECT * FROM jokalariak,taldeak,maila where idtaldej = idtaldeak and idmaila = kategoria and idtxapeltalde = ? order by mailazki,taldeizena,kamisetaneurria',[id],function(err,rows)     {
+
+        if(err)
+           console.log("Error Selecting : %s ",err );
+
+        for (var i in rows) { 
+          if(vTalde != rows[i].idtaldeak){
+            if(vTalde !=null){
+              taldea.n11 = n11;
+              taldea.n12 = n12;
+              taldea.s = s;
+              taldea.m = m;
+              taldea.l = l;
+              taldea.xl = xl;
+              taldea.xxl = xxl;
+              totala = n11 + n12 + s + m + l + xl + xxl;
+              taldea.totala = totala;
+              taldeak[t] = taldea;
+              t++;
+              n11 = 0;
+              n12 = 0;
+              s = 0;
+              m = 0;
+              l = 0;
+              xl = 0;
+              xxl = 0;
+            }
+            vTalde = rows[i].idtaldeak;
+       
+            taldea = {
+
+                  idtaldeak  : rows[i].idtaldeak,
+                  taldeizena    : rows[i].taldeizena,
+                  mailaizena    : rows[i].mailaizena,
+                  herria    : rows[i].herria,
+                  izenaard    : rows[i].izenaard,
+                  telefonoard    : rows[i].telefonoard,
+                  balidatuta : rows[i].balidatuta,
+                  i : t
+               };
+               
+          }
+            if(rows[i].kamisetaneurria == '11-13'){ 
+              n11 ++;             
+            }
+            if(rows[i].kamisetaneurria == '12-14'){
+              n12 ++;             
+            }
+            if(rows[i].kamisetaneurria == 'S'){
+              s ++;             
+            }
+            if(rows[i].kamisetaneurria == 'M'){
+              m ++;             
+            }
+            if(rows[i].kamisetaneurria == 'L'){
+              l ++;             
+            }
+            if(rows[i].kamisetaneurria == 'XL'){
+              xl ++;             
+            }
+            if(rows[i].kamisetaneurria == 'XXL'){
+             xxl ++;             
+            }
+          
+        }
+        if(vTalde !=null){
+              taldea.n11 = n11;
+              taldea.n12 = n12;
+              taldea.s = s;
+              taldea.m = m;
+              taldea.l = l;
+              taldea.xl = xl;
+              taldea.xxl = xxl;
+              totala = n11 + n12 + s + m + l + xl + xxl;
+              taldea.totala = totala;
+              taldeak[t] = taldea;
+              t++;
+            }
+        
+        res.render('kamisetenorriak.handlebars', {title : 'Txaparrotan-Kamiseten orriak', data2:taldeak, taldeizena: req.session.txapelketaizena, layout: null });
+         });
+       
+    });
+  };
+
 exports.sariak = function(req, res){
 var id = req.session.idtxapelketa;
 var vKategoria = req.body.kategoria4;

@@ -39,6 +39,21 @@ return res.redirect('/');
   
 };
 
+exports.sortzeko = function(req, res){
+
+  req.getConnection(function (err, connection) {
+      if (err)
+              console.log("Error connection : %s ",err );
+      //Txapelketa bat pruebetako ixkutatuta idtxapelketa != 42
+      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err ); 
+        console.log("txapelketak : " + JSON.stringify(rows)); 
+        res.render('txapelketaksortu.handlebars', {title : 'Txaparrotan-Txapelketak sortu', txapelketak : rows});
+      });   
+  });  
+};
+
 exports.sortu = function(req,res){
     var idtxapelketa;
     var input = JSON.parse(JSON.stringify(req.body));
@@ -74,7 +89,7 @@ exports.sortu = function(req,res){
 
       connection.query('SELECT * FROM taldeak where taldeizena = ?',[req.body.taldeizena],function(err,rows)  {
           
-        if(err || rows.length != 0){
+       if(err || rows.length != 0){
         //  res.redirect('/izenematea');
 
           res.locals.flash = {
@@ -89,9 +104,38 @@ exports.sortu = function(req,res){
             pasahitza: req.body.pasahitza
 
           } );
-        }
+       }
 
-        var data = {
+       connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.body.sTxapelketak],function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err ); 
+        console.log("txapelketatik : " + JSON.stringify(rows));
+        if (rows.length != 0) 
+         var data = {
+            txapelketaizena    : input.txapelketaizena,
+              zelaikop   : rows[0].zelaikop,
+              taldekopmax   : rows[0].taldekopmax,
+              partidukopmin   : rows[0].partidukopmin,
+              hasierakoeguna    : rows[0].hasierakoeguna,
+              hasierakoordua    : rows[0].hasierakoordua,
+              bukaerakoeguna   : rows[0].bukaerakoeguna,
+              bukaerakoordua   : rows[0].bukaerakoordua,
+              hastekosexua   : rows[0].hastekosexua,
+              partidudenbora   : rows[0].partidudenbora,
+              inskripziohasierae   : rows[0].inskripziohasierae,
+              inskripziohasierao   : rows[0].inskripziohasierao,
+              inskripziobukaerae   : rows[0].inskripziobukaerae,
+              inskripziobukaerao    : rows[0].inskripziobukaerao,
+              prezioa : rows[0].prezioa,
+              kontukorrontea : rows[0].kontukorrontea,
+              txapelketaprest : 0,
+              atsedenordua : rows[0].atsedenordua,
+              atsedendenbora : rows[0].atsedendenbora,
+              finalakordua : rows[0].finalakordua,
+              buelta : rows[0].buelta           
+        };
+        else
+         var data = {
             txapelketaizena    : input.txapelketaizena
         };
         
@@ -101,10 +145,50 @@ exports.sortu = function(req,res){
               console.log("Error inserting : %s ",err ); 
 
           idtxapelketa = rows.insertId;
-
+//ADI
+          connection.query('SELECT * FROM zelaia where idtxapelz= ?',[req.body.sTxapelketak],function(err,rowsz)   {
+           if(err)
+            console.log("Error Selecting : %s ",err );
+           for (var i in rowsz) { 
+             var dataz = {
+            
+               zelaiizena : rowsz[i].zelaiizena,
+               zelaizki   : rowsz[i].zelaizki,
+               idtxapelz    : idtxapelketa
+             };
+        
+             console.log(dataz);
+             var query = connection.query("INSERT INTO zelaia set ? ",dataz, function(err, rows)
+             {
+              if (err)
+               console.log("Error inserting : %s ",err );
+             });
+           }    
+          });
+          connection.query('SELECT * FROM maila where idtxapelm= ?',[req.body.sTxapelketak],function(err,rowsm)   {
+           if(err)
+            console.log("Error Selecting : %s ",err );
+           for (var j in rowsm) { 
+             var datam = {
+            
+               mailaizena : rowsm[j].mailaizena,
+               mailazki   : rowsm[j].mailazki,
+               akronimoa  : rowsm[j].akronimoa,
+               idtxapelm  :  idtxapelketa
+             };
+        
+             console.log(datam);
+             var query = connection.query("INSERT INTO maila set ? ",datam, function(err, rows)
+             {
+              if (err)
+               console.log("Error inserting : %s ",err );
+             });
+           }    
+          });
+//ADI
           // Generate password hash
-        var salt = bcrypt.genSaltSync();
-        var password_hash = bcrypt.hashSync(input.pasahitza, salt);
+          var salt = bcrypt.genSaltSync();
+          var password_hash = bcrypt.hashSync(input.pasahitza, salt);
 
           var data = {
             idtxapeltalde : idtxapelketa,
@@ -131,6 +215,7 @@ exports.sortu = function(req,res){
         }); 
          
         });
+       });
       });
     });    
 };

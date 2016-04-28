@@ -218,9 +218,10 @@ app.get('/taldesailkapena', authorize, kudeaketa.sailkapenak);
 app.get('/taldepartiduak', authorize, kudeaketa.partiduakikusi);
 app.get('/taldeordutegia', authorize, kudeaketa.taldeordutegia);
 
-app.get('/admin/txapelketak', admintxapelketaonartua, function(req, res){
+/*app.get('/admin/txapelketak', admintxapelketaonartua, function(req, res){
     res.render('txapelketaksortu.handlebars', {title : 'Txaparrotan-Txapelketak sortu'});
-});
+});*/
+app.get('/admin/txapelketak', admintxapelketaonartua, txapelketak.sortzeko);
 app.post('/txapelketaksortu', admintxapelketaonartua, txapelketak.sortu);
 app.get('/txapelketakeditatu', adminonartua,txapelketak.editatu);
 app.post('/txapelketakaldatu', adminonartua,txapelketak.aldatu);
@@ -258,6 +259,7 @@ app.post('/admin/partiduakreset', adminonartua, kudeaketa.partiduakreset);
 app.get('/admin/partidua/:partidu', adminonartua, kudeaketa.partiduordua);
 app.post('/admin/partiduorduaaldatu/:partidu', adminonartua, kudeaketa.partiduorduaaldatu);
 app.post('/admin/kamisetak', adminonartua, kudeaketa.kamisetak);
+app.post('/admin/kamisetenorriak', adminonartua, kudeaketa.kamisetenorriak);
 app.get('/admin/ordutegia', adminonartua, kudeaketa.ordutegiaikusi);
 app.post('/admin/ordutegiasortu', adminonartua, kudeaketa.ordutegiaegin);
 app.post('/admin/sariak', adminonartua, kudeaketa.sariak);

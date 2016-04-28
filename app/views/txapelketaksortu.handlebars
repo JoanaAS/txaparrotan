@@ -32,6 +32,18 @@
                 <input type="password" class="form-control" required id="pasahitza" name="pasahitza" value={{pasahitza}}>
             </div>
         </div>
+
+        <div class="form-group">
+         <label for="sTxapelketak" class="col-sm-2 control-label">Txapelketak</label>
+          <select name="sTxapelketak" id="sTxapelketak">
+            <option value="">--Txapelketa kopiatzeko--</option>
+            {{#each txapelketak}}
+                <option value="{{idtxapelketa}}">{{txapelketaizena}}</option>
+            {{/each}}
+            
+          </select>
+        </div>
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-4">
                 <button type="submit" class="btn btn-default">Txapelketa sortu</button>
