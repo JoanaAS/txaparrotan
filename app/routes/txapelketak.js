@@ -20,7 +20,8 @@ exports.aukeratzeko = function(req, res){
       if (err)
               console.log("Error connection : %s ",err );
       //Txapelketa bat pruebetako ixkutatuta idtxapelketa != 42
-      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
+      //connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
+      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where txapelketaprest != 9',function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
         console.log("txapelketak : " + JSON.stringify(rows)); 
@@ -851,6 +852,84 @@ exports.mailakezabatu = function(req,res){
      });
 };
 
+exports.ezabatu = function(req, res){
+  var id = req.session.idtxapelketa;
+  var vGrupo;
+  console.log("Txapelketa ezabatu: " +id);
+  req.getConnection(function(err,connection){
+      connection.query('SELECT * FROM maila where idtxapelm = ?',[id],function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err );           
+        if (rows.length != 0){
+        //  res.redirect('/izenematea');
+
+          res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Partiduak, Multzoak, Zelaiak eta Mailak EZABATU!',
+          };
+          return res.render('txapelketaksortu.handlebars', {
+            txapelketaizena: req.body.txapelketaizena,
+            taldeizena: req.body.taldeizena,
+            emailard   : req.body.emailard,
+            pasahitza: req.body.pasahitza
+
+          } );
+        }
+
+        //ADI - Partiduak, Multzoak, Zelaiak eta Mailak EZABATU AURRETIK
+
+        //ADI - Txapelketa Ezabatu 2 aldiz prozesatu : 1. jokalariak kentzen ditu eta 2. gainontzeko taulak
+
+        connection.query('SELECT * FROM jokalariak,taldeak where idtxapeltalde= ? and idtaldej=idtaldeak',[id],function(err,rows)       
+        {
+          if (err)
+                console.log("Error Updating : %s ",err );
+          if (rows.length != 0){
+              console.log("Jokalariak ezabatu - 1: " +id);
+              for(var i in rows){
+
+                connection.query("DELETE FROM jokalariak WHERE idjokalari = ?  ",[rows[i].idjokalari], function(err, rowsd)
+                {
+            
+                  if (err)
+                   console.log("Error Updating : %s ",err );   
+
+                });
+              }
+
+              res.redirect(303, '/admin/txapelketak');
+            } 
+          else {
+           console.log("Txapelketa ezabatu - 2: " +id);
+           connection.query("DELETE FROM berriak WHERE idtxapel = ?  ",[id], function(err, rowst)
+           {
+            if (err)
+              console.log("Error Deleting : %s ",err );
+
+            connection.query("DELETE FROM taldeak WHERE idtxapeltalde = ?  ",[id], function(err, rowsd)
+            {
+                if (err)
+                   console.log("Error Updating : %s ",err );   
+
+                connection.query("DELETE FROM txapelketa WHERE idtxapelketa = ?  ",[id], function(err, rowsd)
+                {
+            
+                  if (err)
+                   console.log("Error Updating : %s ",err );   
+
+                  res.redirect(303, '/admin/txapelketak');
+                });
+
+            });
+           });
+
+          }    
+        });
+
+     });
+  }); 
+};
 
 exports.mezuakbidali = function(req,res){
     

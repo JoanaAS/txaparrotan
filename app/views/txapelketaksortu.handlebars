@@ -50,8 +50,32 @@
             </div>
         </div>
     </form>
+
 </div>
 
-      </div>
+<div class="formContainer">
+        <h4 style="color:#0000FF"> ADI - Txapelketak Ezabatzeko 2 aldiz prozesatu</h4>
+        </br>
+    <form class="form-horizontal newsletterForm" role="form" action="/txapelketakezabatu" method="POST">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+
+        <div class="form-group">
+         <label for="eTxapelketak" class="col-sm-2 control-label">Txapelketak</label>
+          <select name="eTxapelketak" id="eTxapelketak">
+            <option value="">--Txapelketa ezabatzeko--</option>
+            {{#each txapelketak}}
+                <option value="{{idtxapelketa}}">{{txapelketaizena}}</option>
+            {{/each}}
+            
+          </select>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-default">Txapelketa ezabatu</button>
+            </div>
+        </div>
+    </form>
+</div>
 
  
