@@ -1058,7 +1058,7 @@ var hamarnaka = 0;
                   //var cc 
                   emailService.send(to, subj, body);
                   hamarnaka++;
-                  if((hamarnaka%10) == 0{
+                  if((hamarnaka%10) == 0) {
                       setTimeout(function(){console.log(hamarnaka + ". mezua bidalita " );},60000);
                   }  
               }
