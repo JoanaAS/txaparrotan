@@ -223,6 +223,7 @@ app.get('/taldeordutegia', authorize, kudeaketa.taldeordutegia);
 });*/
 app.get('/admin/txapelketak', admintxapelketaonartua, txapelketak.sortzeko);
 app.post('/txapelketaksortu', admintxapelketaonartua, txapelketak.sortu);
+app.post('/txapelketakikusgai', admintxapelketaonartua, txapelketak.ikusgai);
 app.post('/txapelketakezabatu', admintxapelketaonartua, txapelketak.ezabatu);
 app.get('/txapelketakeditatu', adminonartua,txapelketak.editatu);
 app.post('/txapelketakaldatu', adminonartua,txapelketak.aldatu);

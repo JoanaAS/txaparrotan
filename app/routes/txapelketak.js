@@ -315,6 +315,34 @@ exports.aldatu = function(req,res){
     });
 };
 
+exports.ikusgai = function(req,res){
+    var id = req.body.iTxapelketak;
+    console.log("Ikusgai:" + id);
+    req.getConnection(function (err, connection) {
+        
+        var data = {
+            
+            txapelketaprest : 0
+
+        };
+        
+        console.log(data);
+        var query = connection.query("UPDATE txapelketa set ? WHERE idtxapelketa = ? ",[data,id], function(err, rows)
+        {
+  
+          if (err)
+              console.log("Error updating : %s ",err );
+         
+          res.redirect('/txapelketak');
+          
+        });
+        
+       // console.log(query.sql); 
+    
+    });
+};
+
+
 
 exports.berriaksortu = function(req,res){
     
@@ -354,7 +382,9 @@ exports.berriaksortu = function(req,res){
                   var body = "<h2>"+input.izenburua+"</h2>\n" + 
                               "<p>"+ input.testua+ "</p> \n"+
                               "<h3> Gehiago jakin nahi baduzu, sartu: http://"+hosta+"</h3>" ;
-                  emailService.send(to, subj, body);
+                  //emailService.send(to, subj, body);
+                  setTimeout(function(){emailService.send(to, subj, body);;},5000);
+                  console.log(i + ". mezua: " + to);
                 }
               });
           }
@@ -853,7 +883,7 @@ exports.mailakezabatu = function(req,res){
 };
 
 exports.ezabatu = function(req, res){
-  var id = req.session.idtxapelketa;
+  var id = req.body.eTxapelketak;
   var vGrupo;
   console.log("Txapelketa ezabatu: " +id);
   req.getConnection(function(err,connection){
@@ -1015,6 +1045,7 @@ var j;
 var t = 0;
 var vTalde;
 var date = new Date();
+var hamarnaka = 0;
       
         for (var i in rows) { 
           if(vTalde != rows[i].idtaldeak){
@@ -1026,6 +1057,10 @@ var date = new Date();
                   var to = taldea.emailard;
                   //var cc 
                   emailService.send(to, subj, body);
+                  hamarnaka++;
+                  if((hamarnaka%10) == 0{
+                      setTimeout(function(){console.log(hamarnaka + ". mezua bidalita " );},60000);
+                  }  
               }
             }
             vTalde = rows[i].idtaldeak;

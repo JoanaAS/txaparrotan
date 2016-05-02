@@ -50,7 +50,31 @@
             </div>
         </div>
     </form>
+</div>
 
+<div class="formContainer">
+        <h4 style="color:#0000FF"> ADI - Txapelketak ikusgai bihurtzeko</h4>
+        </br>
+    <form class="form-horizontal newsletterForm" role="form" action="/txapelketakikusgai" method="POST">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+
+        <div class="form-group">
+         <label for="iTxapelketak" class="col-sm-2 control-label">Txapelketak</label>
+          <select name="iTxapelketak" id="iTxapelketak">
+            <option value="">--Txapelketa ikusgaitzeko--</option>
+            {{#each txapelketak}}
+                <option value="{{idtxapelketa}}">{{txapelketaizena}}</option>
+            {{/each}}
+            
+          </select>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-default" id="ikusgai1">Txapelketa ikusgai</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <div class="formContainer">
@@ -72,10 +96,39 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-4">
-                <button type="submit" class="btn btn-default">Txapelketa ezabatu</button>
+                <button type="submit" class="btn btn-default" id="ezabat1">Txapelketa ezabatu</button>
             </div>
         </div>
     </form>
 </div>
 
- 
+ {{#section 'jquery'}}
+<script>
+  $(document).ready(function(){        
+
+   $("#ezabat1").on('click',function (){ 
+        //myFunction();
+        alert ("ADI - Seguru al zaude txapelketa ezabatu nahi duzula?"); 
+   });
+   $("#ikusgai1").on('click',function (){ 
+        //myFunction();
+        alert ("ADI - Seguru al zaude txapelketa BERIKUSGAI nahi duzula?"); 
+   });
+  });
+            
+
+function myFunction() {
+    var x;
+    if (confirm("Seguru al zaude txapelketa ezabatu nahi duzula?") == true) {
+        location.href = "/txapelketakezabatu";
+        console.log("ezabatu");
+    } else {
+        x = "You pressed Cancel!";
+        location.href = "/admin/txapelketak";
+        console.log("EZ");
+    }
+    document.getElementById("demo").innerHTML = x;
+}
+</script>
+
+{{/section}}
