@@ -1,7 +1,7 @@
 module.exports = {
 cookieSecret: 'your cookie secret goes here',
 gmail: {
-user: 'zke.eskubaloia@gmail.com',
-password: 'eskubaloiaweb',
+user: 'txaparrotanapp@gmail.com',
+password: 'antolakuntxa',
 }
 };
