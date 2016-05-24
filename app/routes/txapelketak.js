@@ -814,6 +814,7 @@ exports.mailaksortu = function(req,res){
             mailaizena : input.mailaizena,
             mailazki   : input.mailazki,
             akronimoa   : input.akronimoa,
+            multzokop   : 0,
             idtxapelm    : id
         };
         
@@ -1016,7 +1017,7 @@ exports.mezuakbidali = function(req,res){
 
         else if(input.mezumota == "jokgabe"){
 
-              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta > 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by idtaldeak',[req.session.idtxapelketa],function(err,rows)     {
+              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by idtaldeak',[req.session.idtxapelketa],function(err,rows)     {
               if(err)
                 console.log("Error Selecting : %s ",err );
 

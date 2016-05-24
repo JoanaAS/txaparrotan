@@ -406,7 +406,7 @@ exports.izenematea = function(req,res){
 
         }
         else{
-          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? and multzokop <> 9',[req.session.idtxapelketa],function(err,rowsm)     {
             if(err)
               console.log("Error Selecting : %s ",err );
 
@@ -560,6 +560,7 @@ exports.sortu = function(req,res){
             emailard   : input.emailard,
             pasahitza:   password_hash,     //input.pasahitza,
             sortzedata : now,
+            balidatuta : 0,
             lehentasuna : 99
            };
 
