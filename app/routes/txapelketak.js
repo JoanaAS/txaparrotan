@@ -374,7 +374,7 @@ exports.berriaksortu = function(req,res){
               console.log("Error inserting : %s ",err );
          
           if(input.bidali){
-              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ?',[id],function(err,rows)
+              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and herria like 'zarau%' ',[id],function(err,rows)
               {
                 for (var i in rows){
                   var to = rows[i].emailard;
