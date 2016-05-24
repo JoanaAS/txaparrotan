@@ -374,19 +374,23 @@ exports.berriaksortu = function(req,res){
               console.log("Error inserting : %s ",err );
          
           if(input.bidali){
-              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ? ',[id],function(err,rows)
+              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ? order by emailard',[id],function(err,rows)
               {
+                var to = " ";
                 for (var i in rows){
-                  var to = rows[i].emailard;
+                 if to != rows[i].emailard { 
+                  to = rows[i].emailard;
                   var subj = req.session.txapelketaizena+ "-n berria: "+input.izenburua;
                   var body = "<h2>"+input.izenburua+"</h2>\n" + 
                               "<p>"+ input.testua+ "</p> \n"+
                               "<h3> Gehiago jakin nahi baduzu, sartu: http://"+hosta+"</h3>" ;
+                  console.log(i + ". mezua1: " + to);
                   //emailService.send(to, subj, body);
                   //setTimeout(function(){console.log(i + ". mezua1: " + to);},5000);
-                  console.log(i + ". mezua1: " + to);
-                  doDelay(5000);
+                  //console.log(i + ". mezua1: " + to);
+                  doDelay(1000);
                   console.log(i + ". mezua2: " + to);
+                 }; 
                 }
               });
           }
