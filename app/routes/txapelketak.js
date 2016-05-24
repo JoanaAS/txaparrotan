@@ -383,7 +383,9 @@ exports.berriaksortu = function(req,res){
                               "<p>"+ input.testua+ "</p> \n"+
                               "<h3> Gehiago jakin nahi baduzu, sartu: http://"+hosta+"</h3>" ;
                   //emailService.send(to, subj, body);
-                  setTimeout(function(){console.log(i + ". mezua1: " + to);},5000);
+                  //setTimeout(function(){console.log(i + ". mezua1: " + to);},5000);
+                  console.log(i + ". mezua1: " + to);
+                  doDelay(5000);
                   console.log(i + ". mezua2: " + to);
                 }
               });
@@ -395,6 +397,22 @@ exports.berriaksortu = function(req,res){
     
     });
 };
+
+function doDelay(wait) {
+    var date = new Date();
+    var startDate = date.getTime();
+    var a = 1;
+    var b = 0;
+    while (a !== 0) {
+        date = new Date();
+        if ((date.getTime() - startDate) >= wait) {
+            a = 0;
+        }
+        b++;
+    }
+    alert("Salida del bucle.");
+}
+
 
 exports.berriakikusi = function(req, res){
   var id = req.session.idtxapelketa;
