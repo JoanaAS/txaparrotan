@@ -378,7 +378,7 @@ exports.berriaksortu = function(req,res){
               {
                 var to = " ";
                 for (var i in rows){
-                 if to != rows[i].emailard { 
+                 if (to != rows[i].emailard) { 
                   to = rows[i].emailard;
                   var subj = req.session.txapelketaizena+ "-n berria: "+input.izenburua;
                   var body = "<h2>"+input.izenburua+"</h2>\n" + 
