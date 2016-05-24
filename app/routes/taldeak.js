@@ -616,7 +616,7 @@ exports.balidatu = function(req,res){
         
         };
         
-        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta is null" ,[data,id], function(err, rows)
+        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta = 0" ,[data,id], function(err, rows)
         {
   
           if (err)
