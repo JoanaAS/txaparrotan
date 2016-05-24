@@ -410,7 +410,7 @@ function doDelay(wait) {
         }
         b++;
     }
-    alert("Salida del bucle.");
+    //alert("Salida del bucle.");
 }
 
 
