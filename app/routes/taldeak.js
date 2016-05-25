@@ -271,10 +271,13 @@ exports.bilatu = function(req, res){
     
      connection.query('SELECT * FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
             
-        if(err)
+      if(err)
 
            console.log("Error Selecting : %s ",err );
-
+      if (rows.length == 0) {
+          res.redirect('/logout');
+        }
+      else{
         vBukaera = new Date();
         bukaera = rows[0].inskripziobukaerae;
         aBukaera = bukaera.split("-");
@@ -310,9 +313,9 @@ exports.bilatu = function(req, res){
           console.log("jokalariak : " + JSON.stringify(rowsj));
 
           res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:rows , data:rowsj, aldaketabai : aldaketabai, taldeizena: req.session.taldeizena} );
-
-                           
+                         
          });
+        }
        });
     });
   

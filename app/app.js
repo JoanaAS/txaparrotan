@@ -165,7 +165,7 @@ function admintxapelketaonartua(req, res, next){
 app.get('/', authorize2, txapelketak.berriakikusi);
 app.get('/taldeak', taldeak.ikusi);
 app.get('/izenematea', authorize2, taldeak.izenematea);
-app.post('/taldeasortu',taldeak.sortu); 
+app.post('/taldeasortu', authorize2, taldeak.sortu); 
 app.get('/taldeabalidatu/:id', taldeak.balidatu);
 app.get('/taldeaeditatu', taldeak.editatu);
 app.post('/taldeaaldatu', taldeak.aldatu);
