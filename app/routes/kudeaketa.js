@@ -1237,19 +1237,38 @@ exports.taldeordutegia = function(req, res){
 var id = req.session.idtxapelketa;
 var idtalde = req.session.idtalde;
 var data = new Date();
+var ezerez = [];
 
   req.getConnection(function(err,connection){
+//hemendik
+    connection.query('SELECT * FROM txapelketa where idtxapelketa = ? ',[id],function(err,rows) {
+
+      if(err)
+           console.log("Error Selecting : %s ",err );
+
+      if(rows.length == 0 || (rows[0].txapelketaprest == 0           )){
+           res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Inskripzio amaiera egunaren ondoren izango da ikusgai ordutegia!',
+           };
+        return res.render('taldeordutegia.handlebars', {title : 'Txaparrotan-Talde ordutegia', data : ezerez, taldeizena: req.session.taldeizena} );  
+
+      };
+  //honeaino 
+
       connection.query('SELECT *,t1.taldeizena taldeizena1, t2.taldeizena taldeizena2 FROM partiduak p,taldeak t1, taldeak t2,zelaia where t1.idtaldeak=p.idtalde1 and t2.idtaldeak=p.idtalde2 and p.zelaia=zelaizki and idtxapelz=t1.idtxapeltalde and t1.idtxapeltalde = ? and (t1.idtaldeak = ? or t2.idtaldeak = ?) order by pareguna, parordua',[id,idtalde,idtalde],function(err,rows)     {
 
         if(err)
            console.log("Error Selecting : %s ",err );
-        
+
         for(var i in rows){
           data = rows[i].pareguna;
           rows[i].pareguna = data.getFullYear()+ "-"+ (data.getMonth() +1)+"-"+ data.getDate();
         }
         
         res.render('taldeordutegia.handlebars', {title : 'Txaparrotan-Talde ordutegia', data: rows, taldeizena: req.session.taldeizena} );  
+      });
     });
   });
 };

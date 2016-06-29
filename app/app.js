@@ -82,7 +82,8 @@ if (process.env.NODE_ENV != 'production'){
         user: 'root',
         password : 'joanaagi',
         port : 3306, //port mysql
-        database:'txaparrotan'
+        //database:'txaparrotan'
+        database:'heroku_4efa3ee4ff6c16c'
     },'request')
  );
               console.log("localhost1" );

@@ -385,7 +385,7 @@ exports.berriaksortu = function(req,res){
                               "<p>"+ input.testua+ "</p> \n"+
                               "<h3> Gehiago jakin nahi baduzu, sartu: http://"+hosta+"</h3>" ;
                   console.log(i + ". mezua1: " + to);
-                  //emailService.send(to, subj, body);
+                  emailService.send(to, subj, body);
                   //setTimeout(function(){console.log(i + ". mezua1: " + to);},5000);
                   //console.log(i + ". mezua1: " + to);
                   doDelay(1000);
@@ -1000,16 +1000,17 @@ exports.mezuakbidali = function(req,res){
          
         if(input.mezumota == "prest"){
 
-            connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? and balidatuta > 0 order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
+            //connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? and balidatuta > 0 order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
+            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 0 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
               if(err)
                 console.log("Error Selecting : %s ",err );
               var subj = req.session.txapelketaizena+ " txapelketa prest";
               var body = "<h2> Txapelketa prest </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://"+hosta+"</h3>" ;
-              taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-
-              console.log("Taldeak2: "+JSON.stringify(taldeak2));
+                              //"<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://txaparrotan.herokuapp.com</h3>" ;
+              //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
+              taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
 
               res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
        
@@ -1018,7 +1019,7 @@ exports.mezuakbidali = function(req,res){
 
         else if(input.mezumota == "ordgabe"){
 
-              var query = connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = ? and idtxapelketa=idtxapeltalde and balidatuta < 5 and balidatuta > 0',[id],function(err,rows)
+              var query = connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = ? and idtxapelketa=idtxapeltalde and balidatuta < 5 and balidatuta > 0 order by emailard',[id],function(err,rows)
               {
 
                 if(err)
@@ -1028,9 +1029,8 @@ exports.mezuakbidali = function(req,res){
                 var body = "<h2> Ordainketa egin mesedez! </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu " +rows[0].prezioa+" kontu zenbaki honetan: "+rows[0].kontukorrontea+ "</h3>" ;
-               taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-
-               console.log("Taldeak2: "+JSON.stringify(taldeak2));
+               //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
+               taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
 
                res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
        
@@ -1039,7 +1039,7 @@ exports.mezuakbidali = function(req,res){
 
         else if(input.mezumota == "jokgabe"){
 
-              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by idtaldeak',[req.session.idtxapelketa],function(err,rows)     {
+              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
               if(err)
                 console.log("Error Selecting : %s ",err );
 
@@ -1047,9 +1047,9 @@ exports.mezuakbidali = function(req,res){
               var body = "<h2> Jokalariak sartzeko dituzue </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko</h3>" ;
-              taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-
-              console.log("Taldeak2: "+JSON.stringify(taldeak2));
+              //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
+              taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
+              //console.log("Taldeak2: "+JSON.stringify(taldeak2));
 
               res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
        
@@ -1058,6 +1058,40 @@ exports.mezuakbidali = function(req,res){
         
      });   
 };
+
+function mezuaktaldeari(req, bidali,subj,body,rows){
+var to;
+var nondik = 0, nora = 0;
+var zenbat = 10;
+
+    if (!req.session.nondik){ 
+          req.session.nondik = 0;
+    }
+    nondik = req.session.nondik;
+debugger;      
+console.log("nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
+        for (var i in rows) { 
+          if(i >= nondik && nora < zenbat){
+            if (to != rows[i].emailard){
+              to = rows[i].emailard;
+              nora++;
+              if (bidali){
+                  emailService.send(to, subj, body);
+              }
+              console.log("emaila: "+ i + "-" + to + " - taldea: "+ i + "-" + rows[i].taldeizena);
+              if(i == rows.length - 1){
+                  nora = zenbat;
+              }
+            }
+          }
+          if(nora == zenbat || (i == rows.length - 1 && (nondik >= rows.length - zenbat))){
+              nora++;
+              req.session.nondik = parseInt(i) + 1;
+              console.log("nondik: "+ rows.length + "-" + req.session.nondik);
+          }
+        }
+        return rows;
+}
 
 function mezuaknori(bidali,subj,body,rows){
  console.log("Funtzioan sartuta:" +subj);
