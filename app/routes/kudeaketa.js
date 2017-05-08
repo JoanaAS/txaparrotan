@@ -774,6 +774,16 @@ var vTalde;
               taldea.xxl = xxl;
               totala = n11 + n12 + s + m + l + xl + xxl;
               taldea.totala = totala;
+              if (k % 10 == 0){
+                taldea.jauzi = 1;
+              }
+              else{
+                taldea.jauzi = 0;
+              }
+              // Inprimitzeko Imprimir -> Guardar PDF -> Margenes mínimos
+
+              //console.log("k:" +k+ " jauzi: "+taldea.jauzi);
+              k++;
               taldeak[t] = taldea;
               t++;
               n11 = 0;
@@ -790,7 +800,7 @@ var vTalde;
 
                   idtaldeak  : rows[i].idtaldeak,
                   taldeizena    : rows[i].taldeizena,
-                  mailaizena    : rows[i].mailaizena,
+                  akronimoa    : rows[i].akronimoa,
                   herria    : rows[i].herria,
                   izenaard    : rows[i].izenaard,
                   telefonoard    : rows[i].telefonoard,
@@ -1684,6 +1694,7 @@ var data = new Date();
           
           rows[i].i= k;
           rows[i].jauzi = k % 6;
+          // Inprimitzeko Imprimir -> Guardar PDF -> Margenak 6ra kuadratu
           partiduak [j] = rows[i];
           j++;
           k++;
@@ -1868,6 +1879,48 @@ exports.taldeaezabatu = function(req,res){
         });
         
      });
+};
+
+exports.taldeabalekoa = function(req,res){
+          
+     //var id = req.params.id;
+     var id = req.session.idtalde;
+     var idtxapelketa = req.session.idtxapelketa;
+     var idtaldea = req.params.talde;
+    
+     req.getConnection(function (err, connection) {
+        
+
+        connection.query("SELECT * FROM taldeak,maila, txapelketa WHERE idtaldeak = ? and idmaila = kategoria and idtxapelketa = idtxapeltalde ",[idtaldea], function(err, rows)
+        {
+            
+          if(err)
+            console.log("Error deleting : %s ",err );
+          if (rows[0].balidatuta == 0){
+
+
+             //Enkriptatu talde zenbakia. Zenbaki hau aldatuz gero, taldea balidatu ere aldatu!
+         var taldezenbakia= idtaldea * 3456789;
+         var to = rows[0].emailard;
+         var subj = "Ongi-etorri " + rows[0].izenaard;
+         var hosta = req.hostname;
+         if (process.env.NODE_ENV != 'production'){ 
+          hosta += ":"+ (process.env.PORT || 3000);
+         }
+         
+         var body = "<p>"+rows[0].taldeizena+" "+rows[0].mailaizena+" mailan taldea balidatu ahal izateko, </p>";
+         body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
+         body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rows[0].kontukorrontea+ " kontu korrontean  "+rows[0].prezioa+ "euro sartu eta kontzeptu bezala "+rows[0].taldeizena+"-"+rows[0].izenaard+" jarri.</p>";
+         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p>";
+          req.session.idtalde = idtaldea;
+          emailService.send(to, subj, body);
+        }
+             res.redirect('/admin/taldeakikusi');
+             
+        });
+        
+     });
+
 };
 
 exports.finalakegin = function (req,res){ 
@@ -2498,6 +2551,8 @@ var vAkronimoa;
               console.log("Izenafinala:"+rowsf[i].izenafinala2+ " "+multzo+" "+postu+" "+izena2)
 
               var data ={
+                      izenareset1   : rowsf[i].izenafinala1,
+                      izenareset2   : rowsf[i].izenafinala2,
                       izenafinala1   : izena1,
                       izenafinala2   : izena2,
                       idtalde1 : idtalde1,
@@ -2529,4 +2584,44 @@ var vAkronimoa;
       });
     });
 };
+
+exports.finalakatzera = function (req,res){ 
+
+var input = JSON.parse(JSON.stringify(req.body));
+var id = req.session.idtxapelketa;
+var kategoria = input.kategoriafa;
+
+  req.getConnection(function(err,connection){
+
+         connection.query('SELECT * FROM grupoak,partiduak where multzo > 900 and idgrupop=idgrupo and idtxapelketam = ? and kategoriam = ? order by jardunaldia DESC,pareguna,parordua,zelaia',[id,kategoria],function(err,rowsf)     {
+            if(err)
+              console.log("Error Selecting : %s ",err );
+
+            for (var i in rowsf) {
+             if(rowsf[i].izenareset1 != null){
+              var data ={
+                      izenafinala1   : rowsf[i].izenareset1,
+                      izenafinala2   : rowsf[i].izenareset2,
+                      izenareset1   : null,
+                      izenareset2   : null,
+                      idtalde1 : null,
+                      idtalde2 : null,
+                      idfinala1   : null,
+                      idfinala2   : null
+                };          
+
+               var query = connection.query("UPDATE partiduak set ? WHERE idpartidu = ? ",[data,rowsf[i].idpartidu], function(err, rowsg)
+                      {
+                       if (err)
+                         console.log("Error inserting : %s ",err );
+                      });
+             }
+            }
+
+          res.redirect(303, '/admin/kalkuluak');
+       });
+
+        
+ }); 
+ };
 
