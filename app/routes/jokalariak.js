@@ -75,6 +75,10 @@ exports.sortu = function(req,res){
     console.log("idtalde:" + req.session.idtalde);
     var id = req.session.idtalde;
 
+    if (input.telefonoa == ''){
+      input.telefonoa = 0;
+    }
+
     req.getConnection(function (err, connection) {
         
         var data = {
