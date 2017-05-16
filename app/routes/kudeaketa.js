@@ -105,7 +105,7 @@ exports.kalkuluak = function(req, res){
       connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[id],function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
-        console.log("mailak : " + JSON.stringify(rows)); 
+        //console.log("mailak : " + JSON.stringify(rows)); 
         res.render('kalkuluak.handlebars', {title : 'Txaparrotan-Kalkuluak egin', taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa, mailak : rows});
       });   
   });  
@@ -121,7 +121,7 @@ exports.multzoakegin = function(req, res){
     connection.query('SELECT * FROM maila where idtxapelm = ? and idmaila = ? ',[id,vKategoria],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-         console.log("Rowsg:"+rowsg);
+        // console.log("Rowsg:"+rowsg);
         if(rowsg[0].multzokop == null){
           console.log("Maila honetako multzo kopurua ipini!");
           res.redirect(303, '/admin/mailakeditatu/'+rowsg[0].idmaila);
@@ -379,7 +379,7 @@ for (var i = 0; i < jardunkop -1; i++) {
         }
     }
   }
-  console.log("KAixo" +JSON.stringify(taulaS));
+  //console.log("KAixo" +JSON.stringify(taulaS));
   return taulaS;
 }
 
@@ -402,11 +402,11 @@ exports.partiduaksortu = function(req, res){
     connection.query('SELECT * FROM taldeak,grupoak,maila,txapelketa where idtxapelketa = idtxapelketam and idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-         console.log(rows);
+        // console.log(rows);
         for (var i in rows) { 
           if(vKategoria != rows[i].kategoriam || vMultzo != rows[i].idgrupo){
             if(vKategoria !=null){
-              console.log("multzoak:" +JSON.stringify(multzoak));
+              //console.log("multzoak:" +JSON.stringify(multzoak));
               jardunaldiak = multzoak.length + (multzoak.length % 2);
 
               partiduak = jardunaldiak/2;

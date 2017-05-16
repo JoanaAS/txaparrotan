@@ -164,7 +164,7 @@ exports.saioahasteko = function(req, res){
       connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by taldeizena',[id],function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
-        console.log("taldeak : " + JSON.stringify(rows)); 
+      //  console.log("taldeak : " + JSON.stringify(rows)); 
         res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.taldeizena, taldeak : rows});
       });   
   });  
@@ -297,9 +297,9 @@ exports.bilatu = function(req, res){
         aldaketa.aldaketabai = aldaketabai;
         aldaketarray[0] = aldaketa;
 
-        console.log("aldaketabai : %s ",aldaketabai ); 
-        console.log("aldaketa : " + JSON.stringify(aldaketarray)); 
-        console.log("taldea : " + JSON.stringify(rows));
+        //console.log("aldaketabai : %s ",aldaketabai ); 
+        //console.log("aldaketa : " + JSON.stringify(aldaketarray)); 
+        //console.log("taldea : " + JSON.stringify(rows));
    
         connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rowsj)     {
             
@@ -310,7 +310,7 @@ exports.bilatu = function(req, res){
                rowsj[i].aldaketabai = aldaketabai;
           }
 
-          console.log("jokalariak : " + JSON.stringify(rowsj));
+         // console.log("jokalariak : " + JSON.stringify(rowsj));
 
           res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:rows , data:rowsj, aldaketabai : aldaketabai, taldeizena: req.session.taldeizena} );
                          
@@ -348,7 +348,7 @@ exports.izenematea = function(req,res){
     var now= new Date();
     var tope = 0;
     var aditestua = "Izen-ematea";
-    var vHasiera,aHasiera,hasiera,vBukaera,aBukaera,bukaera;
+    var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera;
            console.log("IdTxaelketa : %s ",req.session.idtxapelketa );
     req.getConnection(function(err,connection){
       connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rows)     {
@@ -366,7 +366,10 @@ exports.izenematea = function(req,res){
           vHasiera.setDate(aHasiera[2]);
           vHasiera.setMonth(aHasiera[1] - 1);
           vHasiera.setYear(aHasiera[0]);
+          aHasieraOrdua = rows[0].inskripziohasierao.split(":");
+          vHasiera.setHours(aHasieraOrdua[0],aHasieraOrdua[1],0);
 
+          vHasiera.set
           vBukaera = new Date();
           bukaera = rows[0].inskripziobukaerae;
           aBukaera = bukaera.split("-");
@@ -407,7 +410,7 @@ exports.izenematea = function(req,res){
          }
          
         }        
-        if((res.locals.flash != null) && (tope = 0)){
+        if((res.locals.flash != null) && (tope == 0)){
          //res.redirect(303,'/');
           res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, aditestua:aditestua});
 
