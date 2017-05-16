@@ -82,7 +82,8 @@ if (process.env.NODE_ENV != 'production'){
         user: 'root',
         password : 'joanaagi',
         port : 3306, //port mysql
-        database:'txaparrotan'
+        //database:'txaparrotan'
+        database:'heroku_4efa3ee4ff6c16c'
     },'request')
  );
               console.log("localhost1" );
@@ -165,7 +166,7 @@ function admintxapelketaonartua(req, res, next){
 app.get('/', authorize2, txapelketak.berriakikusi);
 app.get('/taldeak', taldeak.ikusi);
 app.get('/izenematea', authorize2, taldeak.izenematea);
-app.post('/taldeasortu',taldeak.sortu); 
+app.post('/taldeasortu', authorize2, taldeak.sortu); 
 app.get('/taldeabalidatu/:id', taldeak.balidatu);
 app.get('/taldeaeditatu', taldeak.editatu);
 app.post('/taldeaaldatu', taldeak.aldatu);
@@ -218,10 +219,13 @@ app.get('/taldesailkapena', authorize, kudeaketa.sailkapenak);
 app.get('/taldepartiduak', authorize, kudeaketa.partiduakikusi);
 app.get('/taldeordutegia', authorize, kudeaketa.taldeordutegia);
 
-app.get('/admin/txapelketak', admintxapelketaonartua, function(req, res){
+/*app.get('/admin/txapelketak', admintxapelketaonartua, function(req, res){
     res.render('txapelketaksortu.handlebars', {title : 'Txaparrotan-Txapelketak sortu'});
-});
+});*/
+app.get('/admin/txapelketak', admintxapelketaonartua, txapelketak.sortzeko);
 app.post('/txapelketaksortu', admintxapelketaonartua, txapelketak.sortu);
+app.post('/txapelketakikusgai', admintxapelketaonartua, txapelketak.ikusgai);
+app.post('/txapelketakezabatu', admintxapelketaonartua, txapelketak.ezabatu);
 app.get('/txapelketakeditatu', adminonartua,txapelketak.editatu);
 app.post('/txapelketakaldatu', adminonartua,txapelketak.aldatu);
 /*app.get('/txapelketak', function(req, res){
@@ -258,6 +262,7 @@ app.post('/admin/partiduakreset', adminonartua, kudeaketa.partiduakreset);
 app.get('/admin/partidua/:partidu', adminonartua, kudeaketa.partiduordua);
 app.post('/admin/partiduorduaaldatu/:partidu', adminonartua, kudeaketa.partiduorduaaldatu);
 app.post('/admin/kamisetak', adminonartua, kudeaketa.kamisetak);
+app.post('/admin/kamisetenorriak', adminonartua, kudeaketa.kamisetenorriak);
 app.get('/admin/ordutegia', adminonartua, kudeaketa.ordutegiaikusi);
 app.post('/admin/ordutegiasortu', adminonartua, kudeaketa.ordutegiaegin);
 app.post('/admin/sariak', adminonartua, kudeaketa.sariak);

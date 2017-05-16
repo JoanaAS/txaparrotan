@@ -271,10 +271,13 @@ exports.bilatu = function(req, res){
     
      connection.query('SELECT * FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
             
-        if(err)
+      if(err)
 
            console.log("Error Selecting : %s ",err );
-
+      if (rows.length == 0) {
+          res.redirect('/logout');
+        }
+      else{
         vBukaera = new Date();
         bukaera = rows[0].inskripziobukaerae;
         aBukaera = bukaera.split("-");
@@ -310,9 +313,9 @@ exports.bilatu = function(req, res){
           console.log("jokalariak : " + JSON.stringify(rowsj));
 
           res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:rows , data:rowsj, aldaketabai : aldaketabai, taldeizena: req.session.taldeizena} );
-
-                           
+                         
          });
+        }
        });
     });
   
@@ -406,7 +409,7 @@ exports.izenematea = function(req,res){
 
         }
         else{
-          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? and multzokop <> 9',[req.session.idtxapelketa],function(err,rowsm)     {
             if(err)
               console.log("Error Selecting : %s ",err );
 
@@ -560,6 +563,7 @@ exports.sortu = function(req,res){
             emailard   : input.emailard,
             pasahitza:   password_hash,     //input.pasahitza,
             sortzedata : now,
+            balidatuta : 0,
             lehentasuna : 99
            };
 
@@ -615,7 +619,7 @@ exports.balidatu = function(req,res){
         
         };
         
-        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta is null" ,[data,id], function(err, rows)
+        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta = 0" ,[data,id], function(err, rows)
         {
   
           if (err)

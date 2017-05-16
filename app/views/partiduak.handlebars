@@ -30,17 +30,19 @@
                                 <th>Jardun.</th>
                                 <th>A taldea</th>
                                 <th>B taldea</th>
-                                {{#if admin}}
+
                                     <th>Eguna</th>
                                     <th>Ordua</th>
                                     <th>Zelaia</th>
+                                {{#if admin}}    
                                     <th> </th>
+                                {{/if}}    
                                     <th>1.zatia</th>
                                     <th>Urrezko1.</th>
                                     <th>2.zatia</th>
                                     <th>Urrezko2.</th>
                                     <th>Shut out</th>
-                                {{/if}}
+
                                 <th>Emaitza</th>
                             </tr>   
                         {{#each partiduak}}
@@ -48,17 +50,19 @@
                                 <td align="center" width="5%">{{jardunaldia}}</td>
                                 <td>{{taldeizena1}}</td>      
                                 <td>{{taldeizena2}}</td>
-                                {{#if admin}}
+
                                     <td>{{pareguna}}</td>
                                     <td>{{parordua}}</td>
                                     <td>{{zelaia}}-{{zelaiizena}}</td>
+                                {{#if admin}}    
                                     <td align="center" width="8%"> <a class="a-inside edit" href="/admin/partidua/{{idpartidu}}">Aldatu</a> </td> 
+                                {{/if}}    
                                     <td>{{golak1a}}-{{golak1b}}</td>
                                     <td width="15%">{{goldeoro1}}</td>
                                     <td>{{golak2a}}-{{golak2b}}</td>
                                     <td>{{goldeoro2}}</td>
                                     <td>{{shutout}}</td>
-                                {{/if}}
+ 
                                 <td width="5%">{{emaitza1}}-{{emaitza2}}</td>               
                             </tr>
                         {{/each}} 

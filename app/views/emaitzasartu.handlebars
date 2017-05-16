@@ -38,20 +38,49 @@
                     <td width="10%"><input type="number" size="3" required id="golak1a" name="golak1a" pattern = "\d*"  value={{golak1a}}></td>
                     <td width="10%"> <input type="number" size="3" required id="golak1b" name="golak1b" pattern = "\d*"  value={{golak1b}}></td>
                     <td width="15%"><select id="goldeoro1" name="goldeoro1">
-                         <option value=" " selected> </option> <option value="A">A</option> <option value="B">B</option>
+                <!-- <option value=" " selected> </option> <option value="A">A</option> <option value="B">B</option> -->
+
+                           {{#each gol1}}
+                             {{#if aukeratua}}
+                               <option value="{{balioa}}" selected>{{balioa}}</option>
+                             {{else}}
+                                <option value="{{balioa}}">{{balioa}}</option>
+                             {{/if}}
+                           {{/each}}
+
                          </select> </td>
                     <td width="10%"> <input type="number" size="3" required id="golak2a" name="golak2a" pattern = "\d*"  value={{golak2a}}></td>
                     <td width="10%"><input type="number" size="3" required id="golak2b" name="golak2b" pattern = "\d*"  value={{golak2b}}> </td>
                     <td width="15%"><select id="goldeoro2" name="goldeoro2">
-                    <option value=" " selected> </option> <option value="A">A</option> <option value="B">B</option>
+                <!-- <option value=" " selected> </option> <option value="A">A</option> <option value="B">B</option> -->
+
+                           {{#each gol2}}
+                             {{#if aukeratua}}
+                               <option value="{{balioa}}" selected>{{balioa}}</option>
+                             {{else}}
+                                <option value="{{balioa}}">{{balioa}}</option>
+                             {{/if}}
+                           {{/each}}
+
                     </select> </td>
                     <td width="10%"> <select id="shutout" name="shutout">
-                     <option value=" " selected> </option> <option value="A">A</option> <option value="B">B</option>
+                <!-- <option value=" " selected> </option> <option value="A">A</option> <option value="B">B</option> -->
+
+                           {{#each shut}}
+                             {{#if aukeratua}}
+                               <option value="{{balioa}}" selected>{{balioa}}</option>
+                             {{else}}
+                                <option value="{{balioa}}">{{balioa}}</option>
+                             {{/if}}
+                           {{/each}}
+
                     </select></td>
                     <td width="10%"> <button type="submit" class="btn btn-default">Sartu</button></td>        
                 </tr>
                 <input type="hidden" size="10" required id="emaitza1" name="emaitza1"  value={{emaitza1}}>
-        <input type="hidden" size="10" required id="emaitza2" name="emaitza2" value={{emaitza2}}>
+                <input type="hidden" size="10" required id="emaitza2" name="emaitza2" value={{emaitza2}}>
+                <input type="hidden" id="izenafinala1" name="izenafinala1"  value={{izenafinala1}}>
+                <input type="hidden" id="izenafinala2" name="izenafinala2" value={{izenafinala2}}>
           </form>
           </table>
           </div>

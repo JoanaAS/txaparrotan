@@ -241,12 +241,12 @@ var grupo;
          {
            if(vKategoria != rows[i].kategoriam){
             if(vKategoria !=null){
-              console.log("vKategoria:" +vKategoria);
+              //console.log("vKategoria:" +vKategoria);
               multzoa.taldeak = taldeak;
               multzoak[t] = multzoa;
               maila.multzoak = multzoak;
               mailak[k] = maila;
-              console.log("Mailak:" +t + JSON.stringify(mailak[k]));
+              //console.log("Mailak:" +t + JSON.stringify(mailak[k]));
               k++;
             }
             vKategoria = rows[i].kategoriam;
@@ -261,10 +261,10 @@ var grupo;
           }
           if(vMultzo != rows[i].idgrupo){
             if(vMultzo !=null){
-              console.log("vMultzo:" +vMultzo);
+              //console.log("vMultzo:" +vMultzo);
               multzoa.taldeak = taldeak;
               multzoak[t] = multzoa;
-              console.log("Multzoak:" +t + JSON.stringify(multzoak[t]));
+              //console.log("Multzoak:" +t + JSON.stringify(multzoak[t]));
               t++;
             }
             vMultzo = rows[i].idgrupo;
@@ -307,19 +307,19 @@ var grupo;
                   puntuak    : rows[i].puntuak
                };
           j++;
-          console.log("Taldeak:" + taldeak[j]);
+          //console.log("Taldeak:" + taldeak[j]);
           
           //console.log(  );
          // console.log("Jokalari" + jokalariak);
          }
         }
         if(vKategoria !=null){
-              console.log("vKategoria:" +vKategoria);
+              //console.log("vKategoria:" +vKategoria);
               multzoa.taldeak = taldeak;
               multzoak[t] = multzoa;
               maila.multzoak = multzoak;
               mailak[k] = maila;
-              console.log("Mailak:" +t + JSON.stringify(mailak));
+              //console.log("Mailak:" +t + JSON.stringify(mailak));
               k++;
             }
         if(admin){
@@ -741,6 +741,107 @@ var id = req.session.idtxapelketa;
     });
   };
 
+exports.kamisetenorriak = function(req, res){
+var id = req.session.idtxapelketa;
+var taldeak = [];
+var taldea = {};
+var t=0,k=1;
+var n11 = 0;
+var n12 = 0;
+var s = 0;
+var m = 0;
+var l = 0;
+var xl = 0;
+var xxl = 0;
+var totala = 0;
+var vTalde;
+  req.getConnection(function(err,connection){
+      
+     connection.query('SELECT * FROM jokalariak,taldeak,maila where idtaldej = idtaldeak and idmaila = kategoria and idtxapeltalde = ? order by mailazki,taldeizena,kamisetaneurria',[id],function(err,rows)     {
+
+        if(err)
+           console.log("Error Selecting : %s ",err );
+
+        for (var i in rows) { 
+          if(vTalde != rows[i].idtaldeak){
+            if(vTalde !=null){
+              taldea.n11 = n11;
+              taldea.n12 = n12;
+              taldea.s = s;
+              taldea.m = m;
+              taldea.l = l;
+              taldea.xl = xl;
+              taldea.xxl = xxl;
+              totala = n11 + n12 + s + m + l + xl + xxl;
+              taldea.totala = totala;
+              taldeak[t] = taldea;
+              t++;
+              n11 = 0;
+              n12 = 0;
+              s = 0;
+              m = 0;
+              l = 0;
+              xl = 0;
+              xxl = 0;
+            }
+            vTalde = rows[i].idtaldeak;
+       
+            taldea = {
+
+                  idtaldeak  : rows[i].idtaldeak,
+                  taldeizena    : rows[i].taldeizena,
+                  mailaizena    : rows[i].mailaizena,
+                  herria    : rows[i].herria,
+                  izenaard    : rows[i].izenaard,
+                  telefonoard    : rows[i].telefonoard,
+                  balidatuta : rows[i].balidatuta,
+                  i : t
+               };
+               
+          }
+            if(rows[i].kamisetaneurria == '11-13'){ 
+              n11 ++;             
+            }
+            if(rows[i].kamisetaneurria == '12-14'){
+              n12 ++;             
+            }
+            if(rows[i].kamisetaneurria == 'S'){
+              s ++;             
+            }
+            if(rows[i].kamisetaneurria == 'M'){
+              m ++;             
+            }
+            if(rows[i].kamisetaneurria == 'L'){
+              l ++;             
+            }
+            if(rows[i].kamisetaneurria == 'XL'){
+              xl ++;             
+            }
+            if(rows[i].kamisetaneurria == 'XXL'){
+             xxl ++;             
+            }
+          
+        }
+        if(vTalde !=null){
+              taldea.n11 = n11;
+              taldea.n12 = n12;
+              taldea.s = s;
+              taldea.m = m;
+              taldea.l = l;
+              taldea.xl = xl;
+              taldea.xxl = xxl;
+              totala = n11 + n12 + s + m + l + xl + xxl;
+              taldea.totala = totala;
+              taldeak[t] = taldea;
+              t++;
+            }
+        
+        res.render('kamisetenorriak.handlebars', {title : 'Txaparrotan-Kamiseten orriak', data2:taldeak, taldeizena: req.session.txapelketaizena, layout: null });
+         });
+       
+    });
+  };
+
 exports.sariak = function(req, res){
 var id = req.session.idtxapelketa;
 var vKategoria = req.body.kategoria4;
@@ -848,7 +949,7 @@ var vKategoria = req.body.kategoria4;
                     console.log("Bukaera: "+vEguna+ " "+vBukaera);
 
                     vAtsedena.setDate(vAtsedena.getDate()+1);
-                    atseordu = rows[k].atsedenaordua;
+                    atseordu = rows[k].atsedenordua;
                   //atseordu = "14:00:00";
                   aOrdua = atseordu.split(":");
                   vAtsedena.setHours(aOrdua[0]);
@@ -1074,7 +1175,8 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
             }
             if(vEguna != rowsf[i].pareguna){
                 data = rowsf[i].pareguna;
-                if(data == null){
+
+                if(data == "0000-00-00"){
                   datastring = "00/00/00";
                 }
                 else{
@@ -1135,19 +1237,38 @@ exports.taldeordutegia = function(req, res){
 var id = req.session.idtxapelketa;
 var idtalde = req.session.idtalde;
 var data = new Date();
+var ezerez = [];
 
   req.getConnection(function(err,connection){
+//hemendik
+    connection.query('SELECT * FROM txapelketa where idtxapelketa = ? ',[id],function(err,rows) {
+
+      if(err)
+           console.log("Error Selecting : %s ",err );
+
+      if(rows.length == 0 || (rows[0].txapelketaprest == 0           )){
+           res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Inskripzio amaiera egunaren ondoren izango da ikusgai ordutegia!',
+           };
+        return res.render('taldeordutegia.handlebars', {title : 'Txaparrotan-Talde ordutegia', data : ezerez, taldeizena: req.session.taldeizena} );  
+
+      };
+  //honeaino 
+
       connection.query('SELECT *,t1.taldeizena taldeizena1, t2.taldeizena taldeizena2 FROM partiduak p,taldeak t1, taldeak t2,zelaia where t1.idtaldeak=p.idtalde1 and t2.idtaldeak=p.idtalde2 and p.zelaia=zelaizki and idtxapelz=t1.idtxapeltalde and t1.idtxapeltalde = ? and (t1.idtaldeak = ? or t2.idtaldeak = ?) order by pareguna, parordua',[id,idtalde,idtalde],function(err,rows)     {
 
         if(err)
            console.log("Error Selecting : %s ",err );
-        
+
         for(var i in rows){
           data = rows[i].pareguna;
           rows[i].pareguna = data.getFullYear()+ "-"+ (data.getMonth() +1)+"-"+ data.getDate();
         }
         
         res.render('taldeordutegia.handlebars', {title : 'Txaparrotan-Talde ordutegia', data: rows, taldeizena: req.session.taldeizena} );  
+      });
     });
   });
 };
@@ -1155,11 +1276,40 @@ exports.emaitzapartidu = function(req, res){
   var id = req.session.idtxapelketa;
   var idpar = req.params.partidu;
 
+  var goldeoro1 = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+  var goldeoro2 = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+  var shutout = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+
   req.getConnection(function(err,connection){
       connection.query('SELECT * FROM partiduak,grupoak where idgrupo=idgrupop and idtxapelketam= ? and idpartidu = ?',[id,idpar],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-        console.log(rows);
+        //console.log(rows);
+
+        for(var i in goldeoro1 ){
+               if(rows[0].goldeoro1 == goldeoro1[i].balioa){
+                  goldeoro1[i].aukeratua = true;
+               }
+               else
+                  goldeoro1[i].aukeratua = false;
+        }
+        rows[0].gol1 = goldeoro1;
+        for(var i in goldeoro2 ){
+               if(rows[0].goldeoro2 == goldeoro2[i].balioa){
+                  goldeoro2[i].aukeratua = true;
+               }
+               else
+                  goldeoro2[i].aukeratua = false;
+        }
+        rows[0].gol2 = goldeoro2;
+        for(var i in shutout ){
+               if(rows[0].shutout == shutout[i].balioa){
+                  shutout[i].aukeratua = true;
+               }
+               else
+                  shutout[i].aukeratua = false;
+        }
+        rows[0].shut = shutout;        
 
         res.render('emaitzasartu.handlebars', {title : 'Txaparrotan-Emaitza sartu', data: rows, taldeizena: req.session.txapelketaizena} );
     });
@@ -1214,6 +1364,10 @@ function emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,sh
     emaitza1f=40;
     emaitza2f=35;
   }
+  else if((goldeoro2=="A" && golak1a < golak1b && shutout=="A") || (goldeoro2=="B" && golak1a > golak1b && shutout=="A") ){
+    emaitza1f=40;
+    emaitza2f=35;
+  }
   if(golak1a < golak1b && golak2a < golak2b){
     emaitza1f=0;
     emaitza2f=70;
@@ -1242,6 +1396,10 @@ function emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,sh
     emaitza1f=35;
     emaitza2f=40;
   }
+  else if((goldeoro2=="B" && golak1a > golak1b && shutout=="B") || (goldeoro2=="A" && golak1a < golak1b && shutout=="B") ){
+    emaitza1f=35;
+    emaitza2f=40;
+  }
   //return emaitza1, emaitza2;
   return {emaitza1f: emaitza1f, emaitza2f: emaitza2f}
 }
@@ -1251,22 +1409,75 @@ exports.emaitzasartu = function(req, res){
   var idpar = req.params.partidu;
   var idparti,izenafinala,idtalde;
 
-  var golak1a = req.body.golak1a,
-      golak1b = req.body.golak1b,
-      golak2a = req.body.golak2a,
-      golak2b = req.body.golak2b,
-      goldeoro1 = req.body.goldeoro1,
-      goldeoro2 = req.body.goldeoro2,
-      shutout = req.body.shutout;
-      emaitza1 = req.body.emaitza1;
-      emaitza2 = req.body.emaitza2;
+  var golak1a = parseInt(req.body.golak1a);
+  var golak1b = parseInt(req.body.golak1b);
+  var golak2a = parseInt(req.body.golak2a);
+  var golak2b = parseInt(req.body.golak2b);
+  var goldeoro1 = req.body.goldeoro1;
+  var goldeoro2 = req.body.goldeoro2;
+  var shutout = req.body.shutout;
+  var emaitza1 = req.body.emaitza1;
+  var emaitza2 = req.body.emaitza2;
+
   var bemaitza1,bemaitza2, jokatutakopartiduak, irabazitakopartiduak,puntuak, emaitza1f,emaitza2f;
 
+  console.log("Emaitza z: "+emaitza1+" "+emaitza2);
+  bemaitza1 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza1f;
+  bemaitza2 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza2f;   
+  console.log("Emaitza:" +bemaitza1+ "-" +bemaitza2);
+
+  if(bemaitza1 == 0 && bemaitza2 == 0){
+           res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Emaitza 0 - 0 . Berriro sartu.'
+           }; 
+           var golde1 = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+           var golde2 = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+           var shutt = [{balioa : " "}, {balioa : "A"}, {balioa : "B"}];
+           var data = [{
+                        idpartidu : req.params.partidu,
+                        izenafinala1 : req.body.izenafinala1,
+                        izenafinala2 : req.body.izenafinala2,
+                        golak1a : req.body.golak1a,
+                        golak1b : req.body.golak1b,
+                        golak2a : req.body.golak2a,
+                        golak2b : req.body.golak2b,
+                        goldeoro1 : req.body.goldeoro1,
+                        goldeoro2 : req.body.goldeoro2,
+                        shutout : req.body.shutout,
+                        emaitza1 : req.body.emaitza1,
+                        emaitza2 : req.body.emaitza2
+           }];
+           for(var i in golde1 ){
+               if(goldeoro1 == golde1[i].balioa){
+                  golde1[i].aukeratua = true;
+               }
+               else
+                  golde1[i].aukeratua = false;
+           }
+           data[0].gol1 = golde1;
+           for(var i in golde2 ){
+               if(goldeoro2 == golde2[i].balioa){
+                  golde2[i].aukeratua = true;
+               }
+               else
+                  golde2[i].aukeratua = false;
+           }
+           data[0].gol2 = golde2;
+           for(var i in shutt ){
+               if(shutout == shutt[i].balioa){
+                  shutt[i].aukeratua = true;
+               }
+               else
+                  shutt[i].aukeratua = false;
+           }
+           data[0].shut = shutt;
+
+           return res.render('emaitzasartu.handlebars', {title : 'Txaparrotan-Emaitza sartu', data : data , taldeizena: req.session.txapelketaizena} ); 
+  };
+
   req.getConnection(function(err,connection){
-    console.log("Emaitza z: "+emaitza1+" "+emaitza2);
-    bemaitza1 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza1f;
-    bemaitza2 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza2f;   
-    console.log("Emaitza:" +bemaitza1+ "-" +bemaitza2);
 
     connection.query('SELECT * FROM partiduak,grupoak where idgrupop=idgrupo and idpartidu = ? ',[idpar],function(err,rows)     {
 
@@ -1307,7 +1518,7 @@ exports.emaitzasartu = function(req, res){
             console.log("Jp:"+jokatutakopartiduak+" ip:" + irabazitakopartiduak+ " pun:"+ puntuak);
             console.log("Emaitza2:"+bemaitza1+"-"+bemaitza2);
             console.log("Emaitza3:"+emaitza1+"-"+emaitza2);
-            if((emaitza1==null && emaitza2==null)||(emaitza1==0 && emaitza2==0)){
+            if((emaitza1==null && emaitza2==null) || (emaitza1==0 && emaitza2==0)){
               jokatutakopartiduak++;             
               if(bemaitza1>bemaitza2){
                 irabazitakopartiduak++; 
@@ -2173,6 +2384,7 @@ var vAkronimoa;
          var multzopostu;
          var vJardunaldi,a,f=0,p,idfinala1,idfinala2;
          var partiduenId=[];
+         var aldatutaldea;
 
          var partiduenId = new Array(10); 
          for (var b = 0; b < 10; b++) {
@@ -2214,25 +2426,73 @@ var vAkronimoa;
 
              if(rowsf[i].jardunaldia == 1){
               multzopostu = rowsf[i].izenafinala1.split("-");
-              for (var j=0; j<28;j++){
+              if (multzopostu[0] >= 1 && multzopostu[0] <= 9){
+                postu = multzopostu[0] -1;
+                for (var j=0; j<multzokopuru;j++){
+                 for (var k=j+1; k<multzokopuru;k++){
+                   if(mailak[0].multzoak[j].taldeak[postu].jokatutakopartiduak != mailak[0].multzoak[k].taldeak[postu].jokatutakopartiduak){
+                      console.log("ADI!!Jokatutako partidu ezberdinak");
+                   }
+                   if(mailak[0].multzoak[j].taldeak[postu].irabazitakopartiduak < mailak[0].multzoak[k].taldeak[postu].irabazitakopartiduak){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                   }
+                   else if(mailak[0].multzoak[j].taldeak[postu].irabazitakopartiduak == mailak[0].multzoak[k].taldeak[postu].irabazitakopartiduak){
+                    if(mailak[0].multzoak[j].taldeak[postu].puntuak < mailak[0].multzoak[k].taldeak[postu].puntuak){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                    } 
+                   }    
+                 }
+                }
+                multzo = multzopostu[1] - 1;                 
+              }
+              else{
+               for (var j=0; j<28;j++){
                  if(alfabeto[j]==multzopostu[0]){
                    multzo = j;
                    break;
-                }
-              }
-              postu = multzopostu[1] -1;
+                 }
+               }
+               postu = multzopostu[1] -1;
+              } 
               var izena1 = mailak[0].multzoak[multzo].taldeak[postu].taldeizena;
               var idtalde1 = mailak[0].multzoak[multzo].taldeak[postu].idtaldeak;
               console.log("Izenafinala:"+rowsf[i].izenafinala1+ " "+multzo+" "+postu+" "+izena1);
 
               multzopostu = rowsf[i].izenafinala2.split("-");
-              for (var j=0; j<28;j++){
+              if (multzopostu[0] >= 1 && multzopostu[0] <= 9){
+                postu = multzopostu[0] -1;
+                for (var j=0; j<multzokopuru;j++){
+                 for (var k=j+1; k<multzokopuru;k++){
+                   if(mailak[0].multzoak[j].taldeak[postu].irabazitakopartiduak < mailak[0].multzoak[k].taldeak[postu].irabazitakopartiduak){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                   }
+                   else if(mailak[0].multzoak[j].taldeak[postu].irabazitakopartiduak == mailak[0].multzoak[k].taldeak[postu].irabazitakopartiduak){
+                    if(mailak[0].multzoak[j].taldeak[postu].puntuak < mailak[0].multzoak[k].taldeak[postu].puntuak){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                    } 
+                   }    
+                 }
+                }
+                multzo = multzopostu[1] - 1;                 
+              }
+              else{
+               for (var j=0; j<28;j++){
                  if(alfabeto[j]==multzopostu[0]){
                    multzo = j;
                    break;
-                }
-              }
-              postu = multzopostu[1] -1;
+                 }
+               }
+               postu = multzopostu[1] -1;
+              } 
+
               var izena2 = mailak[0].multzoak[multzo].taldeak[postu].taldeizena;
               var idtalde2 = mailak[0].multzoak[multzo].taldeak[postu].idtaldeak;
               console.log("Izenafinala:"+rowsf[i].izenafinala2+ " "+multzo+" "+postu+" "+izena2)

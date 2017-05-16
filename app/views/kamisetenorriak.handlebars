@@ -1,0 +1,59 @@
+      <div class="row marketing">
+      
+        {{#each data2}} 
+        <div class="col-lg-10 col-sm-offset-1">
+         <table class="table table-striped">
+            <tr>
+                <th align="center">Mailaizena</th>
+                <th align="center">Taldeizena</th>
+                <th align="center">Arduraduna</th>
+                <th align="center">Telefonoa</th>
+                <th align="center">ADI</th>
+                <th></th>
+            </tr>
+
+            <tr>
+                <td align="center" width="5%">{{mailaizena}}</td>
+                <td>{{taldeizena}}</td>
+                <td>{{izenaard}}</td>
+                <td>{{telefonoard}}</td>      
+                <td>{{balidatuta}}</td> 
+                <td>{{i}}</td>       
+            </tr>
+         </table>
+         </br>
+        </div>
+
+            <table border="0">
+                <tr>
+                    <th>11</th>
+                    <th>12</th>
+                    <th>S</th>
+                    <th>M</th>
+                    <th>L</th>
+                    <th>XL</th>
+                    <th>XXL</th>
+                    <th>Totala</th>
+                </tr>                               
+           
+                  <tr>
+                    <td width="10%">{{n11}}</td>
+                    <td width="10%">{{n12}}</td>
+                    <td width="15%">{{s}}</td>
+                    <td width="10%">{{m}}</td>
+                    <td width="10%">{{l}}</td>
+                    <td width="15%">{{xl}}</td>
+                    <td width="10%">{{xxl}}</td>
+                    <td width="10%">{{totala}}</td>        
+                </tr>
+          
+        </table>
+        {{#if jauzi}}
+            </br></br>
+        {{/if}}
+        
+        {{/each}}
+
+      </div>
+
+      

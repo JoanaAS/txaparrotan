@@ -20,7 +20,8 @@ exports.aukeratzeko = function(req, res){
       if (err)
               console.log("Error connection : %s ",err );
       //Txapelketa bat pruebetako ixkutatuta idtxapelketa != 42
-      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
+      //connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
+      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where txapelketaprest != 9',function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
         console.log("txapelketak : " + JSON.stringify(rows)); 
@@ -37,6 +38,21 @@ exports.aukeratu = function(req, res){
 
 return res.redirect('/');
   
+};
+
+exports.sortzeko = function(req, res){
+
+  req.getConnection(function (err, connection) {
+      if (err)
+              console.log("Error connection : %s ",err );
+      //Txapelketa bat pruebetako ixkutatuta idtxapelketa != 42
+      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err ); 
+        console.log("txapelketak : " + JSON.stringify(rows)); 
+        res.render('txapelketaksortu.handlebars', {title : 'Txaparrotan-Txapelketak sortu', txapelketak : rows});
+      });   
+  });  
 };
 
 exports.sortu = function(req,res){
@@ -74,7 +90,7 @@ exports.sortu = function(req,res){
 
       connection.query('SELECT * FROM taldeak where taldeizena = ?',[req.body.taldeizena],function(err,rows)  {
           
-        if(err || rows.length != 0){
+       if(err || rows.length != 0){
         //  res.redirect('/izenematea');
 
           res.locals.flash = {
@@ -89,9 +105,38 @@ exports.sortu = function(req,res){
             pasahitza: req.body.pasahitza
 
           } );
-        }
+       }
 
-        var data = {
+       connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.body.sTxapelketak],function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err ); 
+        console.log("txapelketatik : " + JSON.stringify(rows));
+        if (rows.length != 0) 
+         var data = {
+            txapelketaizena    : input.txapelketaizena,
+              zelaikop   : rows[0].zelaikop,
+              taldekopmax   : rows[0].taldekopmax,
+              partidukopmin   : rows[0].partidukopmin,
+              hasierakoeguna    : rows[0].hasierakoeguna,
+              hasierakoordua    : rows[0].hasierakoordua,
+              bukaerakoeguna   : rows[0].bukaerakoeguna,
+              bukaerakoordua   : rows[0].bukaerakoordua,
+              hastekosexua   : rows[0].hastekosexua,
+              partidudenbora   : rows[0].partidudenbora,
+              inskripziohasierae   : rows[0].inskripziohasierae,
+              inskripziohasierao   : rows[0].inskripziohasierao,
+              inskripziobukaerae   : rows[0].inskripziobukaerae,
+              inskripziobukaerao    : rows[0].inskripziobukaerao,
+              prezioa : rows[0].prezioa,
+              kontukorrontea : rows[0].kontukorrontea,
+              txapelketaprest : 0,
+              atsedenordua : rows[0].atsedenordua,
+              atsedendenbora : rows[0].atsedendenbora,
+              finalakordua : rows[0].finalakordua,
+              buelta : rows[0].buelta           
+        };
+        else
+         var data = {
             txapelketaizena    : input.txapelketaizena
         };
         
@@ -101,10 +146,50 @@ exports.sortu = function(req,res){
               console.log("Error inserting : %s ",err ); 
 
           idtxapelketa = rows.insertId;
-
+//ADI
+          connection.query('SELECT * FROM zelaia where idtxapelz= ?',[req.body.sTxapelketak],function(err,rowsz)   {
+           if(err)
+            console.log("Error Selecting : %s ",err );
+           for (var i in rowsz) { 
+             var dataz = {
+            
+               zelaiizena : rowsz[i].zelaiizena,
+               zelaizki   : rowsz[i].zelaizki,
+               idtxapelz    : idtxapelketa
+             };
+        
+             console.log(dataz);
+             var query = connection.query("INSERT INTO zelaia set ? ",dataz, function(err, rows)
+             {
+              if (err)
+               console.log("Error inserting : %s ",err );
+             });
+           }    
+          });
+          connection.query('SELECT * FROM maila where idtxapelm= ?',[req.body.sTxapelketak],function(err,rowsm)   {
+           if(err)
+            console.log("Error Selecting : %s ",err );
+           for (var j in rowsm) { 
+             var datam = {
+            
+               mailaizena : rowsm[j].mailaizena,
+               mailazki   : rowsm[j].mailazki,
+               akronimoa  : rowsm[j].akronimoa,
+               idtxapelm  :  idtxapelketa
+             };
+        
+             console.log(datam);
+             var query = connection.query("INSERT INTO maila set ? ",datam, function(err, rows)
+             {
+              if (err)
+               console.log("Error inserting : %s ",err );
+             });
+           }    
+          });
+//ADI
           // Generate password hash
-        var salt = bcrypt.genSaltSync();
-        var password_hash = bcrypt.hashSync(input.pasahitza, salt);
+          var salt = bcrypt.genSaltSync();
+          var password_hash = bcrypt.hashSync(input.pasahitza, salt);
 
           var data = {
             idtxapeltalde : idtxapelketa,
@@ -131,6 +216,7 @@ exports.sortu = function(req,res){
         }); 
          
         });
+       });
       });
     });    
 };
@@ -229,6 +315,34 @@ exports.aldatu = function(req,res){
     });
 };
 
+exports.ikusgai = function(req,res){
+    var id = req.body.iTxapelketak;
+    console.log("Ikusgai:" + id);
+    req.getConnection(function (err, connection) {
+        
+        var data = {
+            
+            txapelketaprest : 0
+
+        };
+        
+        console.log(data);
+        var query = connection.query("UPDATE txapelketa set ? WHERE idtxapelketa = ? ",[data,id], function(err, rows)
+        {
+  
+          if (err)
+              console.log("Error updating : %s ",err );
+         
+          res.redirect('/txapelketak');
+          
+        });
+        
+       // console.log(query.sql); 
+    
+    });
+};
+
+
 
 exports.berriaksortu = function(req,res){
     
@@ -260,15 +374,23 @@ exports.berriaksortu = function(req,res){
               console.log("Error inserting : %s ",err );
          
           if(input.bidali){
-              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ?',[id],function(err,rows)
+              var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ? order by emailard',[id],function(err,rows)
               {
+                var to = " ";
                 for (var i in rows){
-                  var to = rows[i].emailard;
+                 if (to != rows[i].emailard) { 
+                  to = rows[i].emailard;
                   var subj = req.session.txapelketaizena+ "-n berria: "+input.izenburua;
                   var body = "<h2>"+input.izenburua+"</h2>\n" + 
                               "<p>"+ input.testua+ "</p> \n"+
                               "<h3> Gehiago jakin nahi baduzu, sartu: http://"+hosta+"</h3>" ;
+                  console.log(i + ". mezua1: " + to);
                   emailService.send(to, subj, body);
+                  //setTimeout(function(){console.log(i + ". mezua1: " + to);},5000);
+                  //console.log(i + ". mezua1: " + to);
+                  doDelay(1000);
+                  console.log(i + ". mezua2: " + to);
+                 }; 
                 }
               });
           }
@@ -279,6 +401,22 @@ exports.berriaksortu = function(req,res){
     
     });
 };
+
+function doDelay(wait) {
+    var date = new Date();
+    var startDate = date.getTime();
+    var a = 1;
+    var b = 0;
+    while (a !== 0) {
+        date = new Date();
+        if ((date.getTime() - startDate) >= wait) {
+            a = 0;
+        }
+        b++;
+    }
+    //alert("Salida del bucle.");
+}
+
 
 exports.berriakikusi = function(req, res){
   var id = req.session.idtxapelketa;
@@ -698,6 +836,7 @@ exports.mailaksortu = function(req,res){
             mailaizena : input.mailaizena,
             mailazki   : input.mailazki,
             akronimoa   : input.akronimoa,
+            multzokop   : 0,
             idtxapelm    : id
         };
         
@@ -766,6 +905,84 @@ exports.mailakezabatu = function(req,res){
      });
 };
 
+exports.ezabatu = function(req, res){
+  var id = req.body.eTxapelketak;
+  var vGrupo;
+  console.log("Txapelketa ezabatu: " +id);
+  req.getConnection(function(err,connection){
+      connection.query('SELECT * FROM maila where idtxapelm = ?',[id],function(err,rows)  {
+        if (err)
+                console.log("Error query : %s ",err );           
+        if (rows.length != 0){
+        //  res.redirect('/izenematea');
+
+          res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Partiduak, Multzoak, Zelaiak eta Mailak EZABATU!',
+          };
+          return res.render('txapelketaksortu.handlebars', {
+            txapelketaizena: req.body.txapelketaizena,
+            taldeizena: req.body.taldeizena,
+            emailard   : req.body.emailard,
+            pasahitza: req.body.pasahitza
+
+          } );
+        }
+
+        //ADI - Partiduak, Multzoak, Zelaiak eta Mailak EZABATU AURRETIK
+
+        //ADI - Txapelketa Ezabatu 2 aldiz prozesatu : 1. jokalariak kentzen ditu eta 2. gainontzeko taulak
+
+        connection.query('SELECT * FROM jokalariak,taldeak where idtxapeltalde= ? and idtaldej=idtaldeak',[id],function(err,rows)       
+        {
+          if (err)
+                console.log("Error Updating : %s ",err );
+          if (rows.length != 0){
+              console.log("Jokalariak ezabatu - 1: " +id);
+              for(var i in rows){
+
+                connection.query("DELETE FROM jokalariak WHERE idjokalari = ?  ",[rows[i].idjokalari], function(err, rowsd)
+                {
+            
+                  if (err)
+                   console.log("Error Updating : %s ",err );   
+
+                });
+              }
+
+              res.redirect(303, '/admin/txapelketak');
+            } 
+          else {
+           console.log("Txapelketa ezabatu - 2: " +id);
+           connection.query("DELETE FROM berriak WHERE idtxapel = ?  ",[id], function(err, rowst)
+           {
+            if (err)
+              console.log("Error Deleting : %s ",err );
+
+            connection.query("DELETE FROM taldeak WHERE idtxapeltalde = ?  ",[id], function(err, rowsd)
+            {
+                if (err)
+                   console.log("Error Updating : %s ",err );   
+
+                connection.query("DELETE FROM txapelketa WHERE idtxapelketa = ?  ",[id], function(err, rowsd)
+                {
+            
+                  if (err)
+                   console.log("Error Updating : %s ",err );   
+
+                  res.redirect(303, '/admin/txapelketak');
+                });
+
+            });
+           });
+
+          }    
+        });
+
+     });
+  }); 
+};
 
 exports.mezuakbidali = function(req,res){
     
@@ -783,16 +1000,17 @@ exports.mezuakbidali = function(req,res){
          
         if(input.mezumota == "prest"){
 
-            connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? and balidatuta > 0 order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
+            //connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? and balidatuta > 0 order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
+            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 0 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
               if(err)
                 console.log("Error Selecting : %s ",err );
               var subj = req.session.txapelketaizena+ " txapelketa prest";
               var body = "<h2> Txapelketa prest </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://"+hosta+"</h3>" ;
-              taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-
-              console.log("Taldeak2: "+JSON.stringify(taldeak2));
+                              //"<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://txaparrotan.herokuapp.com</h3>" ;
+              //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
+              taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
 
               res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
        
@@ -801,7 +1019,7 @@ exports.mezuakbidali = function(req,res){
 
         else if(input.mezumota == "ordgabe"){
 
-              var query = connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = ? and idtxapelketa=idtxapeltalde and balidatuta < 5 and balidatuta > 0',[id],function(err,rows)
+              var query = connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = ? and idtxapelketa=idtxapeltalde and balidatuta < 5 and balidatuta > 0 order by emailard',[id],function(err,rows)
               {
 
                 if(err)
@@ -811,9 +1029,8 @@ exports.mezuakbidali = function(req,res){
                 var body = "<h2> Ordainketa egin mesedez! </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu " +rows[0].prezioa+" kontu zenbaki honetan: "+rows[0].kontukorrontea+ "</h3>" ;
-               taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-
-               console.log("Taldeak2: "+JSON.stringify(taldeak2));
+               //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
+               taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
 
                res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
        
@@ -822,7 +1039,7 @@ exports.mezuakbidali = function(req,res){
 
         else if(input.mezumota == "jokgabe"){
 
-              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta > 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by idtaldeak',[req.session.idtxapelketa],function(err,rows)     {
+              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
               if(err)
                 console.log("Error Selecting : %s ",err );
 
@@ -830,9 +1047,9 @@ exports.mezuakbidali = function(req,res){
               var body = "<h2> Jokalariak sartzeko dituzue </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko</h3>" ;
-              taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-
-              console.log("Taldeak2: "+JSON.stringify(taldeak2));
+              //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
+              taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
+              //console.log("Taldeak2: "+JSON.stringify(taldeak2));
 
               res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
        
@@ -841,6 +1058,40 @@ exports.mezuakbidali = function(req,res){
         
      });   
 };
+
+function mezuaktaldeari(req, bidali,subj,body,rows){
+var to;
+var nondik = 0, nora = 0;
+var zenbat = 10;
+
+    if (!req.session.nondik){ 
+          req.session.nondik = 0;
+    }
+    nondik = req.session.nondik;
+debugger;      
+console.log("nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
+        for (var i in rows) { 
+          if(i >= nondik && nora < zenbat){
+            if (to != rows[i].emailard){
+              to = rows[i].emailard;
+              nora++;
+              if (bidali){
+                  emailService.send(to, subj, body);
+              }
+              console.log("emaila: "+ i + "-" + to + " - taldea: "+ i + "-" + rows[i].taldeizena);
+              if(i == rows.length - 1){
+                  nora = zenbat;
+              }
+            }
+          }
+          if(nora == zenbat || (i == rows.length - 1 && (nondik >= rows.length - zenbat))){
+              nora++;
+              req.session.nondik = parseInt(i) + 1;
+              console.log("nondik: "+ rows.length + "-" + req.session.nondik);
+          }
+        }
+        return rows;
+}
 
 function mezuaknori(bidali,subj,body,rows){
  console.log("Funtzioan sartuta:" +subj);
@@ -851,6 +1102,7 @@ var j;
 var t = 0;
 var vTalde;
 var date = new Date();
+var hamarnaka = 0;
       
         for (var i in rows) { 
           if(vTalde != rows[i].idtaldeak){
@@ -862,6 +1114,10 @@ var date = new Date();
                   var to = taldea.emailard;
                   //var cc 
                   emailService.send(to, subj, body);
+                  hamarnaka++;
+                  if((hamarnaka%10) == 0) {
+                      setTimeout(function(){console.log(hamarnaka + ". mezua bidalita " );},60000);
+                  }  
               }
             }
             vTalde = rows[i].idtaldeak;
