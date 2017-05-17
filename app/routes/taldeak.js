@@ -164,7 +164,7 @@ exports.saioahasteko = function(req, res){
       connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by taldeizena',[id],function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
-        console.log("taldeak : " + JSON.stringify(rows)); 
+      //  console.log("taldeak : " + JSON.stringify(rows)); 
         res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.taldeizena, taldeak : rows});
       });   
   });  
@@ -297,9 +297,9 @@ exports.bilatu = function(req, res){
         aldaketa.aldaketabai = aldaketabai;
         aldaketarray[0] = aldaketa;
 
-        console.log("aldaketabai : %s ",aldaketabai ); 
-        console.log("aldaketa : " + JSON.stringify(aldaketarray)); 
-        console.log("taldea : " + JSON.stringify(rows));
+        //console.log("aldaketabai : %s ",aldaketabai ); 
+        //console.log("aldaketa : " + JSON.stringify(aldaketarray)); 
+        //console.log("taldea : " + JSON.stringify(rows));
    
         connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rowsj)     {
             
@@ -310,7 +310,7 @@ exports.bilatu = function(req, res){
                rowsj[i].aldaketabai = aldaketabai;
           }
 
-          console.log("jokalariak : " + JSON.stringify(rowsj));
+         // console.log("jokalariak : " + JSON.stringify(rowsj));
 
           res.render('jokalariak.handlebars', {title : 'Txaparrotan-Datuak', data2:rows , data:rowsj, aldaketabai : aldaketabai, taldeizena: req.session.taldeizena} );
                          
@@ -346,7 +346,9 @@ exports.izenematea = function(req,res){
 
     res.locals.flash = null;
     var now= new Date();
-    var vHasiera,aHasiera,hasiera,vBukaera,aBukaera,bukaera,aditestua;
+    var tope = 0;
+    var aditestua = "Izen-ematea";
+    var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera;
            console.log("IdTxaelketa : %s ",req.session.idtxapelketa );
     req.getConnection(function(err,connection){
       connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rows)     {
@@ -364,7 +366,10 @@ exports.izenematea = function(req,res){
           vHasiera.setDate(aHasiera[2]);
           vHasiera.setMonth(aHasiera[1] - 1);
           vHasiera.setYear(aHasiera[0]);
+          aHasieraOrdua = rows[0].inskripziohasierao.split(":");
+          vHasiera.setHours(aHasieraOrdua[0],aHasieraOrdua[1],0);
 
+          vHasiera.set
           vBukaera = new Date();
           bukaera = rows[0].inskripziobukaerae;
           aBukaera = bukaera.split("-");
@@ -394,26 +399,29 @@ exports.izenematea = function(req,res){
 
         else if(rowsg[0].guztira >= rows[0].taldekopmax) {
            if(req.xhr) return res.json({ error: 'Invalid beteta' });
+            tope = 1;
             res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
-            message: 'Talde kopurua beteta.',
+            message: 'Talde kopurua beteta. Itxaron zerrendan geratu nahi baduzu, ondorengo datuak bete mesedez.',
           };
-          aditestua = "Talde kopurua beteta! Txapelketa itxita dago! Hala ere, idatzi zuen taldearen izena eta zein mailetakoak zareten (sexua barne) eta posible izanez gero, zuekin kontaktuan jarriko gara!";
+          //aditestua = "Talde kopurua beteta! Txapelketa itxita dago! Hala ere, idatzi zuen taldearen izena eta zein mailetakoak zareten (sexua barne) eta posible izanez gero, zuekin kontaktuan jarriko gara!";
+          aditestua = "Talde kopurua beteta! Itxaron zerrendan geratu nahi baduzu, ondorengo datuak bete mesedez.";
          }
          
         }        
-        if(res.locals.flash != null){
+        if((res.locals.flash != null) && (tope == 0)){
          //res.redirect(303,'/');
           res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, aditestua:aditestua});
 
         }
         else{
-          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? and multzokop <> 9',[req.session.idtxapelketa],function(err,rowsm)     {
+          //connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? and multzokop <> 9',[req.session.idtxapelketa],function(err,rowsm)     {
+          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
             if(err)
               console.log("Error Selecting : %s ",err );
 
-          res.render('taldeaksortu.handlebars', {title : 'Txaparrotan-Izen-ematea', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, mailak:rowsm});
+          res.render('taldeaksortu.handlebars', {title : 'Txaparrotan-Izen-ematea', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, mailak:rowsm, aditestua:aditestua});
          });
         }
       });
@@ -425,6 +433,8 @@ exports.sortu = function(req,res){
     var input = JSON.parse(JSON.stringify(req.body));
     res.locals.flash = null;
     var now= new Date();
+    var aditestua;
+    var topetalde = 0;
 
     if(!req.body.DNIard.match(VALID_DNI_REGEX)) {
     if(req.xhr) return res.json({ error: 'Invalid DNI' });
@@ -478,7 +488,7 @@ exports.sortu = function(req,res){
   }
 
   req.getConnection(function (err, connection) {
-   connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+   connection.query('SELECT * FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
       if(err)
         console.log("Error Selecting : %s ",err ); 
 
@@ -486,6 +496,8 @@ exports.sortu = function(req,res){
           if(req.body.kategoria == rowsm[i].idmaila){
             mailaizena = rowsm[i].mailaizena;
             rowsm[i].aukeratua = true;
+            if(rowsm[i].multzokop == 9)
+              topetalde = 1;
           }
           else
             rowsm[i].aukeratua = false;
@@ -564,7 +576,8 @@ exports.sortu = function(req,res){
             pasahitza:   password_hash,     //input.pasahitza,
             sortzedata : now,
             balidatuta : 0,
-            lehentasuna : 99
+            lehentasuna : 99,
+            sexua : " "
            };
 
            var query = connection.query("INSERT INTO taldeak set ? ",data, function(err, rows)
@@ -572,8 +585,36 @@ exports.sortu = function(req,res){
   
             if (err)
               console.log("Error inserting : %s ",err );
+            connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= ? and balidatuta != "admin" ',[req.session.idtxapelketa],function(err,rowsg)     {
+                if(err)
+                  console.log("Error Selecting : %s ",err );
 
-        //Enkriptatu talde zenbakia. Zenbaki hau aldatuz gero, taldea balidatu ere aldatu!
+                if(rowsg[0].guztira >= rowst[0].taldekopmax) {
+                  if(req.xhr) return res.json({ error: 'Invalid beteta' });
+                  res.locals.flash = {
+                      type: 'danger',
+                      intro: 'Adi!',
+                      message: 'Talde kopurua beteta. Itxaron zerrendan sartu dugu zure taldea',
+                  };
+                aditestua = "Talde kopurua beteta! Itxaron zerrendan sartu dugu zure taldea, jolasteko aukerarik izanez gero, mezu bat jasoko duzue. Adi egon!";
+                }
+                
+                if(topetalde == 1) {
+                  if(req.xhr) return res.json({ error: 'Invalid beteta' });
+                  res.locals.flash = {
+                      type: 'danger',
+                      intro: 'Adi!',
+                      message: 'Maila horretako talde kopurua beteta. Itxaron zerrendan sartu dugu zure taldea',
+                  };
+                aditestua = "Maila horretako talde kopurua beteta! Itxaron zerrendan sartu dugu zure taldea, jolasteko aukerarik izanez gero, mezu bat jasoko duzue. Adi egon!";
+                }
+
+                if(res.locals.flash != null){
+                   res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, aditestua:aditestua});
+                }
+                else{
+         
+               //Enkriptatu talde zenbakia. Zenbaki hau aldatuz gero, taldea balidatu ere aldatu + taldeabalekoa!
          var taldezenbakia= rows.insertId * 3456789;
          var mailaizena;   
          var to = input.emailard;
@@ -595,6 +636,8 @@ exports.sortu = function(req,res){
           emailService.send(to, subj, body);
           //res.redirect('/taldeak');
           res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, txapelketaizena:req.session.txapelketaizena, kk:rowst[0].kontukorrontea, prezio: rowst[0].prezioa, emailard:data.emailard, izenaard: data.izenaard,mailaizena: mailaizena});
+                  }
+               });   
           });
         }); 
       });

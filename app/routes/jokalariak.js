@@ -25,7 +25,7 @@ exports.bilatu = function(req, res){
             
         if(err)
            console.log("Error Selecting : %s ",err );
-        console.log(rows);
+        //console.log(rows);
         res.render('datuak.handlebars', {title : 'Txaparrotan-Datuak', data:rows, taldeak:rows[0], taldeizena: req.session.taldeizena} );
                            
       });
@@ -38,7 +38,7 @@ exports.add = function(req, res){
   res.render('add_customer',{page_title:"Add Customers-Node.js"});
 };
 exports.editatu = function(req, res){
-  var neurriak = [{neurria:"11-13"}, {neurria:"12-14"}, {neurria:"S"}, {neurria:"M"}, {neurria:"L"}, {neurria:"XL"}, {neurria:"XXL"}];
+  var neurriak = [{neurria:"9-10"}, {neurria:"11-12"}, {neurria:"S"}, {neurria:"M"}, {neurria:"L"}, {neurria:"XL"}, {neurria:"XXL"}];
   //var id = req.params.id;
   var id = req.session.idtalde;
   var idjokalari = req.params.idjokalari;
@@ -75,6 +75,10 @@ exports.sortu = function(req,res){
     console.log("idtalde:" + req.session.idtalde);
     var id = req.session.idtalde;
 
+    if (input.telefonoa == ''){
+      input.telefonoa = 0;
+    }
+
     req.getConnection(function (err, connection) {
         
         var data = {
@@ -86,7 +90,7 @@ exports.sortu = function(req,res){
             idtaldej    : id
         };
         
-        console.log(data);
+       // console.log(data);
         var query = connection.query("INSERT INTO jokalariak set ? ",data, function(err, rows)
         {
   
