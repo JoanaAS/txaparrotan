@@ -16,6 +16,24 @@ exports.taldekopurua = function(req, res){
   });       
 };
 
+exports.taldekopbalidatugabe = function(req, res){
+  var id = req.session.idtxapelketa;
+  var totala=0;
+
+  req.getConnection(function(err,connection){
+    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila and balidatuta = 0 group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+        if(err)
+           console.log("Error Selecting : %s ",err );
+
+         for(var i in rowsg){
+          totala += rowsg[i].guztira;
+         }
+
+        res.render('taldekopurua.handlebars', {title : 'Txaparrotan-Taldeak', data2:rowsg, taldetot: totala,taldeizena: req.session.txapelketaizena} );
+     });
+  });       
+};
+
 exports.taldekopurua2 = function(req, res){
   var id = req.session.idtxapelketa;
   var vKategoria, vSexua;
