@@ -152,7 +152,8 @@ exports.multzoakegin = function(req, res){
             
             multzo    : i,
             idtxapelketam : id,
-            kategoriam : vKategoria
+            kategoriam : vKategoria,
+            sexuam : " "
         };
         var query = connection.query("INSERT INTO grupoak set ? ",data, function(err, rowsg)
         {
@@ -1057,7 +1058,8 @@ exports.finalordutegia = function(req, res){
                   vJardunaldi = rows[k].jardunaldia;
                   vMaila = rows[k].kategoriam;
                   vEguna = new Date(rowsf[0].pareguna);
-                  vBukaera = new Date(rows[k].pareguna);
+                  //vBukaera = new Date(rows[k].pareguna);
+                  vBukaera = new Date(rowsf[0].pareguna);
                   vOrdua = rows[k].finalakordua;    
                   //vOrdua = "15:00:00";
                   aOrdua = vOrdua.split(":");
