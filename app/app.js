@@ -168,7 +168,7 @@ app.get('/taldeak', taldeak.ikusi);
 app.get('/izenematea', authorize2, taldeak.izenematea);
 app.post('/taldeasortu', authorize2, taldeak.sortu); 
 app.get('/taldeabalidatu/:id', taldeak.balidatu);
-app.get('/taldeaeditatu', taldeak.editatu);
+app.get('/taldeaeditatu', authorize2, authorize, taldeak.editatu);
 app.post('/taldeaaldatu', taldeak.aldatu);
 app.get('/taldemail/:emaila', taldeak.taldemail);
 app.get('/jokalariak', authorize, taldeak.bilatu);
@@ -176,9 +176,9 @@ app.post('/jokalariasortu', jokalariak.sortu);
 app.post('/jokalariagehitu', function(req, res){
     res.render('jokalariaksortu.handlebars', {title : 'Txaparrotan-Jokalaria gehitu', taldeizena: req.session.taldeizena});
 });
-app.get('/jokalariakezabatu/:idjokalari', jokalariak.ezabatu);
-app.get('/jokalariakeditatu/:idjokalari', jokalariak.editatu);
-app.post('/jokalariakaldatu/:idjokalari', jokalariak.aldatu);
+app.get('/jokalariakezabatu/:idjokalari', authorize, jokalariak.ezabatu);
+app.get('/jokalariakeditatu/:idjokalari', authorize, jokalariak.editatu);
+app.post('/jokalariakaldatu/:idjokalari', authorize, jokalariak.aldatu);
 
 app.get('/login', authorize2, function(req, res){
     res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.taldeizena});
