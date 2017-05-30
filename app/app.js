@@ -207,7 +207,7 @@ app.get('/arauak', function(req, res){
 });
 app.get('/argazkiak', txapelketak.argazkiakikusi);
 
-app.get('/kontaktua', function(req, res){
+app.get('/kontaktua', authorize2, function(req, res){
     res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, aditestua: "Kontaktua"});
 });
 app.post('/kontaktuabidali',txapelketak.kontaktuabidali); 
@@ -278,6 +278,7 @@ app.post('/admin/taldeaaldatu/:talde', adminonartua, kudeaketa.taldeaaldatu);
 app.get('/admin/taldeaezabatu/:talde', adminonartua, kudeaketa.taldeaezabatu);
 app.get('/admin/taldeabalekoa/:talde', adminonartua, kudeaketa.taldeabalekoa);
 app.get('/admin/taldekopurua', adminonartua, kudeaketa.taldekopurua);
+app.get('/admin/taldekopbalidatugabe', adminonartua, kudeaketa.taldekopbalidatugabe);
 app.get('/admin/jokalarikopurua', adminonartua, kudeaketa.jokalarikopurua);
 app.get('/admin/jokalariakikusi', adminonartua, txapelketak.jokalariakikusi);
 app.get('/admin/mantenimentu', adminonartua, txapelketak.mantenimentu);

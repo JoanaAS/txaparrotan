@@ -16,6 +16,24 @@ exports.taldekopurua = function(req, res){
   });       
 };
 
+exports.taldekopbalidatugabe = function(req, res){
+  var id = req.session.idtxapelketa;
+  var totala=0;
+
+  req.getConnection(function(err,connection){
+    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila and balidatuta = 0 group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+        if(err)
+           console.log("Error Selecting : %s ",err );
+
+         for(var i in rowsg){
+          totala += rowsg[i].guztira;
+         }
+
+        res.render('taldekopurua.handlebars', {title : 'Txaparrotan-Taldeak', data2:rowsg, taldetot: totala,taldeizena: req.session.txapelketaizena} );
+     });
+  });       
+};
+
 exports.taldekopurua2 = function(req, res){
   var id = req.session.idtxapelketa;
   var vKategoria, vSexua;
@@ -134,7 +152,8 @@ exports.multzoakegin = function(req, res){
             
             multzo    : i,
             idtxapelketam : id,
-            kategoriam : vKategoria
+            kategoriam : vKategoria,
+            sexuam : " "
         };
         var query = connection.query("INSERT INTO grupoak set ? ",data, function(err, rowsg)
         {
@@ -1039,7 +1058,8 @@ exports.finalordutegia = function(req, res){
                   vJardunaldi = rows[k].jardunaldia;
                   vMaila = rows[k].kategoriam;
                   vEguna = new Date(rowsf[0].pareguna);
-                  vBukaera = new Date(rows[k].pareguna);
+                  //vBukaera = new Date(rows[k].pareguna);
+                  vBukaera = new Date(rowsf[0].pareguna);
                   vOrdua = rows[k].finalakordua;    
                   //vOrdua = "15:00:00";
                   aOrdua = vOrdua.split(":");

@@ -559,7 +559,7 @@ var t = 0;
 var vTalde;
 var date = new Date();
   req.getConnection(function(err,connection){
-      connection.query('SELECT * FROM taldeak LEFT JOIN jokalariak ON idtaldeak=idtaldej WHERE idtxapeltalde = ? and balidatuta != "admin" order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
+      connection.query('SELECT * FROM maila,taldeak LEFT JOIN jokalariak ON idtaldeak=idtaldej WHERE kategoria = idmaila and idtxapeltalde = ? and balidatuta != "admin" order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         for (var i in rows) { 
@@ -587,7 +587,9 @@ var date = new Date();
                   emailard   : rows[i].emailard,
                   telefonoard    : rows[i].telefonoard,
                   sortzedata: rows[i].sortzedata,
-                  balidatuta : rows[i].balidatuta
+                  balidatuta : rows[i].balidatuta,
+                  akronimoa : rows[i].akronimoa
+
                };
                
           }
