@@ -905,7 +905,7 @@ var vKategoria = req.body.kategoria4;
            console.log("Error Selecting : %s ",err );
         console.log("Jardunkop: "+rowsp[0].jardunkop);
      
-    connection.query('SELECT kategoriam , MAX (jardunaldia) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
+    connection.query('SELECT kategoriam , MAX (jardunaldia) as guztira FROM grupoak,partiduak,maila where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo and idmaila = kategoriam group by kategoriam ORDER BY guztira DESC, mailazki ASC',[id],function(err,rowsg)     {
     //connection.query('SELECT kategoriam ,count(*) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -1934,6 +1934,7 @@ exports.taldeabalekoa = function(req,res){
          body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p>";
           req.session.idtalde = idtaldea;
           emailService.send(to, subj, body);
+          console.log("baleko emaila: " +to+ " talde izena: "+rows[0].taldeizena);
         }
              res.redirect('/admin/taldeakikusi');
              
