@@ -1027,10 +1027,11 @@ exports.mezuakbidali = function(req,res){
                 if(err)
                   console.log("Error Selecting : %s ",err );
 
-                var subj = req.session.txapelketaizena+ " txapelketa ordainketa egin mesedez!";
-                var body = "<h2> Ordainketa egin mesedez! </h2>\n" + 
+                var subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
+              var body = "<h2> Izen-emateko urrats guztiak bete gabe dituzue </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Sartu " +rows[0].prezioa+" kontu zenbaki honetan: "+rows[0].kontukorrontea+ "</h3>" ;
+                              "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n" +
+                              "<h3> Ordaindu ez baduzue, sartu " +rows[0].prezioa+" € kontu zenbaki honetan: "+rows[0].kontukorrontea+ " Gogoratu, 8 pertsonatik gorako taldea bada, jokalariko gehigarriko 5€gehiago sartu behar dituzuela. Mila esker!</h3>" ;
                //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
                taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
 
