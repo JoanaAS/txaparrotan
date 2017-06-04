@@ -729,10 +729,10 @@ var id = req.session.idtxapelketa;
         var totala = 0;
 
         for (var i in rows) {
-            if(rows[i].kamisetaneurria == '11-13'){ 
+            if(rows[i].kamisetaneurria == '9-10'){ 
               n11 ++;             
             }
-            if(rows[i].kamisetaneurria == '12-14'){
+            if(rows[i].kamisetaneurria == '11-12'){
               n12 ++;             
             }
             if(rows[i].kamisetaneurria == 'S'){
