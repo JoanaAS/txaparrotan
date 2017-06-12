@@ -1026,7 +1026,7 @@ exports.mezuakbidali = function(req,res){
 
                 if(err)
                   console.log("Error Selecting : %s ",err );
-                if(rows.lenght() != 0){
+                if(rows.length != 0){
                   var subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
                   var body = "<h2> Izen-emateko urrats guztiak bete gabe dituzue </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
@@ -1045,7 +1045,7 @@ exports.mezuakbidali = function(req,res){
               connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
               if(err)
                 console.log("Error Selecting : %s ",err );
-              if(rows.lenght() != 0){
+              if(rows.length != 0){
                 var subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
                 var body = "<h2> Jokalariak sartzeko dituzue! </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
