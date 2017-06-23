@@ -1931,7 +1931,9 @@ exports.taldeabalekoa = function(req,res){
          var body = "<p>"+rows[0].taldeizena+" "+rows[0].mailaizena+" mailan taldea balidatu ahal izateko, </p>";
          body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
          body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rows[0].kontukorrontea+ " kontu korrontean  "+rows[0].prezioa+ "euro sartu eta kontzeptu bezala "+rows[0].taldeizena+"-"+rows[0].izenaard+" jarri.</p>";
-         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p>";
+         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p> \n \n";
+         body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
+
           req.session.idtalde = idtaldea;
           emailService.send(to, subj, body);
           console.log("baleko emaila: " +to+ " talde izena: "+rows[0].taldeizena);
