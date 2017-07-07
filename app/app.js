@@ -84,7 +84,8 @@ if (process.env.NODE_ENV != 'production'){
         port : 3306, //port mysql
         //database:'txaparrotan'
         database:'heroku_4efa3ee4ff6c16c'
-    },'request')
+  //  },'request')
+      },'pool')
  );
               console.log("localhost1" );
 }
@@ -98,7 +99,8 @@ else{
         password : '4d96016a',
       //  port : 3306, //port mysql
         database:'heroku_4efa3ee4ff6c16c'
-    },'request')
+    //},'request')
+      },'pool')
  );
               console.log("heroku1" );
 }

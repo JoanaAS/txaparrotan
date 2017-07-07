@@ -1448,8 +1448,13 @@ exports.emaitzasartu = function(req, res){
   var shutout = req.body.shutout;
   var emaitza1 = req.body.emaitza1;
   var emaitza2 = req.body.emaitza2;
+  var lehengolak1a = req.body.lehengolak1a;
+  var lehengolak2a = req.body.lehengolak2a;
+  var lehengolak1b = req.body.lehengolak1b;
+  var lehengolak2b = req.body.lehengolak2b;
 
   var bemaitza1,bemaitza2, jokatutakopartiduak, irabazitakopartiduak,puntuak, emaitza1f,emaitza2f;
+  var golakalde, golakkontra, setalde, setkontra;
 
   console.log("Emaitza z: "+emaitza1+" "+emaitza2);
   bemaitza1 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza1f;
@@ -1545,6 +1550,10 @@ exports.emaitzasartu = function(req, res){
             jokatutakopartiduak = rowst[0].jokatutakopartiduak;
             irabazitakopartiduak = rowst[0].irabazitakopartiduak;
             puntuak = rowst[0].puntuak;
+            golakalde = rowst[0].golakalde;
+            golakkontra = rowst[0].golakkontra;
+            setalde = rowst[0].setalde;
+            setkontra = rowst[0].setkontra;
             console.log("Jp:"+jokatutakopartiduak+" ip:" + irabazitakopartiduak+ " pun:"+ puntuak);
             console.log("Emaitza2:"+bemaitza1+"-"+bemaitza2);
             console.log("Emaitza3:"+emaitza1+"-"+emaitza2);
@@ -1564,11 +1573,19 @@ exports.emaitzasartu = function(req, res){
               console.log("2");
             }
             puntuak = puntuak + (bemaitza1-emaitza1);
+            golakalde = golakalde + (golak1a + golak2a - lehengolak1a - lehengolak2a);
+            golakkontra = golakkontra + (golak1b + golak2b - lehengolak1b - lehengolak2b);
+            //setalde = setalde + (bemaitza1-emaitza1);
+            //setkontra = setkontra + (bemaitza1-emaitza1);
             var data = {
 
               jokatutakopartiduak    : jokatutakopartiduak,
               irabazitakopartiduak    : irabazitakopartiduak,
-              puntuak    : puntuak        
+              puntuak    : puntuak,
+              golakalde : golakalde,
+              golakkontra: golakkontra  
+              //setalde : setalde,
+              //setkontra: setkontra      
             };
 
             connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,talde1], function(err, rowst)
@@ -1584,6 +1601,10 @@ exports.emaitzasartu = function(req, res){
                 jokatutakopartiduak = rowsp[0].jokatutakopartiduak;
                 irabazitakopartiduak = rowsp[0].irabazitakopartiduak;
                 puntuak = rowsp[0].puntuak;
+                golakalde = rowsp[0].golakalde;
+                golakkontra = rowsp[0].golakkontra;
+                setalde = rowsp[0].setalde;
+                setkontra = rowsp[0].setkontra;
 
                 if((emaitza1==null && emaitza2==null)||(emaitza1==0 && emaitza2==0)){
                   jokatutakopartiduak++;
@@ -1601,11 +1622,19 @@ exports.emaitzasartu = function(req, res){
                   console.log("4");
                 }
                 puntuak = puntuak + (bemaitza2-emaitza2);
+                golakalde = golakalde + (golak1b + golak2b - lehengolak1b - lehengolak2b);
+                golakkontra = golakkontra + (golak1a + golak2a - lehengolak1a - lehengolak2a);
+                //setalde = setalde + (bemaitza2-emaitza2);
+                //setkontra = setkontra + (bemaitza2-emaitza2);
                 var data = {
 
                   jokatutakopartiduak    : jokatutakopartiduak,
                   irabazitakopartiduak    : irabazitakopartiduak,
-                  puntuak    : puntuak        
+                  puntuak    : puntuak,
+                  golakalde : golakalde,
+                  golakkontra: golakkontra  
+                  //setalde : setalde,
+                  //setkontra: setkontra        
                 };
                 connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,talde2], function(err, rowst)
                 {
@@ -1737,7 +1766,11 @@ exports.multzoakreset = function(req, res){
             idgrupot    : null,
             jokatutakopartiduak : null,
             irabazitakopartiduak : null,
-            puntuak : null
+            puntuak : null,
+            golakalde : null,
+            golakkontra: null,  
+            setalde : null,
+            setkontra: null 
 
         
         };
@@ -1771,7 +1804,11 @@ exports.partiduakreset = function(req, res){
 
             jokatutakopartiduak : null,
             irabazitakopartiduak : null,
-            puntuak : null
+            puntuak : null,
+            golakalde : null,
+            golakkontra: null,  
+            setalde : null,
+            setkontra: null 
 
         
         };
@@ -2029,7 +2066,8 @@ var vAkronimoa;
         }
         console.log("imultzo: "+JSON.stringify(imultzo));
 
-      connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[id,kategoria],function(err,rows)     {
+      //connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[id,kategoria],function(err,rows)     {
+      connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc',[id,kategoria],function(err,rows)     {  
         if(err)
            console.log("Error Selecting : %s ",err );
 
@@ -2076,7 +2114,8 @@ var vAkronimoa;
                   taldeizena    : rows[i].taldeizena,
                   jokatutakopartiduak    : rows[i].jokatutakopartiduak,
                   irabazitakopartiduak    : rows[i].irabazitakopartiduak,
-                  puntuak    : rows[i].puntuak
+                  puntuak    : rows[i].puntuak,
+                  golaberaje : rows[i].golaberaje
                };
           j++;
           console.log("Taldeak:" + taldeak[j]);
