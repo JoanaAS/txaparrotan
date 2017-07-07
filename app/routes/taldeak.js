@@ -631,7 +631,9 @@ exports.sortu = function(req,res){
          var body = "<p>"+data.taldeizena+" "+mailaizena+" mailan taldea balidatu ahal izateko, </p>";
          body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
          body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rowst[0].kontukorrontea+ " kontu korrontean  "+rowst[0].prezioa+ "euro sartu eta kontzeptu bezala "+data.taldeizena+"-"+data.izenaard+" jarri.</p>";
-         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p>";
+         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p> \n \n";
+         body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
+
           req.session.idtalde = rows.insertId;
           emailService.send(to, subj, body);
           //res.redirect('/taldeak');
@@ -688,7 +690,9 @@ exports.forgot = function(req,res){
     var to = input.emailaard;
     var subj ="Pasahitza ahaztu al duzu?";
     var body = "<h2>Klik egin http://"+hosta+"/reset/" + idEnkript +"</h2>";
-    body += "<h2>eta pasahitza berria bi aldiz sartu</h2>";
+    body += "<h2>eta pasahitza berria bi aldiz sartu</h2> \n \n";
+    body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
+
     
     emailService.send(to, subj, body);
 

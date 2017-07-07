@@ -242,7 +242,7 @@ var zuretaldekoa = (req.path == "/taldesailkapena");
 var grupo;
 
   req.getConnection(function(err,connection){
-      connection.query('SELECT * FROM taldeak,grupoak,maila,txapelketa where idgrupot=idgrupo and idtxapelketa = idtxapeltalde and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[req.session.idtxapelketa],function(err,rows)     {
+      connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila,txapelketa where idgrupot=idgrupo and idtxapelketa = idtxapeltalde and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc',[req.session.idtxapelketa],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         if(rows.length == 0 || (rows[0].txapelketaprest == 0 && !admin)){
@@ -323,7 +323,12 @@ var grupo;
                   taldeizena    : rows[i].taldeizena,
                   jokatutakopartiduak    : rows[i].jokatutakopartiduak,
                   irabazitakopartiduak    : rows[i].irabazitakopartiduak,
-                  puntuak    : rows[i].puntuak
+                  puntuak    : rows[i].puntuak,
+                  golakalde : rows[i].golakalde,
+                  golakkontra: rows[i].golakkontra,
+                  golaberaje : rows[i].golaberaje
+                  //setalde: rows[i].setalde,
+                  //setkontra: rows[i].setkontra
                };
           j++;
           //console.log("Taldeak:" + taldeak[j]);
@@ -729,10 +734,10 @@ var id = req.session.idtxapelketa;
         var totala = 0;
 
         for (var i in rows) {
-            if(rows[i].kamisetaneurria == '11-13'){ 
+            if(rows[i].kamisetaneurria == '9-10'){ 
               n11 ++;             
             }
-            if(rows[i].kamisetaneurria == '12-14'){
+            if(rows[i].kamisetaneurria == '11-12'){
               n12 ++;             
             }
             if(rows[i].kamisetaneurria == 'S'){
@@ -828,10 +833,10 @@ var vTalde;
                };
                
           }
-            if(rows[i].kamisetaneurria == '11-13'){ 
+            if(rows[i].kamisetaneurria == '9-10'){ 
               n11 ++;             
             }
-            if(rows[i].kamisetaneurria == '12-14'){
+            if(rows[i].kamisetaneurria == '11-12'){
               n12 ++;             
             }
             if(rows[i].kamisetaneurria == 'S'){
@@ -905,7 +910,7 @@ var vKategoria = req.body.kategoria4;
            console.log("Error Selecting : %s ",err );
         console.log("Jardunkop: "+rowsp[0].jardunkop);
      
-    connection.query('SELECT kategoriam , MAX (jardunaldia) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
+    connection.query('SELECT kategoriam , MAX (jardunaldia) as guztira FROM grupoak,partiduak,maila where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo and idmaila = kategoriam group by kategoriam ORDER BY guztira DESC, mailazki ASC',[id],function(err,rowsg)     {
     //connection.query('SELECT kategoriam ,count(*) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -1448,13 +1453,19 @@ exports.emaitzasartu = function(req, res){
   var shutout = req.body.shutout;
   var emaitza1 = req.body.emaitza1;
   var emaitza2 = req.body.emaitza2;
+  var lehengolak1a = req.body.lehengolak1a;
+  var lehengolak2a = req.body.lehengolak2a;
+  var lehengolak1b = req.body.lehengolak1b;
+  var lehengolak2b = req.body.lehengolak2b;
+
 
   var bemaitza1,bemaitza2, jokatutakopartiduak, irabazitakopartiduak,puntuak, emaitza1f,emaitza2f;
+  var golakalde=0, golakkontra=0, setalde=0, setkontra=0;
 
-  console.log("Emaitza z: "+emaitza1+" "+emaitza2);
+  //console.log("Emaitza z: "+emaitza1+" "+emaitza2);
   bemaitza1 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza1f;
   bemaitza2 = emaitzakalkulatu(golak1a,golak1b,golak2a,golak2b,goldeoro1,goldeoro2,shutout).emaitza2f;   
-  console.log("Emaitza:" +bemaitza1+ "-" +bemaitza2);
+  //console.log("Emaitza:" +bemaitza1+ "-" +bemaitza2);
 
   if(bemaitza1 == 0 && bemaitza2 == 0){
            res.locals.flash = {
@@ -1545,9 +1556,14 @@ exports.emaitzasartu = function(req, res){
             jokatutakopartiduak = rowst[0].jokatutakopartiduak;
             irabazitakopartiduak = rowst[0].irabazitakopartiduak;
             puntuak = rowst[0].puntuak;
-            console.log("Jp:"+jokatutakopartiduak+" ip:" + irabazitakopartiduak+ " pun:"+ puntuak);
-            console.log("Emaitza2:"+bemaitza1+"-"+bemaitza2);
-            console.log("Emaitza3:"+emaitza1+"-"+emaitza2);
+            golakalde = rowst[0].golakalde;
+            // console.log("GOLAKALDE: "+rowst[0].golakalde+ "-"+golakalde);
+            golakkontra = rowst[0].golakkontra;
+            setalde = rowst[0].setalde;
+            setkontra = rowst[0].setkontra;
+            //console.log("Jp:"+jokatutakopartiduak+" ip:" + irabazitakopartiduak+ " pun:"+ puntuak);
+            //console.log("Emaitza2:"+bemaitza1+"-"+bemaitza2);
+            //console.log("Emaitza3:"+emaitza1+"-"+emaitza2);
             if((emaitza1==null && emaitza2==null) || (emaitza1==0 && emaitza2==0)){
               jokatutakopartiduak++;             
               if(bemaitza1>bemaitza2){
@@ -1564,11 +1580,19 @@ exports.emaitzasartu = function(req, res){
               console.log("2");
             }
             puntuak = puntuak + (bemaitza1-emaitza1);
+            golakalde = golakalde + (golak1a + golak2a - lehengolak1a - lehengolak2a);
+            golakkontra = golakkontra + (golak1b + golak2b - lehengolak1b - lehengolak2b);
+            //setalde = setalde + (bemaitza1-emaitza1);
+            //setkontra = setkontra + (bemaitza1-emaitza1);
             var data = {
 
               jokatutakopartiduak    : jokatutakopartiduak,
               irabazitakopartiduak    : irabazitakopartiduak,
-              puntuak    : puntuak        
+              puntuak    : puntuak,
+              golakalde : golakalde,
+              golakkontra: golakkontra  
+              //setalde : setalde,
+              //setkontra: setkontra      
             };
 
             connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,talde1], function(err, rowst)
@@ -1584,6 +1608,10 @@ exports.emaitzasartu = function(req, res){
                 jokatutakopartiduak = rowsp[0].jokatutakopartiduak;
                 irabazitakopartiduak = rowsp[0].irabazitakopartiduak;
                 puntuak = rowsp[0].puntuak;
+                golakalde = rowsp[0].golakalde;
+                golakkontra = rowsp[0].golakkontra;
+                setalde = rowsp[0].setalde;
+                setkontra = rowsp[0].setkontra;
 
                 if((emaitza1==null && emaitza2==null)||(emaitza1==0 && emaitza2==0)){
                   jokatutakopartiduak++;
@@ -1601,12 +1629,23 @@ exports.emaitzasartu = function(req, res){
                   console.log("4");
                 }
                 puntuak = puntuak + (bemaitza2-emaitza2);
+                golakalde = golakalde + (golak1b + golak2b - lehengolak1b - lehengolak2b);
+                golakkontra = golakkontra + (golak1a + golak2a - lehengolak1a - lehengolak2a);
+                //setalde = setalde + (bemaitza2-emaitza2);
+                //setkontra = setkontra + (bemaitza2-emaitza2);
+
                 var data = {
 
                   jokatutakopartiduak    : jokatutakopartiduak,
                   irabazitakopartiduak    : irabazitakopartiduak,
-                  puntuak    : puntuak        
+                  puntuak    : puntuak,
+                  golakalde : golakalde,
+                  golakkontra: golakkontra  
+                  //setalde : setalde,
+                  //setkontra: setkontra        
                 };
+                console.log("data: " +JSON.stringify(data));
+
                 connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,talde2], function(err, rowst)
                 {
   
@@ -1737,7 +1776,11 @@ exports.multzoakreset = function(req, res){
             idgrupot    : null,
             jokatutakopartiduak : null,
             irabazitakopartiduak : null,
-            puntuak : null
+            puntuak : null,
+            golakalde : null,
+            golakkontra: null,  
+            setalde : null,
+            setkontra: null 
 
         
         };
@@ -1771,7 +1814,11 @@ exports.partiduakreset = function(req, res){
 
             jokatutakopartiduak : null,
             irabazitakopartiduak : null,
-            puntuak : null
+            puntuak : null,
+            golakalde : null,
+            golakkontra: null,  
+            setalde : null,
+            setkontra: null 
 
         
         };
@@ -1931,9 +1978,12 @@ exports.taldeabalekoa = function(req,res){
          var body = "<p>"+rows[0].taldeizena+" "+rows[0].mailaizena+" mailan taldea balidatu ahal izateko, </p>";
          body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
          body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rows[0].kontukorrontea+ " kontu korrontean  "+rows[0].prezioa+ "euro sartu eta kontzeptu bezala "+rows[0].taldeizena+"-"+rows[0].izenaard+" jarri.</p>";
-         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p>";
+         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p> \n \n";
+         body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
+
           req.session.idtalde = idtaldea;
           emailService.send(to, subj, body);
+          console.log("baleko emaila: " +to+ " talde izena: "+rows[0].taldeizena);
         }
              res.redirect('/admin/taldeakikusi');
              
@@ -2026,7 +2076,8 @@ var vAkronimoa;
         }
         console.log("imultzo: "+JSON.stringify(imultzo));
 
-      connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[id,kategoria],function(err,rows)     {
+      //connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[id,kategoria],function(err,rows)     {
+      connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc',[id,kategoria],function(err,rows)     {  
         if(err)
            console.log("Error Selecting : %s ",err );
 
@@ -2073,7 +2124,8 @@ var vAkronimoa;
                   taldeizena    : rows[i].taldeizena,
                   jokatutakopartiduak    : rows[i].jokatutakopartiduak,
                   irabazitakopartiduak    : rows[i].irabazitakopartiduak,
-                  puntuak    : rows[i].puntuak
+                  puntuak    : rows[i].puntuak,
+                  golaberaje : rows[i].golaberaje
                };
           j++;
           console.log("Taldeak:" + taldeak[j]);
@@ -2386,7 +2438,7 @@ var vAkronimoa;
         }
         console.log("imultzo: "+JSON.stringify(imultzo));
 
-      connection.query('SELECT * FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc',[id,kategoria],function(err,rows)     {
+      connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc',[id,kategoria],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
 
@@ -2434,7 +2486,8 @@ var vAkronimoa;
                   taldeizena    : rows[i].taldeizena,
                   jokatutakopartiduak    : rows[i].jokatutakopartiduak,
                   irabazitakopartiduak    : rows[i].irabazitakopartiduak,
-                  puntuak    : rows[i].puntuak
+                  puntuak    : rows[i].puntuak,
+                  golaberaje : rows[i].golaberaje
                };
           j++;
           console.log("Taldeak:" + taldeak[j]);
@@ -2516,7 +2569,14 @@ var vAkronimoa;
                      aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
                      mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
                      mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                    }
+                    else if(mailak[0].multzoak[j].taldeak[postu].puntuak == mailak[0].multzoak[k].taldeak[postu].puntuak){
+                    if(mailak[0].multzoak[j].taldeak[postu].golaberaje < mailak[0].multzoak[k].taldeak[postu].golaberaje){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
                     } 
+                   }   
                    }    
                  }
                 }
@@ -2550,7 +2610,14 @@ var vAkronimoa;
                      aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
                      mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
                      mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
+                    }
+                    else if(mailak[0].multzoak[j].taldeak[postu].puntuak == mailak[0].multzoak[k].taldeak[postu].puntuak){
+                    if(mailak[0].multzoak[j].taldeak[postu].golaberaje < mailak[0].multzoak[k].taldeak[postu].golaberaje){
+                     aldatutaldea = mailak[0].multzoak[j].taldeak[postu];
+                     mailak[0].multzoak[j].taldeak[postu] = mailak[0].multzoak[k].taldeak[postu]; 
+                     mailak[0].multzoak[k].taldeak[postu] = aldatutaldea;
                     } 
+                   }   
                    }    
                  }
                 }

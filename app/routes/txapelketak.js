@@ -1009,7 +1009,8 @@ exports.mezuakbidali = function(req,res){
               var subj = req.session.txapelketaizena+ " txapelketa prest";
               var body = "<h2> Txapelketa prest </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://"+hosta+"</h3>" ;
+                              "<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://"+hosta+"</h3>\n \n \n"+
+                              "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                               //"<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://txaparrotan.herokuapp.com</h3>" ;
               //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
               taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
@@ -1026,16 +1027,18 @@ exports.mezuakbidali = function(req,res){
 
                 if(err)
                   console.log("Error Selecting : %s ",err );
-
-                var subj = req.session.txapelketaizena+ " txapelketa ordainketa egin mesedez!";
-                var body = "<h2> Ordainketa egin mesedez! </h2>\n" + 
+                if(rows.length != 0){
+                  var subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
+                  var body = "<h2> Izen-emateko urrats guztiak bete gabe dituzue </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Sartu " +rows[0].prezioa+" kontu zenbaki honetan: "+rows[0].kontukorrontea+ "</h3>" ;
+                              "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n" +
+                              "<h3> Ordaindu ez baduzue, sartu " +rows[0].prezioa+" € kontu zenbaki honetan: "+rows[0].kontukorrontea+ " Gogoratu, 8 pertsonatik gorako taldea bada, jokalariko gehigarriko 5€gehiago sartu behar dituzuela. Mila esker!</h3>\n \n \n"+
+                              "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-               taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
-
+                  taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
+                }
                res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
-       
+                
           });
         }
 
@@ -1044,15 +1047,18 @@ exports.mezuakbidali = function(req,res){
               connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
               if(err)
                 console.log("Error Selecting : %s ",err );
-
-              var subj = req.session.txapelketaizena+ " txapelketan jokalariak gehitu";
-              var body = "<h2> Jokalariak sartzeko dituzue </h2>\n" + 
+              if(rows.length != 0){
+                var subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
+                var body = "<h2> Jokalariak sartzeko dituzue! </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko</h3>" ;
+                              "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n \n \n"+
+                              "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
+
+                              
               //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
               taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
               //console.log("Taldeak2: "+JSON.stringify(taldeak2));
-
+              }
               res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
        
              });
