@@ -1863,7 +1863,9 @@ exports.partiduorduaaldatu = function(req,res){
             
             parordua : input.parordua,
             pareguna   : input.pareguna,
-            zelaia : input.zelaia
+            zelaia : input.zelaia,
+            izenafinala1 : input.izenafinala1,
+            izenafinala2 : input.izenafinala2
 
         };
         
