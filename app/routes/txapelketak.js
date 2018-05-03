@@ -531,13 +531,13 @@ exports.kontaktuabidali = function(req,res){
             
         if(err)
            console.log("Error Selecting : %s ",err );
-    
-        var to = rows[0].emailard;
+        if(rows.length != 0){     
+         var to = rows[0].emailard;
          var subj = "Web orriko zalantza " +rows[0].txapelketaizena+":" + input.izenabizen;
          var body = "Izen abizenak: " + input.izenabizen + "\n Emaila: " + input.email + "\n Telefonoa" + input.telef + "\n Herria: " + input.herri+ "\n Azalpena:" + input.azalpena;
           console.log("input:" + input.izenabizen);
           emailService.send(to, subj, body);
-
+        }
           res.locals.flash = {
               type: 'success',
               intro: 'Bidalita!',

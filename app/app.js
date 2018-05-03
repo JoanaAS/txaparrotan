@@ -75,7 +75,10 @@ console.log("environment " + process.env.NODE_ENV);
 //if ('development' == app.get('env')) {
 if (process.env.NODE_ENV != 'production'){
   app.use(
-    
+
+    connection(mysql, credentials.dbdevelop,'pool')
+
+/*    
     connection(mysql,{
         
         host: 'localhost',
@@ -86,12 +89,16 @@ if (process.env.NODE_ENV != 'production'){
         database:'heroku_4efa3ee4ff6c16c'
   //  },'request')
       },'pool')
+*/
  );
               console.log("localhost1" );
 }
 else{
   app.use(
-    
+
+    connection(mysql, credentials.dbproduction,'pool')
+
+/*    
     connection(mysql,{
         
         host: 'us-cdbr-iron-east-02.cleardb.net',
@@ -101,6 +108,7 @@ else{
         database:'heroku_4efa3ee4ff6c16c'
     //},'request')
       },'pool')
+*/
  );
               console.log("heroku1" );
 }
