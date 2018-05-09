@@ -376,7 +376,7 @@ exports.berriakbilatu = function(req, res){
   var k = 0;
   req.getConnection(function(err,connection){
        
-     connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak WHERE idtxapelBerria = ? and zenbakiBerria <> 0 order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)            
+     connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak WHERE idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)            
      {
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -439,7 +439,7 @@ exports.berriakaldatu = function(req,res){
               console.log("Error Updating : %s ",err );
           if (input.bidali){
             
-                  var status = input.izenburuaEdukia + " - http://txaparrotan.herokuapp.com/";
+                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/";
 
                   twitter.post('statuses/update', { status: status }, function (err, data, response) {
                    if (err) {
@@ -528,7 +528,7 @@ exports.berriaksortu = function(req,res){
 */
           if (input.bidali){
             
-                  var status = input.izenburuaEdukia + " - http://txaparrotan.herokuapp.com/";
+                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/";
 
                   twitter.post('statuses/update', { status: status }, function (err, data, response) {
                    if (err) {

@@ -350,6 +350,7 @@ exports.izenematea = function(req,res){
 
     res.locals.flash = null;
     var now= new Date();
+     console.log("NOW : "+now );
     var tope = 0;
     var aditestua = "Izen-ematea";
     var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera;
@@ -527,18 +528,19 @@ exports.sortu = function(req,res){
       }
   
 //  req.getConnection(function (err, connection) {
-
+debugger;
       connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and (taldeizena = ? or emailard = ?)',[req.session.idtxapelketa, req.body.taldeizena, req.body.emailard],function(err,rows)  {
 
  //      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
-            
-        if(err || rows.length != 0){
+        if(err)
+          console.log("Error Selecting : %s ",err );
+        if (rows.length != 0){
           if (rows[0].taldeizena == req.body.taldeizena)
           {
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
-            message: 'Beste talde izen bat sartu!',
+            message: 'Beste talde izen bat sartu behar duzu! Dagoenekoz, izen hori erabilita dago eta.',
            };
           }
           else 
