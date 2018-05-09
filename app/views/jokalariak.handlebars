@@ -63,8 +63,10 @@
             <table class="table table-striped">
             <tr>
                     <th>Izena</th>
+<!--
                     <th>Emaila</th>
                     <th>Telefonoa</th>
+-->                    
                     <th>Kamiseta neurria</th>
                     <th></th>
                     <th></th>
@@ -73,8 +75,10 @@
             {{#each data}}
                   <tr>
                     <td>{{jokalariizena}}</td>
+<!--
                     <td>{{emailaj}}</td>
                     <td>{{telefonoaj}}</td>
+-->                    
                     <td>{{kamisetaneurria}}</td>
                     {{#if aldaketabai}}  
                      <td>
@@ -96,8 +100,8 @@
     <form class="form-horizontal newsletterForm" role="form" action="/jokalariasortu" method="POST">
     <input type="hidden" name="_csrf" value="{{_csrfToken}}">
         
-        <h4 style="color:#0000FF"> Gogoratu, taldeko jokalari kopuruak 6 eta 8ren artean egon behar duela </h4>
-        <h4 style="color:#0000FF"> 8 partaidetik gora izanez gero, txaparrotan@gmail.com -era mezu bat bidali mesedez! </h4>
+        <h4 style="color:#0000FF"> Gogoratu, taldeko jokalari kopurua 6 eta 8ren artean izatea gomendatzen dugula. </h4>
+        <h4 style="color:#0000FF"> 8 partaidetik gorako taldeetan, haurretan, partaide gehigarri bakoitzeko 3€ gehiago eta helduetan, 5€. </h4>
         </br>
         <div class="form-group">
             <label for="jokalariizena" class="col-sm-2 control-label">Izen-abizenak</label>
@@ -105,6 +109,7 @@
                 <textarea name="jokalariizena" rows="1" cols="40" class="form-control" required>{{jokalariizena}}</textarea>
             </div>
         </div>
+<!--
         <div class="form-group">
             <label for="emaila" class="col-sm-2 control-label">Emaila</label>
             <div class="col-sm-4">
@@ -117,6 +122,7 @@
                 <input type="tel" class="form-control" id="telefonoa" placeholder="Hautazkoa" name="telefonoa">
             </div>
         </div>
+-->
         <div class="form-group">
             <label for="kamisetaneurria" class="col-sm-2 control-label">Kamisetaren neurria (derrigorrezkoa)</label>
             <div class="col-sm-4">

@@ -23,6 +23,7 @@
             }
         </style>
     <link rel="stylesheet" href="{{static '/vendor/bootstrap/css/bootstrap-theme.min.css'}}">
+    <link rel="stylesheet" href="{{static '/vendor/bootstrap/css/bootstrap-markdown.min.css'}}">
     {{#each _bundles.css}}
       <link rel="stylesheet" href="{{static .}}">
     {{/each}}
@@ -131,6 +132,10 @@
 
     <script src="{{static '/vendor/bootstrap/js/bootstrap.min.js'}}"></script>
     <script src="{{static '/js/main.js'}}"></script>
+
+    <script src="{{static '/vendor/bootstrap/js/bootstrap-markdown.js'}}"></script>
+    <script src="{{static '/vendor/bootstrap/js/marked.js'}}"></script>
+    
     </body>
 </html>
 

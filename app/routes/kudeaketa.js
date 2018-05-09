@@ -124,7 +124,7 @@ exports.kalkuluak = function(req, res){
         if (err)
                 console.log("Error query : %s ",err ); 
         //console.log("mailak : " + JSON.stringify(rows)); 
-        res.render('kalkuluak.handlebars', {title : 'Txaparrotan-Kalkuluak egin', taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa, mailak : rows});
+        res.render('kalkuluak.handlebars', {title : 'Txaparrotan-Kalkuluak egin', taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa, mailak : rows, nondik:req.session.nondik});
       });   
   });  
 };
@@ -191,8 +191,8 @@ exports.multzoakbete = function(req, res){
           imultzo[rowsg[j].multzo] = rowsg[j].idgrupo;
         }
 
-     connection.query('SELECT * FROM taldeak where balidatuta >= 1 and idtxapeltalde = ? and kategoria = ? order by lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {
-            
+     connection.query('SELECT * FROM taldeak where balidatuta >= 4 and idtxapeltalde = ? and kategoria = ? order by lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {
+//     connection.query('SELECT * FROM taldeak where balidatuta >= 1 and idtxapeltalde = ? and kategoria = ? order by lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {            
         if(err)
            console.log("Error Selecting : %s ",err );
        
@@ -1977,10 +1977,11 @@ exports.taldeabalekoa = function(req,res){
           hosta += ":"+ (process.env.PORT || 3000);
          }
          
-         var body = "<p>"+rows[0].taldeizena+" "+rows[0].mailaizena+" mailan taldea balidatu ahal izateko, </p>";
+         var body = "<p>1. "+rows[0].taldeizena+" taldea "+rows[0].mailaizena+" mailan balidatu ahal izateko, </p>";
          body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
-         body += "<p>Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p> Hori egindakoan, " +rows[0].kontukorrontea+ " kontu korrontean  "+rows[0].prezioa+ "euro sartu eta kontzeptu bezala "+rows[0].taldeizena+"-"+rows[0].izenaard+" jarri.</p>";
-         body += "<p>Hori egin arte, zure taldea ez da apuntaturik egongo. Mila esker!</p> \n \n";
+         body += "<p>2. Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p>3. Hori egindakoan, " +rows[0].kontukorrontea+ " kontu korrontean  "+rows[0].prezioa+ "euro sartu eta kontzeptu bezala "+rows[0].taldeizena+"-"+rows[0].izenaard+" jarri.</p>";
+         body += "<p style='color:#FF0000'>4. Hori egin arte, zure taldea ez da apuntaturik egongo.</p>";
+         body += "<p style='color:#FFFF00'>5. Eguraldi txarra medioz, antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera gelditu ezkero, antolakuntza ez da kargo egiten gertatzen denarekin. Mila esker!</p> \n \n";
          body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
 
           req.session.idtalde = idtaldea;

@@ -1,0 +1,52 @@
+{{> menuadmin}}
+
+<div class="jumbotron">
+        <h2>Berriak editatu</h2>
+ </div>
+
+<div class="formContainer">
+{{#each data}}
+    <form class="form-horizontal newsletterForm" role="form" action="/admin/berriakaldatu/{{idBerriak}}" method="POST">
+    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+        <div class="form-group">
+            <label for="izenburuaBerria" class="col-sm-2 control-label">Izenburua</label>
+            <div class="col-sm-4">
+<!--            <input type="text" class="form-control" required id="izenburuaBerria" name="izenburuaBerria" autofocus 
+                  value={{izenburuaBerria}}> -->
+                <textarea name="izenburuaBerria" rows="1" cols="50" class="form-control" required id="izenburuaBerria" value={{izenburuaBerria}}>{{izenburuaBerria}}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="testuaBerria" class="col-sm-2 control-label">Testua</label>
+            <div class="col-sm-6">
+                <textarea name="testuaBerria" data-provide="markdown" rows="10" cols="220" class="form-control" required id="testuaBerria" value={{testuaBerria}}>{{testuaBerria}}</textarea>
+              <!--  <input type="textarea" class="form-control" required id="testua" name="testua" value={{testua}}> -->
+            </div>
+        </div> 
+        <div class="form-group">
+            <label for="zenbakiBerria" class="col-sm-2 control-label">Zenbakia</label>
+            <div class="col-sm-2">
+                <input type="number" class="form-control" required id="zenbakiBerria" name="zenbakiBerria" autofocus value={{zenbakiBerria}} >
+            </div>
+        </div>
+
+        <div class="form-group">
+        <div class="checkbox col-sm-offset-3">
+              <label>
+                <input type="checkbox" name="bidali" id="bidali" value="true">
+                <strong>Bidali berria txioaz?</strong>
+              </label>
+            </div>
+         </div>
+         </div>        
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-4">
+                <button type="submit" class="btn btn-default">Gorde</button>
+            </div>
+        </div>
+    </form>
+   {{/each}} 
+</div>
+

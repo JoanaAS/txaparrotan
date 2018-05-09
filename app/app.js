@@ -20,6 +20,8 @@ var app = express();
 var connection  = require('express-myconnection'); 
 var mysql = require('mysql');
 
+var md = require('marked');
+
 //var passport= require('./config/passport')(passport);
 
 // all environments
@@ -248,10 +250,11 @@ app.get('/admin/argazkiak', adminonartua,function(req, res){
 });    
 app.post('/argazkiakigo/:idtxapelketa', adminonartua,txapelketak.argazkiakigo);
 
-app.get('/admin/berriak', adminonartua,function(req, res){
-    res.render('berriaksortu.handlebars', {title : 'Txaparrotan-Berriak sortu', taldeizena: req.session.txapelketaizena});
-});
-app.post('/berriaksortu',adminonartua,txapelketak.berriaksortu); 
+app.get('/admin/berriak', adminonartua, txapelketak.berriakbilatu);
+app.post('/admin/berriaksortu', adminonartua, txapelketak.berriaksortu);
+app.get('/admin/berriakezabatu/:idBerriak', adminonartua, txapelketak.berriakezabatu);
+app.get('/admin/berriakeditatu/:idBerriak', adminonartua, txapelketak.berriakeditatu);
+app.post('/admin/berriakaldatu/:idBerriak', adminonartua, txapelketak.berriakaldatu);
 
 /*app.get('/admin/kalkuluak', adminonartua,function(req, res){
     res.render('kalkuluak.handlebars', {title : 'Txaparrotan-Kalkuluak egin', taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa});
@@ -282,6 +285,7 @@ app.get('/admin/emaitzaguztiak', adminonartua, kudeaketa.emaitzakikusi);
 app.get('/admin/emaitza/:partidu', adminonartua, kudeaketa.emaitzapartidu);
 app.post('/admin/emaitzasartu/:partidu', adminonartua, kudeaketa.emaitzasartu);
 app.post('/admin/emaitzenorriak', adminonartua, kudeaketa.emaitzenorriak);
+app.get('/admin/taldeak', adminonartua, taldeak.ikusi);
 app.get('/admin/taldeakikusi', adminonartua, txapelketak.taldeakikusi);
 app.get('/admin/taldea/:talde', adminonartua, kudeaketa.taldeaeditatu);
 app.post('/admin/taldeaaldatu/:talde', adminonartua, kudeaketa.taldeaaldatu);

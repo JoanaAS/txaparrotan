@@ -1,31 +1,80 @@
 {{> menuadmin}}
 
 <div class="jumbotron">
+        <h2>Berriak</h2>
+      </div>
+
+<div class="row marketing">
+    <div class="col-lg-12">
+
+         <table class="table table-striped">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Izenburua</th>
+                    <th>Data</th>
+                    <th>Zenbakia</th>
+                    <th></th>
+                    <th></th>
+                </tr>                  
+            
+              {{#each berriak}}
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td>{{izenburuaBerria}}</td>
+<!--                    <td>{{testuaBerria}}</td>  -->
+                    <td>{{dataBerria}}</td>
+                    <td align=center>{{zenbakiBerria}}</td>
+                     <td>
+                        <a class="a-inside edit" href="../admin/berriakeditatu/{{idBerriak}}">Berria Aldatu</a>
+                    </td>
+                    <td>
+                        <a class="a-inside delete" href="../admin/berriakezabatu/{{idBerriak}}">Berria Ezabatu</a> 
+                    </td>
+                    
+                  </tr>
+              {{/each}}
+
+      </table>
+
+        
+    </div>
+  </div>
+
+<div class="jumbotron">
         <h2>Berriak sortu</h2>
       </div>
+
 <div class="formContainer">
-    <form class="form-horizontal newsletterForm" role="form" action="/berriaksortu" method="POST">
+    <form class="form-horizontal newsletterForm" role="form" action="/admin/berriaksortu" method="POST">
     <input type="hidden" name="_csrf" value="{{_csrfToken}}">
         <div class="form-group">
-            <label for="izenburua" class="col-sm-2 control-label">Izenburua</label>
+            <label for="izenburuaBerria" class="col-sm-2 control-label">Izenburua</label>
             <div class="col-sm-4">
-                <input type="text" class="form-control" required id="izenburua" name="izenburua" autofocus value={{izenburua}} >
+                <input type="text" class="form-control" required id="izenburuaBerria" name="izenburuaBerria" autofocus value={{izenburuaBerria}} >
             </div>
         </div>
         
         <div class="form-group">
-            <label for="testua" class="col-sm-2 control-label">Testua</label>
-            <div class="col-sm-4">
-                <textarea name="testua" rows="10" cols="40" class="form-control" required id="testua" value={{testua}}>  </textarea>
+            <label for="testuaBerria" class="col-sm-2 control-label">Testua</label>
+            <div class="col-sm-6">
+                <textarea name="testuaBerria" data-provide="markdown" rows="10" cols="220" class="form-control" required id="testuaBerria" value={{testuaBerria}}>  </textarea>
               <!--  <input type="textarea" class="form-control" required id="testua" name="testua" value={{testua}}> -->
             </div>
         </div> 
+        <div class="form-group">
+            <label for="zenbakiBerria" class="col-sm-2 control-label">Zenbakia</label>
+            <div class="col-sm-2">
+                <input type="number" class="form-control" required id="zenbakiBerria" name="zenbakiBerria" autofocus value={{zenbakiBerria}} >
+            </div>
+        </div>
 
         <div class="form-group">
         <div class="checkbox col-sm-offset-3">
               <label>
                 <input type="checkbox" name="bidali" id="bidali" value="true">
-                <strong>Bidali berria postaz?</strong>
+                <strong>Bidali berria txioaz?</strong>
               </label>
             </div>
          </div>

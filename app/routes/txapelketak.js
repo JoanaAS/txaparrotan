@@ -6,6 +6,23 @@ var VALID_TEL_REGEX = /^[0-9-()+]{3,20}/;
   formidable = require('formidable');
   var bcrypt = require('bcrypt-nodejs');
 
+  var md = require('marked');
+  
+  var credentials = require('../credentials.js');
+  var Twitter = require('twit');
+  var twitter = new Twitter(credentials.twitter);
+
+/*           
+              twitter.get('followers/list', { screen_name: 'txaparrotan' }, function (err, data, response) {
+                  if (err) {
+                        console.log(err);
+                  } else {
+                      data.users.forEach(function(user){
+                        console.log(user.screen_name);
+                      });
+                  }
+              }); 
+*/
 // make sure data directory exists
 //var dataDir = path.normalize(path.join(__dirname, '..', 'data'));
 var dataDir = path.normalize(path.join(__dirname, '../public', 'data'));
@@ -24,8 +41,18 @@ exports.aukeratzeko = function(req, res){
       connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where txapelketaprest != 9',function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
-        console.log("txapelketak : " + JSON.stringify(rows)); 
-        res.render('txapelketakaukeratzeko.handlebars', {title : 'Txaparrotan-Txapelketa aukeratzeko', txapelketak : rows});
+//        console.log("txapelketak : " + JSON.stringify(rows)); 
+
+        connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak WHERE zenbakiBerria = 9 order by zenbakiBerria asc, dataBerria desc',function(err,rowsb)            
+        {
+          if(err)
+            console.log("Error Selecting : %s ",err );
+          for (var i in rowsb) {
+            var testuahtml = md(rowsb[i].testuaBerria);
+            rowsb[i].htmlBerria = testuahtml;
+          }
+          res.render('txapelketakaukeratzeko.handlebars', {title : 'Txaparrotan-Txapelketa aukeratzeko', txapelketak : rows, berriak : rowsb});
+        });
       });   
   });  
 };
@@ -342,7 +369,112 @@ exports.ikusgai = function(req,res){
     });
 };
 
+exports.berriakbilatu = function(req, res){
+  var id = req.session.idtxapelketa;
+  var edukiak = []; //partiduak
+  var j,t;
+  var k = 0;
+  req.getConnection(function(err,connection){
+       
+     connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak WHERE idtxapelBerria = ? and zenbakiBerria <> 0 order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)            
+     {
+        if(err)
+           console.log("Error Selecting : %s ",err );
+     
+       //console.log("Edukiak:" +JSON.stringify(rows));
+        // debugger;
+        for (var i in rowsb) {
+            var testuahtml = md(rowsb[i].testuaBerria);
+            rowsb[i].htmlBerria = testuahtml;
+        }
+        res.render('berriaksortu.handlebars',{title: "Txaparrotan-Berriak sortu", berriak:rowsb, taldeizena: req.session.txapelketaizena});
+      });   
+  });
+};
 
+exports.berriakeditatu = function(req, res){
+  //var id = req.params.id;
+  var id = req.session.idtxapelketa;
+  var idBerriak = req.params.idBerriak;
+    
+  req.getConnection(function(err,connection){
+       
+     connection.query('SELECT * FROM berriak WHERE idtxapelBerria = ? and idBerriak = ?',[id,idBerriak],function(err,rows)
+        {
+            
+            if(err)
+                console.log("Error Selecting : %s ",err );
+
+            res.render('berriakeditatu.handlebars', {title:"Berriak aldatu",data:rows, jardunaldia: req.session.jardunaldia, idDenboraldia: req.session.idDenboraldia, partaidea: req.session.partaidea});
+                           
+         });
+                 
+    }); 
+};
+
+exports.berriakaldatu = function(req,res){
+    
+    var input = JSON.parse(JSON.stringify(req.body));
+    //var id = req.params.id;
+    var id = req.session.idtxapelketa;
+    var idBerriak = req.params.idBerriak;
+    var now= new Date();
+    
+    req.getConnection(function (err, connection) {
+        
+        var data = {
+            
+            izenburuaBerria    : input.izenburuaBerria,
+            testuaBerria   : input.testuaBerria,
+            zenbakiBerria : input.zenbakiBerria,
+            dataBerria : now
+            //idElkarteakEdukia : id
+
+            //argazkia
+        };
+        
+        connection.query("UPDATE berriak set ? WHERE idtxapelBerria = ? and idBerriak = ? ",[data,id,idBerriak], function(err, rows)
+        {
+          if (err)
+              console.log("Error Updating : %s ",err );
+          if (input.bidali){
+            
+                  var status = input.izenburuaEdukia + " - http://txaparrotan.herokuapp.com/";
+
+                  twitter.post('statuses/update', { status: status }, function (err, data, response) {
+                   if (err) {
+                        console.log(err);
+                   } else {
+                        console.log(data.text + ' txiotu da');
+                   }
+                  });
+          }
+          res.redirect('/admin/berriak');
+        });
+    
+    });
+};
+
+exports.berriakezabatu = function(req,res){
+          
+     //var id = req.params.id;
+     var id = req.session.idtxapelketa;
+     var idBerriak = req.params.idBerriak;
+    
+     req.getConnection(function (err, connection) {
+        
+        connection.query("DELETE FROM berriak  WHERE idtxapelBerria = ? and idBerriak = ?",[id,idBerriak], function(err, rows)
+        {
+            
+             if(err)
+                 console.log("Error deleting : %s ",err );
+            
+             res.redirect('/admin/berriak');
+             
+        });
+        
+     });
+};
 
 exports.berriaksortu = function(req,res){
     
@@ -360,19 +492,18 @@ exports.berriaksortu = function(req,res){
         
         var data = {
             
-            izenburua    : input.izenburua,
-            testua   : input.testua,
-            data: now,
-            idtxapel : id
+            izenburuaBerria    : input.izenburuaBerria,
+            testuaBerria   : input.testuaBerria,
+            dataBerria: now,
+            zenbakiBerria : input.zenbakiBerria,
+            idtxapelBerria : id
         };
-        
-  
+       
         var query = connection.query("INSERT INTO berriak set ? ",data, function(err, rows)
         {
-  
           if (err)
               console.log("Error inserting : %s ",err );
-         
+/*         
           if(input.bidali){
               var query = connection.query('SELECT * FROM taldeak where idtxapeltalde = ? order by emailard',[id],function(err,rows)
               {
@@ -393,6 +524,19 @@ exports.berriaksortu = function(req,res){
                  }; 
                 }
               });
+          }
+*/
+          if (input.bidali){
+            
+                  var status = input.izenburuaEdukia + " - http://txaparrotan.herokuapp.com/";
+
+                  twitter.post('statuses/update', { status: status }, function (err, data, response) {
+                   if (err) {
+                        console.log(err);
+                   } else {
+                        console.log(data.text + ' txiotu da');
+                   }
+                  });
           }
           res.redirect('/admin/berriak');
         });
@@ -423,16 +567,19 @@ exports.berriakikusi = function(req, res){
 
   req.getConnection(function(err,connection){
        
-     connection.query('SELECT * FROM berriak where idtxapel = ? order by data desc',[id],function(err,rows)     {
+     connection.query('SELECT * FROM berriak where zenbakiBerria <> 0 and idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)     {
             
-        if(err)
+        if(err) 
            console.log("Error Selecting : %s ",err );
      
-        connection.query('SELECT * FROM txapelketa where idtxapelketa = ? ',[id],function(err,rowst)     {
+        connection.query('SELECT * FROM txapelketa where idtxapelketa = ? ',[id],function(err,rows)     {
           if(err)
            console.log("Error Selecting : %s ",err );
-         
-          res.render('index.handlebars',{title: "Txaparrotan", taldeizena: req.session.taldeizena, data:rows, data2: rowst});
+          for (var i in rowsb) {
+            var testuahtml = md(rowsb[i].testuaBerria);
+            rowsb[i].htmlBerria = testuahtml;
+          }         
+          res.render('index.handlebars',{title: "Txaparrotan", taldeizena: req.session.taldeizena, data:rowsb, data2: rows});
         });                        
       });   
   });
@@ -1003,7 +1150,7 @@ exports.mezuakbidali = function(req,res){
         if(input.mezumota == "prest"){
 
             //connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? and balidatuta > 0 order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
-            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 0 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
+            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 3 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
               if(err)
                 console.log("Error Selecting : %s ",err );
               var subj = req.session.txapelketaizena+ " txapelketa prest";
@@ -1019,8 +1166,24 @@ exports.mezuakbidali = function(req,res){
        
              });
         }
+        else if(input.mezumota == "onartuak"){
+            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 3 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
+              if(err)
+                console.log("Error Selecting : %s ",err );
+              var subj = req.session.txapelketaizena+ " txapelketan zure taldea onartua";
+              var body = "<h2> Txapelketan zure taldea onartua </h2>\n" + 
+                              "<p>"+ req.session.txapelketaizena+ "</p> \n"+
+                              "<h3> Sartu: http://" +hosta+" eta ikusi zure taldea onarturik Taldeak atalean</h3>\n \n \n"+
+                              "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
+                              //"<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://txaparrotan.herokuapp.com</h3>" ;
+              //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
+              taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
 
-        else if(input.mezumota == "ordgabe"){
+              res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
+       
+             });
+          }          
+          else if(input.mezumota == "ordgabe"){
 
               var query = connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = ? and idtxapelketa=idtxapeltalde and balidatuta < 5 and balidatuta > 0 order by emailard',[id],function(err,rows)
               {
@@ -1039,10 +1202,10 @@ exports.mezuakbidali = function(req,res){
                 }
                res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
                 
-          });
-        }
+              });
+           }
 
-        else if(input.mezumota == "jokgabe"){
+           else if(input.mezumota == "jokgabe"){
 
               connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
               if(err)
@@ -1062,7 +1225,7 @@ exports.mezuakbidali = function(req,res){
               res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
        
              });
-        }
+            }
         
      });   
 };
