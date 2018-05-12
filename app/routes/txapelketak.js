@@ -419,7 +419,13 @@ exports.berriakaldatu = function(req,res){
     var id = req.session.idtxapelketa;
     var idBerriak = req.params.idBerriak;
     var now= new Date();
-    
+    console.log("now1 : %s ",now );
+    if (process.env.NODE_ENV == 'production'){
+      now.setUTCHours(now.getHours());
+      now.setUTCMinutes(now.getMinutes()); 
+    }
+    console.log("now2 : %s ",now );  
+
     req.getConnection(function (err, connection) {
         
         var data = {
@@ -439,7 +445,7 @@ exports.berriakaldatu = function(req,res){
               console.log("Error Updating : %s ",err );
           if (input.bidali){
             
-                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/";
+                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/ \n #txaparrotan15";
 
                   twitter.post('statuses/update', { status: status }, function (err, data, response) {
                    if (err) {
@@ -482,7 +488,10 @@ exports.berriaksortu = function(req,res){
     console.log("Bidali:" + input.bidali);
     var id = req.session.idtxapelketa;
     var now= new Date();
-
+    if (process.env.NODE_ENV == 'production'){
+      now.setUTCHours(now.getHours());
+      now.setUTCMinutes(now.getMinutes()); 
+    }
     var hosta = req.hostname;
     if (process.env.NODE_ENV != 'production'){ 
           hosta += ":"+ (process.env.PORT || 3000);
@@ -528,7 +537,7 @@ exports.berriaksortu = function(req,res){
 */
           if (input.bidali){
             
-                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/";
+                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/ \n #txaparrotan15";
 
                   twitter.post('statuses/update', { status: status }, function (err, data, response) {
                    if (err) {
@@ -1145,65 +1154,101 @@ exports.mezuakbidali = function(req,res){
           hosta += ":"+ (process.env.PORT || 3000);
     }
 
-    req.getConnection(function (err, connection) {
-         
-        if(input.mezumota == "prest"){
+    var to;
+    var nondik = 0, nora = 0;
+    var zenbat = 10;
 
-            //connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? and balidatuta > 0 order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
-            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 3 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
-              if(err)
-                console.log("Error Selecting : %s ",err );
+    if (!req.session.nondik){ 
+          req.session.nondik = 0;
+    }
+    nondik = req.session.nondik;
+debugger;      
+ 
+    req.getConnection(function (err, connection) {
+      connection.query('SELECT * FROM txapelketa where idtxapelketa = ? ',[id],function(err,rowst)
+      {
+        if(err)
+            console.log("Error Selecting : %s ",err );       
+        if(input.mezumota == "prest" || input.mezumota == "onartuak"){
+            if(input.mezumota == "prest"){
               var subj = req.session.txapelketaizena+ " txapelketa prest";
               var body = "<h2> Txapelketa prest </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://"+hosta+"</h3>\n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
-                              //"<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://txaparrotan.herokuapp.com</h3>" ;
-              //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-              taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
-
-              res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
-       
-             });
-        }
-        else if(input.mezumota == "onartuak"){
-            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 3 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
-              if(err)
-                console.log("Error Selecting : %s ",err );
-              var subj = req.session.txapelketaizena+ " txapelketan zure taldea onartua";
-              var body = "<h2> Txapelketan zure taldea onartua </h2>\n" + 
+            }
+            else if(input.mezumota == "onartuak"){
+                    var subj = req.session.txapelketaizena+ " txapelketan zure taldea onartua";
+                    var body = "<h2> Txapelketan zure taldea onartua </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu: http://" +hosta+" eta ikusi zure taldea onarturik Taldeak atalean</h3>\n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
-                              //"<h3> Partiduen ordutegia ikusi ahal izateko sartu: http://txaparrotan.herokuapp.com</h3>" ;
-              //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-              taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
-
-              res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
-       
-             });
-          }          
-          else if(input.mezumota == "ordgabe"){
-
-              var query = connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = ? and idtxapelketa=idtxapeltalde and balidatuta < 5 and balidatuta > 0 order by emailard',[id],function(err,rows)
+            }  
+            //connection.query('SELECT * FROM taldeak,jokalariak where idtaldeak=idtaldej and idtxapeltalde = ? and balidatuta > 0 order by idtaldeak, idjokalari',[req.session.idtxapelketa],function(err,rows)     {
+            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 3 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
+              if(err)
+                console.log("Error Selecting : %s ",err );
+              if (input.bidali){
+                for (var i in rows){
+                  if(i >= nondik && nora < zenbat){
+                    nora++;
+                    var to = rows[i].emailard;
+                    emailService.send(to, subj, body);
+                    console.log("emaila: "+ i + "-" + nora + "-" + to );
+                    req.session.nondik = parseInt(i) + 1;
+                  }
+                }    
+                if(nondik >= rows.length - zenbat){
+                  to = "txaparrotan@gmail.com";                     // ADI txapelketako emaila
+                  emailService.send(to, subj, body);
+                  res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:rows, taldeizena: req.session.txapelketaizena} );
+                } 
+                else
+                  res.redirect('/admin/kalkuluak');  
+              }
+              else
               {
-
-                if(err)
-                  console.log("Error Selecting : %s ",err );
-                if(rows.length != 0){
-                  var subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
-                  var body = "<h2> Izen-emateko urrats guztiak bete gabe dituzue </h2>\n" + 
+                res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:rows, taldeizena: req.session.txapelketaizena} );
+              }       
+          });
+        }
+        else if(input.mezumota == "ordgabe" || input.mezumota == "erdiord" ){
+            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and (balidatuta < 3 or balidatuta = 4) and balidatuta > 0 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
+              if(err)
+                console.log("Error Selecting : %s ",err );
+              console.log(rows.length + "- nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
+              if (input.bidali){
+                for (var i in rows){
+                 if((input.mezumota == "ordgabe" && rows[i].balidatuta < 3) || (input.mezumota == "erdiord" && rows[i].balidatuta == 4)){
+                  if(i >= nondik && nora < zenbat){
+                    nora++;
+                    var to = rows[i].emailard;
+                    var subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
+                    var body = "<h2> Izen-emateko urrats guztiak bete gabe dituzue </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n" +
-                              "<h3> Ordaindu ez baduzue, sartu " +rows[0].prezioa+" € kontu zenbaki honetan: "+rows[0].kontukorrontea+ " Gogoratu, 8 pertsonatik gorako taldea bada, jokalariko gehigarriko 5€gehiago sartu behar dituzuela. Mila esker!</h3>\n \n \n"+
+                              "<h3> Ordaindu ez baduzue, sartu " +rowst[0].prezioa+" € kontu zenbaki honetan: "+rowst[0].kontukorrontea+ " Gogoratu, 8 pertsonatik gorako taldea bada, jokalariko gehigarriko 5€gehiago sartu behar dituzuela. Mila esker!</h3>\n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
-               //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
-                  taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
-                }
-               res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:taldeak2, taldeizena: req.session.txapelketaizena} );
-                
-              });
-           }
+                    emailService.send(to, subj, body);
+                    console.log("emaila: "+ i + "-" + nora + "-" + to );
+                    req.session.nondik = parseInt(i) + 1;
+                  }
+                 }
+                }    
+                if(nondik >= rows.length - zenbat){
+                  to = "txaparrotan@gmail.com";                     // ADI txapelketako emaila
+                  emailService.send(to, subj, body);
+                  res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:rows, taldeizena: req.session.txapelketaizena} );
+                } 
+                else
+                  res.redirect('/admin/kalkuluak');  
+              }
+              else
+              {
+                res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:rows, taldeizena: req.session.txapelketaizena} );
+              }
+             });
+          }          
 
            else if(input.mezumota == "jokgabe"){
 
@@ -1216,7 +1261,6 @@ exports.mezuakbidali = function(req,res){
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
-
                               
               //taldeak2 = mezuaknori(input.bidali,subj,body,rows);
               taldeak2 = mezuaktaldeari(req, input.bidali,subj,body,rows);
@@ -1226,14 +1270,33 @@ exports.mezuakbidali = function(req,res){
        
              });
             }
-        
+      });  
      });   
 };
+
+function emailakbidali(i, nondik, nora, zenbat, lenght, to, subj, body){
+
+ if(i >= nondik && nora < zenbat){
+   nora++;
+//   emailService.send(to, subj, body);
+
+   console.log("emaila: "+ i + "-" + to );
+   if(i == length - 1){
+        nora = zenbat;
+   }
+ }
+ if(nora == zenbat || (i == length - 1 && (nondik >= length - zenbat))){
+    nora++;
+    req.session.nondik = parseInt(i) + 1;
+    console.log("nondik: "+ rows.length + "-" + req.session.nondik);
+ }
+}
 
 function mezuaktaldeari(req, bidali,subj,body,rows){
 var to;
 var nondik = 0, nora = 0;
 var zenbat = 10;
+var nori =[];
 
     if (!req.session.nondik){ 
           req.session.nondik = 0;

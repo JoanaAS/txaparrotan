@@ -74,24 +74,13 @@ app.use(session({
     type koneksi : single,pool and request 
 -------------------------------------------*/
 console.log("environment " + process.env.NODE_ENV);
+
 //if ('development' == app.get('env')) {
 if (process.env.NODE_ENV != 'production'){
   app.use(
 
     connection(mysql, credentials.dbdevelop,'pool')
 
-/*    
-    connection(mysql,{
-        
-        host: 'localhost',
-        user: 'root',
-        password : 'joanaagi',
-        port : 3306, //port mysql
-        //database:'txaparrotan'
-        database:'heroku_4efa3ee4ff6c16c'
-  //  },'request')
-      },'pool')
-*/
  );
               console.log("localhost1" );
 }
@@ -100,17 +89,6 @@ else{
 
     connection(mysql, credentials.dbproduction,'pool')
 
-/*    
-    connection(mysql,{
-        
-        host: 'us-cdbr-iron-east-02.cleardb.net',
-        user: 'b52372483fde60',
-        password : '4d96016a',
-      //  port : 3306, //port mysql
-        database:'heroku_4efa3ee4ff6c16c'
-    //},'request')
-      },'pool')
-*/
  );
               console.log("heroku1" );
 }
@@ -286,6 +264,7 @@ app.get('/admin/emaitza/:partidu', adminonartua, kudeaketa.emaitzapartidu);
 app.post('/admin/emaitzasartu/:partidu', adminonartua, kudeaketa.emaitzasartu);
 app.post('/admin/emaitzenorriak', adminonartua, kudeaketa.emaitzenorriak);
 app.get('/admin/taldeak', adminonartua, taldeak.ikusi);
+app.get('/admin/taldeakbalidatugabe', adminonartua, taldeak.ikusi);
 app.get('/admin/taldeakikusi', adminonartua, txapelketak.taldeakikusi);
 app.get('/admin/taldea/:talde', adminonartua, kudeaketa.taldeaeditatu);
 app.post('/admin/taldeaaldatu/:talde', adminonartua, kudeaketa.taldeaaldatu);

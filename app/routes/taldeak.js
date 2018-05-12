@@ -11,10 +11,14 @@ var taldeak = [];
 var j,t;
 var k = 0;
 var vKategoria, postua;
-var admin = (req.path == "/admin/taldeak");
+var admintalde = (req.path == "/admin/taldeak");
+var admingabe = (req.path == "/admin/taldeakbalidatugabe");
+var admin = (admintalde || admingabe);
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
+//    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
+    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
+
         if(err)
            console.log("Error Selecting : %s ",err );
 /*
@@ -28,7 +32,7 @@ var admin = (req.path == "/admin/taldeak");
         };
 */
         for (var i in rows) { 
-          if ((rows[i].balidatuta >= 1 && admin) || (rows[i].balidatuta >= 4 && !admin)) 
+          if ((rows[i].balidatuta >= 1 && admintalde) || (rows[i].balidatuta == 0 && admingabe) || (rows[i].balidatuta >= 4 && !admin)) 
           {  
            if(vKategoria != rows[i].kategoria){
             if(vKategoria !=null){
@@ -41,7 +45,8 @@ var admin = (req.path == "/admin/taldeak");
             j=0;
             maila = {
                   kategoria    : rows[i].kategoria,
-                  mailaizena  : rows[i].mailaizena
+                  mailaizena  : rows[i].mailaizena,
+                  admin : admin
                };
                
            }
@@ -50,7 +55,8 @@ var admin = (req.path == "/admin/taldeak");
                   postua : j+1,
                   taldeizena    : rows[i].taldeizena,
                   herria    : rows[i].herria,
-                  
+                  balidatuta : rows[i].balidatuta,
+                  admin : admin
                };
            j++;
           }
@@ -266,6 +272,10 @@ exports.bilatu = function(req, res){
   var taldea;
   var id = req.session.idtalde;
   var now= new Date();
+    if (process.env.NODE_ENV == 'production'){
+      now.setUTCHours(now.getHours());
+      now.setUTCMinutes(now.getMinutes()); 
+    }
   //var id = req.params.id;
   var bukaera,aBukaera, vBukaera,aldaketabai;
   var aldaketa = {};
@@ -350,7 +360,10 @@ exports.izenematea = function(req,res){
 
     res.locals.flash = null;
     var now= new Date();
-     console.log("NOW : "+now );
+    if (process.env.NODE_ENV == 'production'){
+      now.setUTCHours(now.getHours());
+      now.setUTCMinutes(now.getMinutes()); 
+    }
     var tope = 0;
     var aditestua = "Izen-ematea";
     var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera;
@@ -438,6 +451,10 @@ exports.sortu = function(req,res){
     var input = JSON.parse(JSON.stringify(req.body));
     res.locals.flash = null;
     var now= new Date();
+    if (process.env.NODE_ENV == 'production'){
+      now.setUTCHours(now.getHours());
+      now.setUTCMinutes(now.getMinutes()); 
+    }
     var aditestua;
     var topetalde = 0;
 
@@ -534,8 +551,20 @@ debugger;
  //      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
         if(err)
           console.log("Error Selecting : %s ",err );
+
         if (rows.length != 0){
-          if (rows[0].taldeizena == req.body.taldeizena)
+         var izenaberdin = 0, emailaberdin = 0; 
+         for(var i in rows ){
+          if(rows[i].taldeizena == req.body.taldeizena){
+              izenaberdin++;
+          }
+          if(rows[i].emailard == req.body.emailard){
+              emailaberdin++;
+          }
+         } 
+         if (izenaberdin >= 1 || emailaberdin >= 2)
+         { 
+          if (izenaberdin >= 1)
           {
            res.locals.flash = {
             type: 'danger',
@@ -548,7 +577,7 @@ debugger;
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
-            message: 'Beste email batekin izen-eman behar duzu! Dagoenekoz email horrekin talde bat sortuta duzu eta. Email batekin talde bat bakarrik sor daiteke!',
+            message: 'Beste email batekin izen-eman behar duzu! Dagoenekoz email horrekin 2 talde sortuta dituzu eta. Email batekin 2 talde bakarrik sor daiteke!',
            };
           }
            return res.render('taldeaksortu.handlebars', {
@@ -566,6 +595,7 @@ debugger;
             emailard2 : req.body.emailard2
 
            });
+         }
         }
         connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {          
             
@@ -647,7 +677,8 @@ debugger;
          body += "<p>2. Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p>3. Hori egindakoan, " +rowst[0].kontukorrontea+ " kontu korrontean  "+rowst[0].prezioa+ "euro sartu eta kontzeptu bezala "+data.taldeizena+"-"+data.izenaard+" jarri.</p>";
          body += '<p style="color:#FF0000">4. Hau egin ezean, zure taldea ez da txapelketan apuntatuta egongo. Behin ordainketa egindakoan eta guk hau berrikusitakoan (astebeteko mugarekin), beste email bat jasoko duzu ONARTUA izan zarela adierazten. Hau jaso arte, ez zaudela onartua garbi utzi nahi dugu</p>';
          body += "<p style='color:#0000FF'>5. Txapelketak dituen mugak gainditu ezinak ditugunez: asteburu batean eta 6 jokutoki, izena emandako taldeak topea gainditu ezkero, antolakuntzak, astebetera, zein talde izan diren onartuak adieraziko ditu. Ordaindu duen talderen bat kanpoan geldituko balitz, dirua bueltatuko litzaioke.</p>";
-         body += "<p style='color:#FF0000'>6. Eguraldi txarra medioz, antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera gelditu ezkero, antolakuntza ez da kargo egiten gertatzen denarekin. Mila esker!</p> \n \n";
+         body += "<p style='color:#FF0000'>6. Gerta daitezken kalteez, Antolakuntza ez da arduradun egiten.</p>";
+         body += "<p style='color:#0000FF'>7. Antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera gelditu ezkero, antolakuntza ez da kargo egiten gertatzen denarekin. Mila esker!</p> \n \n";
          body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
 
           req.session.idtalde = rows.insertId;
@@ -662,7 +693,6 @@ debugger;
     });
   });
 };
-
 
 exports.balidatu = function(req,res){
     

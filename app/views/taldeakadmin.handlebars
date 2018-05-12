@@ -5,6 +5,7 @@
       </div>
       <a href="/admin/taldeak" class="btn btn-primary btn-sm" role="button">Taldeak</a>
       <a href="/admin/taldekopurua" class="btn btn-primary btn-sm" role="button">Talde kopurua ikusi</a>
+      <a href="/admin/taldeakbalidatugabe" class="btn btn-primary btn-sm" role="button">Itxaron Zerrenda</a>
       <a href="/admin/taldekopbalidatugabe" class="btn btn-primary btn-sm" role="button">Talde kop balidatu gabe</a>
       <a href="/admin/jokalarikopurua" class="btn btn-primary btn-sm" role="button">Jokalari kopurua ikusi</a>
       <a href="/admin/jokalariakikusi" class="btn btn-primary btn-sm" role="button">Jokalariak izenez ikusi</a>
@@ -23,11 +24,12 @@
                     <th>Maila</th>
                     <th>B</th>
                     <th>Jokalarien izenak</th>
+                    <th>Kamiseta neurriak</th>
+<!--
                     <th>Jokalarien emailak</th>
                     <th>Jokalarien telefonoak</th>
-                    <th>Kamiseta neurriak</th>
-
-
+-->                    
+                    <th>        </th>
                 </tr>                               
             {{#each data2}}
                   <tr class="active">
@@ -43,7 +45,7 @@
                     <td><a class="a-inside edit" href="/admin/taldeaezabatu/{{idtaldeak}}">Ezabatu</a></td>
  
                     <td><a class="a-inside edit" href="/admin/taldeabalekoa/{{idtaldeak}}">Balekoa</a></td>
-                    <td>--------</td>
+<!--                    <td>--------</td>   -->
                     {{#each jokalariak}} 
                     <tr>
                     <td width="20px"> </td>
@@ -53,10 +55,13 @@
                     <td> </td>
                     <td> </td>
                     <td> </td>
-                    <td>{{jokalariizena}} </td>   
+                    <td> </td>
+                    <td>{{jokalariizena}} </td> 
+                    <td>{{kamisetaneurria}}</td>
+<!--
                     <td>{{emailaj}}</td> 
                     <td>{{telefonoaj}}</td> 
-                    <td>{{kamisetaneurria}}</td>
+-->
                     </tr>
                     {{/each}} 
                 </tr>
