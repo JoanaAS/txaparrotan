@@ -376,7 +376,7 @@ exports.berriakbilatu = function(req, res){
   var k = 0;
   req.getConnection(function(err,connection){
        
-     connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak WHERE idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)            
+     connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak WHERE idtxapelBerria = ? order by motaEdukia asc, zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)            
      {
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -433,10 +433,10 @@ exports.berriakaldatu = function(req,res){
             izenburuaBerria    : input.izenburuaBerria,
             testuaBerria   : input.testuaBerria,
             zenbakiBerria : input.zenbakiBerria,
-            dataBerria : now
+            dataBerria : now,
             //idElkarteakEdukia : id
 
-            //argazkia
+            motaEdukia : input.motaEdukia //argazkiaK-A  berriak-B 
         };
         
         connection.query("UPDATE berriak set ? WHERE idtxapelBerria = ? and idBerriak = ? ",[data,id,idBerriak], function(err, rows)
@@ -505,7 +505,8 @@ exports.berriaksortu = function(req,res){
             testuaBerria   : input.testuaBerria,
             dataBerria: now,
             zenbakiBerria : input.zenbakiBerria,
-            idtxapelBerria : id
+            idtxapelBerria : id,
+            motaEdukia : input.motaEdukia
         };
        
         var query = connection.query("INSERT INTO berriak set ? ",data, function(err, rows)
@@ -576,7 +577,7 @@ exports.berriakikusi = function(req, res){
 
   req.getConnection(function(err,connection){
        
-     connection.query('SELECT * FROM berriak where zenbakiBerria <> 0 and idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)     {
+     connection.query('SELECT * FROM berriak where motaEdukia = "B" and zenbakiBerria <> 0 and idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)     {
             
         if(err) 
            console.log("Error Selecting : %s ",err );
@@ -594,6 +595,24 @@ exports.berriakikusi = function(req, res){
   });
 };
 
+exports.argazkiakikusi = function(req, res){
+  var id = req.session.idtxapelketa;
+
+  req.getConnection(function(err,connection){
+       
+     connection.query('SELECT * FROM berriak where motaEdukia = "A" and zenbakiBerria <> 0 and idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)     {
+            
+        if(err) 
+           console.log("Error Selecting : %s ",err );
+     
+        for (var i in rowsb) {
+            var testuahtml = md(rowsb[i].testuaBerria);
+            rowsb[i].htmlBerria = testuahtml;
+        }         
+        res.render('argazkiak.handlebars', {title: "Txaparrotan - Argazkiak", irudiak:rowsb, taldeizena: req.session.taldeizena});
+      });   
+  });
+};
 
 exports.argazkiakigo = function(req, res){
   var idtxapelketa = req.session.idtxapelketa;
@@ -626,7 +645,7 @@ exports.argazkiakigo = function(req, res){
     });
 };
 
-exports.argazkiakikusi = function(req, res){
+exports.argazkiakikusi2 = function(req, res){
   var argazkiak = [];
   var argazkia = {};
   debugger;

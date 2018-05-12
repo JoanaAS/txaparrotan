@@ -4,19 +4,13 @@
       </div>
 
       <div class="row marketing">
-        
-        
 
-  
-          {{#each irudiak}}
-          <div class="col-lg-4">
-             <a href="/data/argazkiak/{{idtxapelketa}}/{{files}}" class="thumbnail">
-          		<img src="/data/argazkiak/{{idtxapelketa}}/{{files}}" alt="Txaparrotan argazkia"  ref="/data/argazkiak/{{idtxapelketa}}/{{files}}" class="thumbnail"> </img> </a>
+        {{#each irudiak}}
+          <div class="col-lg-12" class="thumbnail">
+                  {{{htmlBerria}}}
           </div>
-          {{/each}} 
-        
-        
-        
+        {{/each}} 
+               
       </div>
 
      
