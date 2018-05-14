@@ -595,6 +595,26 @@ exports.berriakikusi = function(req, res){
   });
 };
 
+exports.egitekoakikusi = function(req, res){
+  var id = req.session.idtxapelketa;
+
+  req.getConnection(function(err,connection){
+       
+     connection.query('SELECT * FROM berriak where motaEdukia = "E" and zenbakiBerria <> 0 and idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)     {
+            
+        if(err) 
+           console.log("Error Selecting : %s ",err );
+     
+        for (var i in rowsb) {
+            var testuahtml = md(rowsb[i].testuaBerria);
+            rowsb[i].htmlBerria = testuahtml;
+        }         
+        res.render('egitekoak.handlebars', {title: "Txaparrotan - Egitekoak", egitekoak:rowsb, taldeizena: req.session.taldeizena});
+      });   
+  });
+};
+
+
 exports.argazkiakikusi = function(req, res){
   var id = req.session.idtxapelketa;
 
@@ -1181,6 +1201,11 @@ exports.mezuakbidali = function(req,res){
           req.session.nondik = 0;
     }
     nondik = req.session.nondik;
+
+    if (!req.session.mezumota){ 
+          req.session.mezumota = input.mezumota;
+    }
+
 debugger;      
  
     req.getConnection(function (err, connection) {
@@ -1208,6 +1233,7 @@ debugger;
               if(err)
                 console.log("Error Selecting : %s ",err );
               if (input.bidali){
+                console.log(rows.length + "- nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
                 for (var i in rows){
                   if(i >= nondik && nora < zenbat){
                     nora++;
@@ -1223,7 +1249,10 @@ debugger;
                   res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:rows, taldeizena: req.session.txapelketaizena} );
                 } 
                 else
-                  res.redirect('/admin/kalkuluak');  
+                  if (req.session.nondik != 0) 
+                      res.redirect('/admin/mezuakmenua');
+                  else
+                      res.redirect('/admin/kalkuluak');  
               }
               else
               {
@@ -1235,8 +1264,9 @@ debugger;
             connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and (balidatuta < 3 or balidatuta = 4) and balidatuta > 0 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
               if(err)
                 console.log("Error Selecting : %s ",err );
-              console.log(rows.length + "- nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
+      //        console.log(rows.length + "- nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
               if (input.bidali){
+                console.log(rows.length + "- nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
                 for (var i in rows){
                  if((input.mezumota == "ordgabe" && rows[i].balidatuta < 3) || (input.mezumota == "erdiord" && rows[i].balidatuta == 4)){
                   if(i >= nondik && nora < zenbat){
@@ -1260,7 +1290,10 @@ debugger;
                   res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:rows, taldeizena: req.session.txapelketaizena} );
                 } 
                 else
-                  res.redirect('/admin/kalkuluak');  
+                  if (req.session.nondik != 0) 
+                      res.redirect('/admin/mezuakmenua');
+                  else
+                      res.redirect('/admin/kalkuluak');   
               }
               else
               {
@@ -1330,8 +1363,9 @@ console.log("nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
               nora++;
               if (bidali){
                   emailService.send(to, subj, body);
+                  console.log("emaila: "+ i + "-" + to + " - taldea: "+ i + "-" + rows[i].taldeizena);
               }
-              console.log("emaila: "+ i + "-" + to + " - taldea: "+ i + "-" + rows[i].taldeizena);
+//              console.log("emaila: "+ i + "-" + to + " - taldea: "+ i + "-" + rows[i].taldeizena);
               if(i == rows.length - 1){
                   nora = zenbat;
               }

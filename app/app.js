@@ -234,10 +234,13 @@ app.get('/admin/berriakezabatu/:idBerriak', adminonartua, txapelketak.berriakeza
 app.get('/admin/berriakeditatu/:idBerriak', adminonartua, txapelketak.berriakeditatu);
 app.post('/admin/berriakaldatu/:idBerriak', adminonartua, txapelketak.berriakaldatu);
 
+app.get('/admin/egitekoak', adminonartua, txapelketak.egitekoakikusi);
+
 /*app.get('/admin/kalkuluak', adminonartua,function(req, res){
     res.render('kalkuluak.handlebars', {title : 'Txaparrotan-Kalkuluak egin', taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa});
 });*/
 app.get('/admin/kalkuluak', adminonartua, kudeaketa.kalkuluak);
+app.get('/admin/mezuakmenua', adminonartua, kudeaketa.mezuakmenua);
 app.post('/admin/multzoakegin', adminonartua, kudeaketa.multzoakegin);
 app.post('/admin/multzoakbete', adminonartua, kudeaketa.multzoakbete);
 app.post('/admin/multzoakreset', adminonartua, kudeaketa.multzoakreset);
@@ -293,7 +296,6 @@ app.get('/admin/mailakeditatu/:idmaila', adminonartua, txapelketak.mailakeditatu
 app.post('/admin/mailakaldatu/:idmaila', adminonartua, txapelketak.mailakaldatu);
 
 app.post('/admin/mezuakbidali', adminonartua, txapelketak.mezuakbidali);
-
 
 
 var server = http.createServer(app).listen(app.get('port'), function(){

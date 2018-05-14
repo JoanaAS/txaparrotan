@@ -129,6 +129,24 @@ exports.kalkuluak = function(req, res){
   });  
 };
 
+exports.mezuakmenua = function(req, res){
+  var id = req.session.idtxapelketa;
+  var mezumotak = [{balioa:"jokgabe", mota:"Jokalaririk gabe"}, {balioa:"ordgabe", mota: "Ordaindu gabeak"},
+                     {balioa:"erdiord", mota: "Erdi Ordainduak"}, {balioa:"onartuak",mota:"Onartuak"},
+                       {balioa:"prest",mota:"Txapelketa prest"}];
+  if(req.session.mezumota){
+      for(var i in mezumotak ){
+               if(req.session.mezumota == mezumotak[i].balioa){
+                  mezumotak[i].aukeratua = true;
+               }
+               else
+                  mezumotak[i].aukeratua = false;
+      }
+  }
+        //console.log("mailak : " + JSON.stringify(rows)); 
+  res.render('mezuak.handlebars', {title : 'Txaparrotan-Mezuak', motak : mezumotak, taldeizena: req.session.txapelketaizena, idtxapelketa: req.session.idtxapelketa, nondik:req.session.nondik, mezumota:req.session.mezumota});
+};
+
 exports.multzoakegin = function(req, res){
   var id = req.session.idtxapelketa;
   var vKategoria = req.body.kategoria;
