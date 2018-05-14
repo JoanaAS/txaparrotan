@@ -676,9 +676,9 @@ debugger;
          body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
          body += "<p>2. Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p>3. Hori egindakoan, " +rowst[0].kontukorrontea+ " kontu korrontean  "+rowst[0].prezioa+ "euro sartu eta kontzeptu bezala "+data.taldeizena+"-"+data.izenaard+" jarri.</p>";
          body += '<p style="color:#FF0000">4. Hau egin ezean, zure taldea ez da txapelketan apuntatuta egongo. Behin ordainketa egindakoan eta guk hau berrikusitakoan (astebeteko mugarekin), beste email bat jasoko duzu ONARTUA izan zarela adierazten. Hau jaso arte, ez zaudela onartua garbi utzi nahi dugu</p>';
-         body += "<p style='color:#0000FF'>5. Txapelketak dituen mugak gainditu ezinak ditugunez: asteburu batean eta 6 jokutoki, izena emandako taldeak topea gainditu ezkero, antolakuntzak, astebetera, zein talde izan diren onartuak adieraziko ditu. Ordaindu duen talderen bat kanpoan geldituko balitz, dirua bueltatuko litzaioke.</p>";
+         body += "<p style='color:#0000FF'>5. Txapelketak dituen mugak gainditu ezinak ditugunez: asteburu batean eta 6 jokutoki, izena emandako taldeak topea gaindituz gero, antolakuntzak, astebetera, zein talde izan diren onartuak adieraziko du. Ordaindu duen talderen bat kanpoan geldituko balitz, dirua bueltatuko litzaioke.</p>";
          body += "<p style='color:#FF0000'>6. Gerta daitezken kalteez, Antolakuntza ez da arduradun egiten.</p>";
-         body += "<p style='color:#0000FF'>7. Antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera gelditu ezkero, antolakuntza ez da kargo egiten gertatzen denarekin. Mila esker!</p> \n \n";
+         body += "<p style='color:#0000FF'>7. Antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera geldituz gero, antolakuntza ez da kargu egiten gertatzen denaz. Mila esker!</p> \n \n";
          body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
 
           req.session.idtalde = rows.insertId;
