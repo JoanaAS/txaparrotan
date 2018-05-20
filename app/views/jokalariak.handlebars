@@ -9,8 +9,9 @@
 
 <div class="row marketing">
 
-<h3 style="color:#0000FF"> Taldearen datuak</h3>
-<div class="table-responsive">
+{{#each data2}}
+    <h3 style="color:#0000FF"> Taldearen datuak   -  <spam style="color:#FF0000">{{egoeratalde}} </spam> </h3>
+    <div class="table-responsive">
         
           <table class="table table-striped">
             <tr>
@@ -23,7 +24,7 @@
                     <th> </th>
                     
                 </tr>                               
-            {{#each data2}}
+
                   <tr>
                     <td>{{taldeizena}}</td>
                     <td>{{mailaizena}}</td>
@@ -38,10 +39,10 @@
                     {{/if}}    
                     
                 </tr>
-            {{/each}}
+
           </table>
         </div>
-
+    {{/each}}
         <div class="col-lg-8">
           <div class="col-lg-2">
           <h3 style="color:#0000FF"> Jokalariak </h3>

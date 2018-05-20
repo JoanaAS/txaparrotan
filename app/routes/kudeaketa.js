@@ -133,7 +133,7 @@ exports.mezuakmenua = function(req, res){
   var id = req.session.idtxapelketa;
   var mezumotak = [{balioa:"jokgabe", mota:"Jokalaririk gabe"}, {balioa:"ordgabe", mota: "Ordaindu gabeak"},
                      {balioa:"erdiord", mota: "Erdi Ordainduak"}, {balioa:"onartuak",mota:"Onartuak"},
-                       {balioa:"prest",mota:"Txapelketa prest"}];
+                       {balioa:"prest",mota:"Txapelketa prest"}, {balioa:"onargabe",mota:"Onartu gabeak"}];
   if(req.session.mezumota){
       for(var i in mezumotak ){
                if(req.session.mezumota == mezumotak[i].balioa){

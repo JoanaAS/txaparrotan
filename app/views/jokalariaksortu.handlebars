@@ -1,4 +1,8 @@
-{{> menu}}
+{{#if menuadmin}}
+  {{> menuadmin}}
+{{else}}
+  {{> menu}}
+{{/if}}
 
       <div class="jumbotron">
         <h2>Jokalariak gehitu</h2>
@@ -16,6 +20,7 @@
                 <textarea name="jokalariizena" rows="1" cols="40" class="form-control" required>{{jokalariizena}}</textarea>
             </div>
         </div>
+<!--
         <div class="form-group">
             <label for="emaila" class="col-sm-2 control-label">Emaila</label>
             <div class="col-sm-4">
@@ -28,6 +33,7 @@
                 <input type="tel" class="form-control" id="telefonoa" placeholder="Hautazkoa" name="telefonoa">
             </div>
         </div>
+-->        
         <div class="form-group">
             <label for="kamisetaneurria" class="col-sm-2 control-label">Kamisetaren neurria (derrigorrezkoa)</label>
             <div class="col-sm-4">

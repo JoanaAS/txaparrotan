@@ -1,4 +1,8 @@
-{{> menu}}
+{{#if menuadmin}}
+  {{> menuadmin}}
+{{else}}
+  {{> menu}}
+{{/if}} 
 
       <div class="jumbotron">
         <h2>Jokalariak editatu</h2>

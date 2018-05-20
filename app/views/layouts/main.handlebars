@@ -63,6 +63,7 @@
     </header>
 
       <div class="container">
+      
       {{#if flash}}
         <div class="alert alert-dismissible alert-{{flash.type}}">
           <button type="button" class="close" 
@@ -84,6 +85,7 @@
     <script>window.jQuery || document.write('<script src="{{static '/vendor/js/jquery-2.1.1.min.js'}}"><\/script>')</script>   
     {{! since we've move jquery to the end of the body (instead of in head), we should really rename this bundle
       to something other than "head", but i'm leaving it for consistency with the book. }}
+<!--
     {{#each _bundles.js.head}}
       <script src="{{static .}}"></script>
     {{/each}}
@@ -113,6 +115,7 @@
         IMG_CART_EMPTY : IMG_CART_FULL );
       });
     </script>
+-->
       {{{_sections.jquery}}}
 
     {{#if showTests}}

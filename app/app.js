@@ -277,6 +277,15 @@ app.get('/admin/taldekopurua', adminonartua, kudeaketa.taldekopurua);
 app.get('/admin/taldekopbalidatugabe', adminonartua, kudeaketa.taldekopbalidatugabe);
 app.get('/admin/jokalarikopurua', adminonartua, kudeaketa.jokalarikopurua);
 app.get('/admin/jokalariakikusi', adminonartua, txapelketak.jokalariakikusi);
+app.post('/admin/jokalariasortu', adminonartua, jokalariak.sortu);
+app.get('/admin/jokalariagehitu/:idtaldeak', adminonartua, function(req, res){
+    req.session.idtalde = req.params.idtaldeak;
+    var admin = true;
+    res.render('jokalariaksortu.handlebars', {title : 'Txaparrotan-Jokalaria gehitu', taldeizena: req.session.taldeizena, menuadmin:admin});
+});
+app.get('/admin/jokalariakezabatu/:idtaldeak/:idjokalari', adminonartua, jokalariak.ezabatu);
+app.get('/admin/jokalariakeditatu/:idtaldeak/:idjokalari', adminonartua, jokalariak.editatu);
+app.post('/admin/jokalariakaldatu/:idjokalari', adminonartua, jokalariak.aldatu);
 app.get('/admin/mantenimentu', adminonartua, txapelketak.mantenimentu);
 app.get('/admin/zelaiak', adminonartua, txapelketak.zelaiakbilatu);
 app.post('/admin/zelaiaksortu', adminonartua, txapelketak.zelaiaksortu);

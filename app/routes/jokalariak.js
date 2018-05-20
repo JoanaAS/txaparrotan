@@ -42,10 +42,13 @@ exports.editatu = function(req, res){
   //var id = req.params.id;
   var id = req.session.idtalde;
   var idjokalari = req.params.idjokalari;
-    
+  var admin = (req.path.slice(0,24) == "/admin/jokalariakeditatu");
+  if (admin)
+    id = req.params.idtaldeak;
   req.getConnection(function(err,connection){
        
      connection.query('SELECT * FROM jokalariak WHERE idtaldej = ? and idjokalari = ?',[id,idjokalari],function(err,rows)
+
         {
             
             if(err)
@@ -60,7 +63,7 @@ exports.editatu = function(req, res){
 
             rows[0].neurriak = neurriak;
      
-            res.render('jokalariakeditatu.handlebars', {page_title:"Jokalaria aldatu",data:rows, taldeizena: req.session.taldeizena});
+            res.render('jokalariakeditatu.handlebars', {page_title:"Jokalaria aldatu",data:rows, taldeizena: req.session.taldeizena, menuadmin: admin});
                            
          });
                  
@@ -74,7 +77,8 @@ exports.sortu = function(req,res){
     //var id = req.params.id;
     console.log("idtalde:" + req.session.idtalde);
     var id = req.session.idtalde;
-
+    var admin = (req.path.slice(0,21) == "/admin/jokalariasortu");
+                                       
     if (input.telefonoa == ''){
       input.telefonoa = 0;
     }
@@ -96,6 +100,9 @@ exports.sortu = function(req,res){
   
           if (err)
               console.log("Error inserting : %s ",err );
+          if (admin)
+             res.redirect('/admin/taldeakikusi'); 
+          else    
              res.redirect('/jokalariak');
           
         });
@@ -111,7 +118,10 @@ exports.aldatu = function(req,res){
     //var id = req.params.id;
     var id = req.session.idtalde;
     var idjokalari = req.params.idjokalari;
-    
+    var admin = (req.path.slice(0,23) == "/admin/jokalariakaldatu");
+    if (admin)
+      id = req.params.idtaldeak;
+                                        
     req.getConnection(function (err, connection) {
         
         var data = {
@@ -129,8 +139,11 @@ exports.aldatu = function(req,res){
           if (err)
               console.log("Error Updating : %s ",err );
          
-          res.redirect('/jokalariak');
-          
+          if (admin)
+             res.redirect('/admin/taldeakikusi'); 
+          else    
+             res.redirect('/jokalariak');
+       
         });
     
     });
@@ -141,15 +154,20 @@ exports.ezabatu = function(req,res){
      //var id = req.params.id;
      var id = req.session.idtalde;
      var idjokalari = req.params.idjokalari;
-    
+
+     var admin = (req.path.slice(0,24) == "/admin/jokalariakezabatu");
+     if (admin)
+        id = req.params.idtaldeak;                                    
      req.getConnection(function (err, connection) {
         
         connection.query("DELETE FROM jokalariak  WHERE idtaldej = ? and idjokalari = ?",[id,idjokalari], function(err, rows)
         {
             
-             if(err)
+          if(err)
                  console.log("Error deleting : %s ",err );
-            
+          if (admin)
+             res.redirect('/admin/taldeakikusi'); 
+          else    
              res.redirect('/jokalariak');
              
         });
