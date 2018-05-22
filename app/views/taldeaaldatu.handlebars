@@ -46,6 +46,26 @@
                 <input type="number" class="form-control" required id="lehentasuna" name="lehentasuna" value={{lehentasuna}}>
             </div>
         </div>
+
+        <p> ARDURADUNA </p>
+        <div class="form-group">
+            <label for="izenaard" class="col-sm-2 control-label">Izen-abizenak</label>
+            <div class="col-sm-4">
+                <textarea name="izenaard" rows="1" cols="40" class="form-control" required>{{izenaard}}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="telefonoard" class="col-sm-2 control-label">Telefonoa</label>
+            <div class="col-sm-4">
+                <input type="tel" class="form-control" required id="telefonoard" name="telefonoard" pattern = "\d{9}" value={{telefonoard}}>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="emailard" class="col-sm-2 control-label">Emaila</label>
+            <div class="col-sm-4">
+                <input type="email" class="form-control" required id="emailard" name="emailard" value={{emailard}} >
+            </div>
+        </div>
         
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-4">

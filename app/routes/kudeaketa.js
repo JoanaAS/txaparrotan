@@ -1925,8 +1925,10 @@ exports.taldeaaldatu = function(req,res){
             taldeizena : input.taldeizena,
             balidatuta   : input.balidatuta,
             berezitasunak : input.berezitasunak,
-            lehentasuna  : input.lehentasuna
-
+            lehentasuna  : input.lehentasuna,
+            izenaard  : input.izenaard,
+            telefonoard : input.telefonoard,
+            emailard : input.emailard
         };
 
         if(input.idgrupot != null && input.idgrupot != ""){

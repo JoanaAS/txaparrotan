@@ -85,6 +85,11 @@ exports.sortzeko = function(req, res){
 exports.sortu = function(req,res){
     var idtxapelketa;
     var input = JSON.parse(JSON.stringify(req.body));
+    var now= new Date();
+    if (process.env.NODE_ENV == 'production'){
+      now.setUTCHours(now.getHours());
+      now.setUTCMinutes(now.getMinutes()); 
+    }
     res.locals.flash = null;
  
   if(!req.body.emailard.match(VALID_EMAIL_REGEX)) {
@@ -207,6 +212,27 @@ exports.sortu = function(req,res){
         
              console.log(datam);
              var query = connection.query("INSERT INTO maila set ? ",datam, function(err, rows)
+             {
+              if (err)
+               console.log("Error inserting : %s ",err );
+             });
+           }    
+          });
+          connection.query('SELECT * FROM berriak where idtxapelBerria= ?',[req.body.sTxapelketak],function(err,rowsb)   {
+           if(err)
+            console.log("Error Selecting : %s ",err );
+           for (var j in rowsb) { 
+             var datab = {
+               izenburuaBerria    : rowsb[j].izenburuaBerria,
+               testuaBerria   : rowsb[j].testuaBerria,
+               dataBerria: now,
+               zenbakiBerria : 0,
+               idtxapelBerria : idtxapelketa,
+               motaEdukia : rowsb[j].motaEdukia
+             };
+        
+             console.log(datab);
+             var query = connection.query("INSERT INTO berriak set ? ",datab, function(err, rows)
              {
               if (err)
                console.log("Error inserting : %s ",err );

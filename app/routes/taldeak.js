@@ -56,6 +56,9 @@ var admin = (admintalde || admingabe);
                   taldeizena    : rows[i].taldeizena,
                   herria    : rows[i].herria,
                   balidatuta : rows[i].balidatuta,
+                  izenaard : rows[i].izenaard,
+                  telefonoard : rows[i].telefonoard,
+                  emailard : rows[i].emailard,
                   admin : admin
                };
            j++;
