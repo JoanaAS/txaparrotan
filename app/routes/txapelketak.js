@@ -86,10 +86,12 @@ exports.sortu = function(req,res){
     var idtxapelketa;
     var input = JSON.parse(JSON.stringify(req.body));
     var now= new Date();
+/*
     if (process.env.NODE_ENV == 'production'){
       now.setUTCHours(now.getHours());
       now.setUTCMinutes(now.getMinutes()); 
     }
+*/
     res.locals.flash = null;
  
   if(!req.body.emailard.match(VALID_EMAIL_REGEX)) {
@@ -445,13 +447,14 @@ exports.berriakaldatu = function(req,res){
     var id = req.session.idtxapelketa;
     var idBerriak = req.params.idBerriak;
     var now= new Date();
-    console.log("now1 : %s ",now );
+    console.log("now1 : %s ",now );  // now : UTC +2ordu heroku config:add TZ="Europe/Madrid"
+/*
     if (process.env.NODE_ENV == 'production'){
       now.setUTCHours(now.getHours());
       now.setUTCMinutes(now.getMinutes()); 
     }
     console.log("now2 : %s ",now );  
-
+*/
     req.getConnection(function (err, connection) {
         
         var data = {
@@ -514,10 +517,12 @@ exports.berriaksortu = function(req,res){
     console.log("Bidali:" + input.bidali);
     var id = req.session.idtxapelketa;
     var now= new Date();
+/*    
     if (process.env.NODE_ENV == 'production'){
       now.setUTCHours(now.getHours());
       now.setUTCMinutes(now.getMinutes()); 
     }
+*/    
     var hosta = req.hostname;
     if (process.env.NODE_ENV != 'production'){ 
           hosta += ":"+ (process.env.PORT || 3000);

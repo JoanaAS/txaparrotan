@@ -275,10 +275,12 @@ exports.bilatu = function(req, res){
   var taldea;
   var id = req.session.idtalde;
   var now= new Date();
+/*  
     if (process.env.NODE_ENV == 'production'){
       now.setUTCHours(now.getHours());
       now.setUTCMinutes(now.getMinutes()); 
     }
+*/    
   //var id = req.params.id;
   var bukaera,aBukaera, vBukaera,aldaketabai;
   var aldaketa = {};
@@ -326,7 +328,7 @@ exports.bilatu = function(req, res){
             egoeratalde = "onartua izateko zai";
          }   
          else if(rows[0].balidatuta >= 1){
-              egoeratalde = "ordainketa faltan";
+              egoeratalde = "prozesatzen";
          }
         rows[0].egoeratalde = egoeratalde;  
    
@@ -374,11 +376,13 @@ exports.edit = function(req, res){
 exports.izenematea = function(req,res){
 
     res.locals.flash = null;
-    var now= new Date();
+    var now= new Date();   // now : UTC +2ordu heroku config:add TZ="Europe/Madrid" 
+/*       
     if (process.env.NODE_ENV == 'production'){
       now.setUTCHours(now.getHours());
       now.setUTCMinutes(now.getMinutes()); 
     }
+*/    
     var tope = 0;
     var aditestua = "Izen-ematea";
     var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera;
@@ -466,10 +470,12 @@ exports.sortu = function(req,res){
     var input = JSON.parse(JSON.stringify(req.body));
     res.locals.flash = null;
     var now= new Date();
+/*    
     if (process.env.NODE_ENV == 'production'){
       now.setUTCHours(now.getHours());
       now.setUTCMinutes(now.getMinutes()); 
     }
+*/    
     var aditestua;
     var topetalde = 0;
     var mailaizena = "";
@@ -710,7 +716,8 @@ debugger;
          body += "<p style='color:#0000FF'>7. Antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera geldituz gero, antolakuntza ez da kargu egiten gertatzen denaz. Mila esker!</p> \n \n";
          body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
 
-          req.session.idtalde = rows.insertId;
+//          req.session.idtalde = rows.insertId;  ADI login egin gabe sartu egiten dira
+
           emailService.send(to, subj, body);
           //res.redirect('/taldeak');
           res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, txapelketaizena:req.session.txapelketaizena, kk:rowst[0].kontukorrontea, prezio: rowst[0].prezioa, emailard:data.emailard, izenaard: data.izenaard,mailaizena: mailaizena});
