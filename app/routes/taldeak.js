@@ -677,7 +677,7 @@ debugger;
                 if(res.locals.flash != null){
 //                   var mailaizena;   
                    var to = input.emailard;
-                   var subj = "Itxaron zerrendan <b>" + data.taldeizena +"</b> taldea <b>"+ mailaizena+"</b> mailan.";
+                   var subj = "Itxaron zerrendan " + data.taldeizena +" taldea "+ mailaizena+" mailan.";
 
                    var body = "<p style='color:#FF0000'><b>"+data.taldeizena+"</b> taldea <b>"+mailaizena+"</b> mailan itxaron zerrendan dago. </p>";
                        body += "<p style='color:#0000FF'> Txapelketak dituen mugak gainditu ezinak ditugunez: asteburu batean eta 6 jokutoki, Antolakuntzak ahalegin guztiak egingo ditu talde gehienei tokia egiten.</p>";

@@ -361,7 +361,7 @@ exports.aldatu = function(req,res){
           if (err)
               console.log("Error inserting : %s ",err );
          
-          res.redirect('/admin/txapelketakeditatu');
+          res.redirect('/txapelketakeditatu');
           
         });
         
@@ -1266,7 +1266,7 @@ debugger;
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
                     else if(input.mezumota == "onartuak"){
-                        var subj = req.session.txapelketaizena+ " txapelketan zure taldea :<b>"+rows[i].taldeizena+"</b> onartua";
+                        var subj = req.session.txapelketaizena+ " txapelketan zure taldea : "+rows[i].taldeizena+"  onartua";
                         var body = "<h2> Txapelketan zure taldea :<b>"+rows[i].taldeizena+"</b> onartua </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu: http://" +hosta+" eta ikusi zure taldea onarturik Taldeak atalean</h3>\n \n \n"+
@@ -1314,7 +1314,7 @@ debugger;
                     nora++;
 
                     if(input.mezumota == "onargabe"){
-                      var subj = "<b>"+rows[i].taldeizena+"</b> taldea "+req.session.txapelketaizena+ " txapelketan kanpoan geratu zarete";
+                      var subj = rows[i].taldeizena+"  taldea "+req.session.txapelketaizena+ " txapelketan kanpoan geratu zarete";
                       var body = "<h2> Txapelketan kanpoan geratu zarete : <b>"+rows[i].taldeizena+"</b> </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Ordaindu duen taldeari dirua itzuliko zaio. </h3>"+
@@ -1322,7 +1322,7 @@ debugger;
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
                     else if(input.mezumota == "ordgabe" || input.mezumota == "erdiord"){
-                      var subj = req.session.txapelketaizena+ " txapelketako zuen taldea : <b>"+rows[i].taldeizena+"</b> osatu!";
+                      var subj = req.session.txapelketaizena+ " txapelketako zuen taldea : "+rows[i].taldeizena+"  osatu!";
                       var body = "<h2> <b>"+rows[i].taldeizena+"</b> Izen-emateko urrats guztiak bete gabe dituzue </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n" +
@@ -1358,7 +1358,9 @@ debugger;
 
            else if(input.mezumota == "jokgabe"){
 
-              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
+//              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
+              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta > 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
+
               if(err)
                 console.log("Error Selecting : %s ",err );
               if(rows.length != 0){
