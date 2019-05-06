@@ -10,7 +10,7 @@ var maila = {};
 var taldeak = [];
 var j,t;
 var k = 0;
-var vKategoria, postua;
+var vKategoria, postua, ezaukeratua;
 var admintalde = (req.path == "/admin/taldeak");
 var admingabe = (req.path == "/admin/taldeakbalidatugabe");
 var admin = (admintalde || admingabe);
@@ -32,7 +32,7 @@ var admin = (admintalde || admingabe);
         };
 */
         for (var i in rows) { 
-          if ((rows[i].balidatuta >= 1 && admintalde) || (rows[i].balidatuta == 0 && admingabe) || (rows[i].balidatuta >= 4 && !admin)) 
+          if ((rows[i].balidatuta >= 1 && admintalde) || (rows[i].balidatuta == 0 && admingabe) || (rows[i].balidatuta > 4 && !admin)) 
           {  
            if(vKategoria != rows[i].kategoria){
             if(vKategoria !=null){
@@ -50,7 +50,7 @@ var admin = (admintalde || admingabe);
                };
                
            }
-          
+           ezaukeratua = (rows[i].balidatuta > 0 && rows[i].balidatuta < 4);          
            taldeak[j] = {
                   postua : j+1,
                   taldeizena    : rows[i].taldeizena,
@@ -59,7 +59,9 @@ var admin = (admintalde || admingabe);
                   izenaard : rows[i].izenaard,
                   telefonoard : rows[i].telefonoard,
                   emailard : rows[i].emailard,
-                  admin : admin
+                  admin : admin,
+                  ezaukeratua : ezaukeratua,
+                  idtaldeak    : rows[i].idtaldeak
                };
            j++;
           }
@@ -76,7 +78,44 @@ var admin = (admintalde || admingabe);
   });
 }
 
+exports.taldeakaukeratu = function(req, res){
+  var id = req.session.idtxapelketa;
+  var input = JSON.parse(JSON.stringify(req.body));
+  var taldekide = [], ordaintzeko = 0;
+  req.getConnection(function(err,connection){
+    
+//      console.log("Body:" +JSON.stringify(req.body));
+ 
+    for(var i in input.aukeratua ){
+      var  idTaldeak = input.aukeratua[i];                                           //  ADI   .split("-");
+// ADI- taldekideakkopiatu.handlebars : gehitu checkbox-en kopiatu nahi duguna        
+//        console.log("input : " + i + "-" + input.aukeratuo[i] + "-" + idTaldekideak);
+      connection.query('SELECT * FROM taldeak WHERE idtxapeltalde = ? and idtaldeak= ?',[id,idTaldeak],function(err,rows)
+      {
+       
+        if(err)
+          console.log("Error Selecting : %s ",err );        
+//        console.log("kide : " + i + "-" + rows[0].ordaintzekoKide + "-" + rows[0].idTaldekideak);
+        var  idTaldeak = rows[0].idtaldeak; 
+        var data = {
+            
+            balidatuta    : 4
+        
+        };
+        
+        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta < 4" ,[data,idTaldeak], function(err, rows)
+        {
+          if (err)
+              console.log("Error updating : %s ",err );
+        });
+      });
+    }
 
+    for (var j = 0; j < 1000; j++) {}  // atseden denbora ADI ADI
+
+    res.redirect('/admin/taldeak');
+  });
+};
 
 exports.taldemail = function(req, res){
 
@@ -321,10 +360,10 @@ exports.bilatu = function(req, res){
         //console.log("aldaketa : " + JSON.stringify(aldaketarray)); 
         //console.log("taldea : " + JSON.stringify(rows));
 
-        if(rows[0].balidatuta >= 4){
+        if(rows[0].balidatuta > 4){
           egoeratalde = "onartuta";
         }
-        else if(rows[0].balidatuta >= 2){
+        else if(rows[0].balidatuta >= 4){
             egoeratalde = "onartua izateko zai";
          }   
          else if(rows[0].balidatuta >= 1){
@@ -709,11 +748,23 @@ debugger;
 */         
          var body = "<p>1.<b>"+data.taldeizena+"</b> taldea <b>"+mailaizena+"</b> mailan balidatu ahal izateko, </p>";
          body += "<h3> klik egin: http://"+hosta+"/taldeabalidatu/" + taldezenbakia+ ". </h3>";
-         body += "<p>2. Ondoren, saioa hasi eta zure jokalariak gehitu.</p> <p>3. Hori egindakoan, <b>" +rowst[0].kontukorrontea+ "</b> kontu korrontean  <b>"+rowst[0].prezioa+ "</b>uro sartu eta kontzeptu bezala <b>"+data.taldeizena+"-"+data.izenaard+"</b> jarri.</p>";
-         body += '<p style="color:#FF0000">4. Hau egin ezean, zure taldea ez da txapelketan apuntatuta egongo. Behin ordainketa egindakoan eta guk hau berrikusitakoan (astebeteko mugarekin), beste email bat jasoko duzu ONARTUA izan zarela adierazten. Hau jaso arte, ez zaudela onartua garbi utzi nahi dugu</p>';
-         body += "<p style='color:#0000FF'>5. Txapelketak dituen mugak gainditu ezinak ditugunez: asteburu batean eta 6 jokutoki, izena emandako taldeak topea gaindituz gero, antolakuntzak, astebetera, zein talde izan diren onartuak adieraziko du. Egoera honetan, bertako taldeek izango dute lehentasuna. Ordaindu duen talderen bat kanpoan geldituko balitz, dirua bueltatuko litzaioke.</p>";
-         body += "<p style='color:#FF0000'>6. Gerta daitezken kalteez, Antolakuntza ez da arduradun egiten.</p>";
-         body += "<p style='color:#0000FF'>7. Antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera geldituz gero, antolakuntza ez da kargu egiten gertatzen denaz. Mila esker!</p> \n \n";
+         body += "<p>2. Ondoren, saioa hasi eta zure jokalariak gehitu.</p>";
+
+      //   body += "<p>3. Hori egindakoan, <b>" +rowst[0].kontukorrontea+ "</b> kontu korrontean  <b>"+rowst[0].prezioa+ "</b>uro sartu eta kontzeptu bezala <b>"+data.taldeizena+"-"+data.izenaard+"</b> jarri.</p>";
+      //   body += "<p style="color:#FF0000">4. Hau egin ezean, zure taldea ez da txapelketan apuntatuta egongo. Behin ordainketa egindakoan eta guk hau berrikusitakoan (astebeteko mugarekin), beste email bat jasoko duzu ONARTUA izan zarela adierazten. Hau jaso arte, ez zaudela onartua garbi utzi nahi dugu</p>";
+      //   body += "<p style='color:#0000FF'>5. Txapelketak dituen mugak gainditu ezinak ditugunez: asteburu batean eta 6 jokutoki,  antolakuntzak, astebetera, zein talde izan diren onartuak adieraziko du. Egoera honetan, bertako taldeek izango dute lehentasuna. </p>";
+    //   body += "<p style='color:#FF0000'>6. Ordainketa egindakoan eta guk berrikusitakoan Onartua izan zaren emaila jasoko duzu eta webguneko zerrendan zuen taldea azalduko da. </p>"; 
+//         body += "<p style='color:#FF0000'>7. Gerta daitezken kalteez, Antolakuntza ez da arduradun egiten.</p>";
+//         body += "<p style='color:#0000FF'>8. Antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera geldituz gero, antolakuntza ez da kargu egiten gertatzen denaz. Mila esker!</p> \n \n";
+
+         body += "<p style='color:#FF0000'>3. Hau egin ezean, zure taldea ez da kontutan hartuko. </p>";
+         body += "<p style='color:#0000FF'>4. Txapelketak dituen mugak gainditu ezinak ditugunez: asteburu batean eta 6 jokutoki,  antolakuntzak, astebetera, zein talde izan diren onartuak adieraziko du. Egoera honetan, bertako taldeek izango dute lehentasuna. </p>";
+         body += "<p>5. Onartua izan zaren jakiteko, emaila jaso arte itxaron beharko duzu. Hau jaso arte, ez zaudela onartua garbi utzi nahi dugu.</p>";
+         body += "<p>6. Onartua izandakoan, 2 egun dituzu <b>" +rowst[0].kontukorrontea+ "</b> kontu korrontean  <b>"+rowst[0].prezioa+ "</b> euro sartzeko. Kontzeptu bezala arduradunaren eta taldearen izena jarri : <b>"+data.taldeizena+"-"+data.izenaard+"</b> </p>";
+         body += "<p style='color:#FF0000'>7. Ordainketa egindakoan eta guk berrikusitakoan webguneko zerrendan zuen taldea azalduko da. Ordainketa egin ezean, zure taldeak txapelketan jolasteko aukera galduko du. </p>"; 
+
+         body += "<p style='color:#FF0000'>8. Gerta daitezken kalteez, Antolakuntza ez da arduradun egiten.</p>";
+         body += "<p style='color:#0000FF'>9. Antolakuntzak ahalegin guztiak egingo ditu txapelketa bertan behera ez gelditzeko. Bertan behera geldituz gero, antolakuntza ez da kargu egiten gertatzen denaz. Mila esker!</p> \n \n";
          body += "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
 
 //          req.session.idtalde = rows.insertId;  ADI login egin gabe sartu egiten dira

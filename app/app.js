@@ -267,6 +267,7 @@ app.get('/admin/emaitza/:partidu', adminonartua, kudeaketa.emaitzapartidu);
 app.post('/admin/emaitzasartu/:partidu', adminonartua, kudeaketa.emaitzasartu);
 app.post('/admin/emaitzenorriak', adminonartua, kudeaketa.emaitzenorriak);
 app.get('/admin/taldeak', adminonartua, taldeak.ikusi);
+app.post('/admin/taldeakaukeratu', adminonartua, taldeak.taldeakaukeratu);
 app.get('/admin/taldeakbalidatugabe', adminonartua, taldeak.ikusi);
 app.get('/admin/taldeakikusi', adminonartua, txapelketak.taldeakikusi);
 app.get('/admin/taldea/:talde', adminonartua, kudeaketa.taldeaeditatu);

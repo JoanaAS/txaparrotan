@@ -1226,7 +1226,7 @@ exports.mezuakbidali = function(req,res){
           hosta += ":"+ (process.env.PORT || 3000);
     }
 
-    var to;
+    var to, subj, body;
     var nondik = 0, nora = 0;
     var zenbat = 10;
 
@@ -1235,7 +1235,7 @@ exports.mezuakbidali = function(req,res){
     }
     nondik = req.session.nondik;
 
-    if (!req.session.mezumota){ 
+    if (!req.session.mezumota || req.session.mezumota != input.mezumota){ 
           req.session.mezumota = input.mezumota;
     }
 
@@ -1259,21 +1259,24 @@ debugger;
                     nora++;
 
                     if(input.mezumota == "prest"){
-                      var subj = req.session.txapelketaizena+ " txapelketa prest, ordutegia ikusgai";
-                      var body = "<h2> Txapelketa prest </h2>\n" + 
-                              "<p>"+ req.session.txapelketaizena+ "</p> \n"+
+                      subj = req.session.txapelketaizena+ " txapelketa prest, ordutegia ikusgai";
+                      body = "<h2>"+ req.session.txapelketaizena+ " txapelketa prest </h2>\n" + 
                               "<h3> <b>"+rows[i].taldeizena+"</b>-ren partiduen ordutegia ikusi ahal izateko sartu: http://"+hosta+"</h3>\n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
                     else if(input.mezumota == "onartuak"){
-                        var subj = req.session.txapelketaizena+ " txapelketan zure taldea : "+rows[i].taldeizena+"  onartua";
-                        var body = "<h2> Txapelketan zure taldea :<b>"+rows[i].taldeizena+"</b> onartua </h2>\n" + 
-                              "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Sartu: http://" +hosta+" eta ikusi zure taldea onarturik Taldeak atalean</h3>\n \n \n"+
+                        subj = req.session.txapelketaizena+ " txapelketan zure taldea  "+rows[i].taldeizena+"  onartua";
+                        body = "<h2>" + req.session.txapelketaizena+" txapelketan zure taldea <b>"+rows[i].taldeizena+"</b> onartua </h2>\n" +
+
+                              "<p>2 egun dituzu <b>" +rowst[0].kontukorrontea+ "</b> kontu korrontean  <b>"+rowst[0].prezioa+ "</b> euro sartzeko. Kontzeptu bezala arduradunaren eta taldearen izena jarri : <b>"+rows[i].taldeizena+"-"+rows[i].izenaard+"</b> </p>" +
+                              "<p style='color:#FF0000'>Ordainketa egindakoan eta guk berrikusitakoan webguneko zerrendan zuen taldea azalduko da. Ordainketa egin ezean, zure taldeak txapelketan jolasteko aukera galduko du. </p> \n \n \n" +
+
+                  //            "<h3> Sartu: http://" +hosta+" eta ikusi zure taldea onarturik Taldeak atalean</h3>\n \n \n"+
+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
 
-                    var to = rows[i].emailard;
+                    to = rows[i].emailard;
                     emailService.send(to, subj, body);
                     console.log("emaila: "+ i + "-" + nora + "-" + to );
                     req.session.nondik = parseInt(i) + 1;
@@ -1297,14 +1300,15 @@ debugger;
           });
         }
         else if(input.mezumota == "ordgabe" || input.mezumota == "erdiord" || input.mezumota == "onargabe"){
-            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and (balidatuta <= 4) order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
-//            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and (balidatuta < 3 or balidatuta = 4) and balidatuta > 0 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
- 
+//            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and (balidatuta <= 4) order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
+            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and (balidatuta <= 5) order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
+
               if(err)
                 console.log("Error Selecting : %s ",err );
             
               for (var i in rows){
-               if((input.mezumota == "ordgabe" && (rows[i].balidatuta == 2 || rows[i].balidatuta == 1)) || (input.mezumota == "erdiord" && rows[i].balidatuta == 4) || (input.mezumota == "onargabe" && rows[i].balidatuta < 4)){
+//               if((input.mezumota == "ordgabe" && (rows[i].balidatuta == 2 || rows[i].balidatuta == 1)) || (input.mezumota == "erdiord" && rows[i].balidatuta == 4) || (input.mezumota == "onargabe" && rows[i].balidatuta < 4)){
+               if((input.mezumota == "ordgabe" && (rows[i].balidatuta == 4)) || (input.mezumota == "erdiord" && rows[i].balidatuta == 5) || (input.mezumota == "onargabe" && rows[i].balidatuta < 4)){
 
                 rowsif.push(rows[i]);
 
@@ -1314,22 +1318,23 @@ debugger;
                     nora++;
 
                     if(input.mezumota == "onargabe"){
-                      var subj = rows[i].taldeizena+"  taldea "+req.session.txapelketaizena+ " txapelketan kanpoan geratu zarete";
-                      var body = "<h2> Txapelketan kanpoan geratu zarete : <b>"+rows[i].taldeizena+"</b> </h2>\n" + 
-                              "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Ordaindu duen taldeari dirua itzuliko zaio. </h3>"+
+                      subj = rows[i].taldeizena+"  taldea "+req.session.txapelketaizena+ " txapelketan kanpoan geratu zarete";
+                      body = "<h2>"+ req.session.txapelketaizena+ " txapelketan kanpoan geratu zarete : <b>"+rows[i].taldeizena+"</b> </h2>\n" + 
+
+              //                "<h3> Ordaindu duen taldeari dirua itzuliko zaio. </h3>"+
                               "<h3> Ia hurrengo urtean ikusten garen. Milaesker!</h3>\n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
                     else if(input.mezumota == "ordgabe" || input.mezumota == "erdiord"){
-                      var subj = req.session.txapelketaizena+ " txapelketako zuen taldea : "+rows[i].taldeizena+"  osatu!";
-                      var body = "<h2> <b>"+rows[i].taldeizena+"</b> Izen-emateko urrats guztiak bete gabe dituzue </h2>\n" + 
-                              "<p>"+ req.session.txapelketaizena+ "</p> \n"+
-                              "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n" +
+                      subj = req.session.txapelketaizena+ " txapelketako zuen taldea : "+rows[i].taldeizena+"  osatu!";
+                      body = "<h2> <b>"+rows[i].taldeizena+"</b> Izen-emateko urrats guztiak bete gabe dituzue </h2>\n" + 
+
+                  //            "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n" +
+                  
                               "<h3> Ordaindu ez baduzue, sartu " +rowst[0].prezioa+" € kontu zenbaki honetan: "+rowst[0].kontukorrontea+ " Gogoratu, 8 pertsonatik gorako taldea bada, jokalariko gehigarriko 5€gehiago sartu behar dituzuela. Mila esker!</h3>\n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
-                    var to = rows[i].emailard;
+                    to = rows[i].emailard;
                     emailService.send(to, subj, body);
                     console.log("emaila: "+ i + "-" + nora + "-" + to );
                     req.session.nondik = parseInt(i) + 1;
@@ -1364,8 +1369,8 @@ debugger;
               if(err)
                 console.log("Error Selecting : %s ",err );
               if(rows.length != 0){
-                var subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
-                var body = "<h2> Jokalariak sartzeko dituzue! </h2>\n" + 
+                subj = req.session.txapelketaizena+ " txapelketako zuen taldea osatu!";
+                body = "<h2> Jokalariak sartzeko dituzue! </h2>\n" + 
                               "<p>"+ req.session.txapelketaizena+ "</p> \n"+
                               "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;

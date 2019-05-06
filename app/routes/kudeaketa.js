@@ -1,17 +1,29 @@
 exports.taldekopurua = function(req, res){
   var id = req.session.idtxapelketa;
-  var totala=0;
+  var guztirao = {}, guztira = [0,0,0,0,0,0,0], guztirak = [];
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+//    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira, sum(case when balidatuta > 4 then 1 else 0 end) as onartuak, sum(case when balidatuta = 4 then 1 else 0 end) as aukeratuak, sum(case when (balidatuta > 0 and balidatuta < 4) then 1 else 0 end) as apuntatuak, sum(case when balidatuta = 0 then 1 else 0 end) as balidatugabeak FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+
         if(err)
            console.log("Error Selecting : %s ",err );
 
          for(var i in rowsg){
-          totala += rowsg[i].guztira;
+            guztira[0] += rowsg[i].guztira;
+            guztira[1] += rowsg[i].onartuak;
+            guztira[2] += rowsg[i].aukeratuak;
+            guztira[3] += rowsg[i].apuntatuak;
+            guztira[4] += rowsg[i].balidatugabeak;
          }
+         guztirao.guztira = guztira[0];
+         guztirao.onartuak = guztira[1];
+         guztirao.aukeratuak = guztira[2]; 
+         guztirao.apuntatuak = guztira[3]; 
+         guztirao.balidatugabeak = guztira[4];
 
-        res.render('taldekopurua.handlebars', {title : 'Txaparrotan-Taldeak', data2:rowsg, taldetot: totala,taldeizena: req.session.txapelketaizena} );
+         guztirak[0] = guztirao; 
+        res.render('taldekopurua.handlebars', {title : 'Txaparrotan-Taldeak', data2:rowsg, guztirak: guztirak, taldeizena: req.session.txapelketaizena} );
      });
   });       
 };
@@ -218,7 +230,8 @@ exports.multzoakbete = function(req, res){
          var multzozenbaki = 0;
          var idgrupo;
          for (var i in rows){
-          multzozenbaki = (i % vMultzokopurua) + 1;
+          multzozenbaki = (i % vMultzokopurua) + 1;  // ADI lehentasuna : rankin edo taldeburu
+//          multzozenbaki = (i / vMultzokopurua) + 1;   // ADI lehentasuna : talde zenbakia
           idgrupo = imultzo [multzozenbaki];
           id = rows[i].idtaldeak;
           var data = {

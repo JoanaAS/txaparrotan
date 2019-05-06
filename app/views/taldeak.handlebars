@@ -10,7 +10,9 @@
       <a href="/admin/taldeakikusi" class="btn btn-primary btn-sm" role="button">Taldeak ikusi</a>
       <a href="/admin/taldekopurua" class="btn btn-primary btn-sm" role="button">Talde kopurua ikusi</a>
       <a href="/admin/taldeakbalidatugabe" class="btn btn-primary btn-sm" role="button">Itxaron Zerrenda</a>
+<!--
       <a href="/admin/taldekopbalidatugabe" class="btn btn-primary btn-sm" role="button">Talde kop balidatu gabe</a>
+-->      
       <a href="/admin/jokalarikopurua" class="btn btn-primary btn-sm" role="button">Jokalari kopurua ikusi</a>
       <a href="/admin/jokalariakikusi" class="btn btn-primary btn-sm" role="button">Jokalariak izenez ikusi</a>
   {{else}}
@@ -19,6 +21,9 @@
     </div>
         <a href="/jokalariak" class="btn btn-primary btn-sm" role="button">Zure taldearen datuak ikusi</a>  
   {{/if}}
+
+<div class="formContainer">
+    <form class="form-horizontal newsletterForm" role="form" action="/admin/taldeakaukeratu" method="POST">
 
       <div class="row marketing">
         <div class="col-lg-5 col-sm-offset-1">
@@ -34,6 +39,7 @@
                         <th>Arduraduna</th>
                         <th>telefonoa</th> 
                         <th>emaila</th>
+                        <th>aukeratzeko</th>
                     {{/if}}
                 </tr>                               
             {{#each taldeak}}
@@ -46,6 +52,11 @@
                        <td>{{izenaard}}</td>
                        <td>{{telefonoard}}</td> 
                        <td>{{emailard}}</td>
+                       <td class="checkbox">
+                        {{#if ezaukeratua}}
+                           <input type="checkbox" id="aukeratua" name="aukeratua[]" value="{{idtaldeak}}">
+                        {{/if}}
+                       </td> 
                     {{/if}}                   
                 </tr>
             {{/each}}
@@ -53,4 +64,28 @@
         {{/each}}
         </div>
       </div>
-    
+      {{#if menuadmin}}
+         <div class="form-group">
+            <div class="col-sm-offset-8 col-sm-4">
+                <button type="submit" class="btn btn-default" id="aukeratu">TALDEAK AUKERATU</button>
+            </div>
+        </div>
+      {{/if}}  
+    </form>
+</div>
+
+{{#section 'jquery'}}
+<script>
+  $(document).ready(function(){   
+
+    $("#aukeratu").on('click',function (){ 
+        var r = confirm("Ziur al zaude Taldeak aukeratu nahi dituzula?");
+        if (r == false) {
+          $(location).attr('href', '/admin/taldeak/');
+        } 
+    });
+
+  });
+            
+</script> 
+{{/section}}    
