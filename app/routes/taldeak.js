@@ -103,7 +103,7 @@ exports.taldeakaukeratu = function(req, res){
         
         };
         
-        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta < 4" ,[data,idTaldeak], function(err, rows)
+        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta > 0 and balidatuta < 4" ,[data,idTaldeak], function(err, rows)
         {
           if (err)
               console.log("Error updating : %s ",err );

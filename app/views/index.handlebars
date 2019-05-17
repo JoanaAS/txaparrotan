@@ -10,11 +10,12 @@
           {{#each data2}}
               <p style="color:#0000FF"><b> Txapelketa eguna: </b> {{hasierakoeguna}}tik {{bukaerakoeguna}}ra </p>
 
-<!--  TOPEAREKIN
-              <p style="color:#0000FF"><b>Apuntatzeko epea: </b>{{inskripziohasierae}}tik <b>({{inskripziohasierao}}etatik)</b> {{inskripziobukaerae}}ra</p>
--->
+              <p style="color:#0000FF"><b>Aurre-Inskripzio epea: </b>{{inskripziohasierae}}tik <b>({{inskripziohasierao}}etatik)</b> {{inskripziobukaerae}}ra</p>
+<!--
               <p style="color:#0000FF"><b>Apuntatzeko eguna: </b>{{inskripziohasierae}}<b>  ({{inskripziohasierao}}etatik aurrera)</b> </p>
-              <p style="color:#FF0000"><b>Taldea onartua izan arte ez da diru sarrerarik egin behar</b> </p>
+-->
+              <p style="color:#FF0000"><b>Zozketaren eguna: </b>{{inskripziobukaerae}}tik 2 egunetara<b>
+              <p style="color:#0000FF"><b>Taldea onartua izan arte ez da diru sarrerarik egin behar</b> </p>
               <p style="color:#FF0000"><b>Onartua izan ondoren 2 egun izango dituzue diru sarrera egiteko</b> </p>
               
               <p style="color:#0000FF"><b>Prezioa: </b>{{prezioa}} euro.</p>
@@ -29,10 +30,17 @@
 
         <div class="col-lg-4">
           
-          <h3 style="color:#0000FF">Izena-emateko laguntza</h3>
-          <p> Laguntza behar baduzu, <a href="/img/laguntza.pdf" target="_blank">klik egin hemen.</a> </p>
-          
-          
+          <h3 style="color:#0000FF"> <a href="/img/laguntza.pdf" target="_blank">Izenemateko laguntza klik hemen</a> </h3>
+<!--          <p> <a href="/img/laguntza.pdf" target="_blank">Izena-emateko laguntza, klik egin hemen.</a> </p> -->
+          {{#if izenemanikusi}}
+            <h3 style="color:#0000FF">AurreInskripzioak ikusi:</h3>
+            <div style="width: 300px; height: 150px; overflow-y: scroll; " align="center">
+             {{#each taldeak}} 
+              <p style="color:{{kolore}}">  {{taldeizena}}  </p>
+             {{/each}}
+           </div>
+           <p> Koloreak: <span style="color:#0000FF">emaila baieztatuta, </span><span style="color:#FF0000">baieztatu gabe</span> </p>
+          {{/if}}
         </div>
       </div>
 

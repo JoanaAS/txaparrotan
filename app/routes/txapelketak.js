@@ -474,7 +474,7 @@ exports.berriakaldatu = function(req,res){
               console.log("Error Updating : %s ",err );
           if (input.bidali){
             
-                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/ \n #txaparrotan15";
+                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/ \n #txaparrotan16 \n #123Zarautz";
 
                   twitter.post('statuses/update', { status: status }, function (err, data, response) {
                    if (err) {
@@ -569,7 +569,7 @@ exports.berriaksortu = function(req,res){
 */
           if (input.bidali){
             
-                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/ \n #txaparrotan15";
+                  var status = input.izenburuaBerria + " - http://txaparrotan.herokuapp.com/ \n #txaparrotan16 \n #123Zarautz";
 
                   twitter.post('statuses/update', { status: status }, function (err, data, response) {
                    if (err) {
@@ -605,24 +605,65 @@ function doDelay(wait) {
 
 exports.berriakikusi = function(req, res){
   var id = req.session.idtxapelketa;
+  var kolore;
+  var now= new Date(), izenemanikusi = 0;
+  var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera,zozketaeguna;
 
   req.getConnection(function(err,connection){
        
-     connection.query('SELECT * FROM berriak where motaEdukia = "B" and zenbakiBerria <> 0 and idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)     {
-            
-        if(err) 
+    connection.query('SELECT * FROM berriak where motaEdukia = "B" and zenbakiBerria <> 0 and idtxapelBerria = ? order by zenbakiBerria asc, dataBerria desc',[id],function(err,rowsb)     {
+      if(err) 
            console.log("Error Selecting : %s ",err );
-     
-        connection.query('SELECT * FROM txapelketa where idtxapelketa = ? ',[id],function(err,rows)     {
-          if(err)
-           console.log("Error Selecting : %s ",err );
-          for (var i in rowsb) {
+      for (var i in rowsb) {
             var testuahtml = md(rowsb[i].testuaBerria);
             rowsb[i].htmlBerria = testuahtml;
-          }         
-          res.render('index.handlebars',{title: "Txaparrotan", taldeizena: req.session.taldeizena, data:rowsb, data2: rows});
+      }     
+      connection.query('SELECT * FROM txapelketa where idtxapelketa = ? ',[id],function(err,rows)     {
+        if(err)
+           console.log("Error Selecting : %s ",err );
+
+        if(rows.length != 0) {
+          vHasiera = new Date();
+          hasiera = rows[0].inskripziohasierae;
+
+          aHasiera = hasiera.split("-");
+          vHasiera.setDate(aHasiera[2]);
+          vHasiera.setMonth(aHasiera[1] - 1);
+          vHasiera.setYear(aHasiera[0]);
+          aHasieraOrdua = rows[0].inskripziohasierao.split(":");
+          vHasiera.setHours(aHasieraOrdua[0],aHasieraOrdua[1],0);
+
+          vHasiera.set
+          vBukaera = new Date();
+          bukaera = rows[0].inskripziobukaerae;
+          aBukaera = bukaera.split("-");
+          vBukaera.setDate(aBukaera[2]);
+          vBukaera.setMonth(aBukaera[1] - 1);
+          vBukaera.setYear(aBukaera[0]);  
+
+          if(vHasiera < now && vBukaera > now) {
+              izenemanikusi = 1;
+          }
+          rows[0].zozketaeguna = aBukaera[0] + "-" + aBukaera[1] + "-" + (aBukaera[2] + 2);
+        }  
+//        connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
+        connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by sortzedata desc',[id],function(err,rowst)     {
+          if(err)
+             console.log("Error Selecting : %s ",err );
+          for (var i in rowst) { 
+            kolore = "#000000";
+            if (rowst[i].balidatuta == 0)
+                 kolore = "#FF0000";
+            else if (rowst[i].balidatuta == 1)
+                      kolore = "#0000FF";
+                 else if (rowst[i].balidatuta == 2)
+                           kolore = "#00FF00";
+            rowst[i].kolore =  kolore;  
+          }  
+          res.render('index.handlebars',{title: "Txaparrotan", taldeizena: req.session.taldeizena, data:rowsb, data2: rows, taldeak: rowst, izenemanikusi: izenemanikusi});
         });                        
-      });   
+      });
+    });   
   });
 };
 
@@ -1265,8 +1306,8 @@ debugger;
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
                     else if(input.mezumota == "onartuak"){
-                        subj = req.session.txapelketaizena+ " txapelketan zure taldea  "+rows[i].taldeizena+"  onartua";
-                        body = "<h2>" + req.session.txapelketaizena+" txapelketan zure taldea <b>"+rows[i].taldeizena+"</b> onartua </h2>\n" +
+                        subj = req.session.txapelketaizena+ " txapelketan zure taldea  "+rows[i].taldeizena+"  aukeratua";
+                        body = "<h2>" + req.session.txapelketaizena+" txapelketan zure taldea <b>"+rows[i].taldeizena+"</b> aukeratua </h2>\n" +
 
                               "<p>2 egun dituzu <b>" +rowst[0].kontukorrontea+ "</b> kontu korrontean  <b>"+rowst[0].prezioa+ "</b> euro sartzeko. Kontzeptu bezala arduradunaren eta taldearen izena jarri : <b>"+rows[i].taldeizena+"-"+rows[i].izenaard+"</b> </p>" +
                               "<p style='color:#FF0000'>Ordainketa egindakoan eta guk berrikusitakoan webguneko zerrendan zuen taldea azalduko da. Ordainketa egin ezean, zure taldeak txapelketan jolasteko aukera galduko du. </p> \n \n \n" +
