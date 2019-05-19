@@ -647,7 +647,7 @@ exports.berriakikusi = function(req, res){
           rows[0].zozketaeguna = aBukaera[0] + "-" + aBukaera[1] + "-" + (aBukaera[2] + 2);
         }  
 //        connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
-        connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by sortzedata desc',[id],function(err,rowst)     {
+        connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by taldeizena asc',[id],function(err,rowst)     {
           if(err)
              console.log("Error Selecting : %s ",err );
           for (var i in rowst) { 
