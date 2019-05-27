@@ -1293,7 +1293,7 @@ debugger;
             connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 3 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
               if(err)
                 console.log("Error Selecting : %s ",err );
-              if (input.bidali){
+//              if (input.bidali){
                 console.log(rows.length + "- nondik: "+ nondik + "-nora " + nora + "-zenbat " + zenbat);
                 for (var i in rows){
                   if(i >= nondik && nora < zenbat){
@@ -1316,10 +1316,11 @@ debugger;
 
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
-
                     to = rows[i].emailard;
-                    emailService.send(to, subj, body);
-                    console.log("emaila: "+ i + "-" + nora + "-" + to );
+                    if (input.bidali){  
+                      emailService.send(to, subj, body);
+                      console.log("emaila: "+ i + "-" + nora + "-" + to );
+                    }
                     req.session.nondik = parseInt(i) + 1;
                   }
                 }    
@@ -1333,11 +1334,11 @@ debugger;
                       res.redirect('/admin/mezuakmenua');
                   else
                       res.redirect('/admin/kalkuluak');  
-              }
-              else
-              {
-                res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:rows, taldeizena: req.session.txapelketaizena} );
-              }       
+//              }
+//              else
+//              {
+//                res.render('taldeakadmin.handlebars', {title : 'Txaparrotan-Mezuak', data2:rows, taldeizena: req.session.txapelketaizena} );
+//              }       
           });
         }
         else if(input.mezumota == "ordgabe" || input.mezumota == "erdiord" || input.mezumota == "onargabe"){
