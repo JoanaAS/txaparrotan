@@ -17,7 +17,7 @@ var admin = (admintalde || admingabe);
 
   req.getConnection(function(err,connection){
 //    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
-    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
+    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by mailazki,lehentasuna,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
 
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -59,6 +59,7 @@ var admin = (admintalde || admingabe);
                   izenaard : rows[i].izenaard,
                   telefonoard : rows[i].telefonoard,
                   emailard : rows[i].emailard,
+                  lehentasuna : rows[i].lehentasuna,
                   admin : admin,
                   ezaukeratua : ezaukeratua,
                   idtaldeak    : rows[i].idtaldeak

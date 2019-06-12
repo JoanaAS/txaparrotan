@@ -4,7 +4,7 @@ exports.taldekopurua = function(req, res){
 
   req.getConnection(function(err,connection){
 //    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
-    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira, sum(case when balidatuta > 4 then 1 else 0 end) as onartuak, sum(case when balidatuta = 4 then 1 else 0 end) as aukeratuak, sum(case when (balidatuta > 0 and balidatuta < 4) then 1 else 0 end) as apuntatuak, sum(case when balidatuta = 0 then 1 else 0 end) as balidatugabeak FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+    connection.query('SELECT mailaizena,multzokop,finalak,balidatuta,count(*) as guztira, sum(case when balidatuta > 4 then 1 else 0 end) as onartuak, sum(case when balidatuta = 4 then 1 else 0 end) as aukeratuak, sum(case when (balidatuta > 0 and balidatuta < 4) then 1 else 0 end) as apuntatuak, sum(case when balidatuta = 0 then 1 else 0 end) as balidatugabeak FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
 
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -114,7 +114,7 @@ exports.jokalarikopurua = function(req, res){
   var totala=0;
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT taldeizena,izenaard,herria,idtaldeak,idgrupot,berezitasunak,balidatuta,lehentasuna,count(*) as guztira FROM taldeak,jokalariak where idtxapeltalde= ? and idtaldeak = idtaldej group by taldeizena ORDER BY taldeizena',[id],function(err,rowsg)     {
+    connection.query('SELECT taldeizena,izenaard,herria,idtaldeak,idgrupot,berezitasunak,balidatuta,lehentasuna,akronimoa,count(*) as guztira FROM taldeak,jokalariak,maila where idtxapeltalde= ? and idtaldeak = idtaldej and kategoria=idmaila group by taldeizena ORDER BY taldeizena',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
 
@@ -162,8 +162,14 @@ exports.mezuakmenua = function(req, res){
 exports.multzoakegin = function(req, res){
   var id = req.session.idtxapelketa;
   var vKategoria = req.body.kategoria;
+//  var vmultzozki;
+//  if(isNaN(req.body.multzozki))
+//     vmultzozki = 0;
+//  else 
+//     vmultzozki = parseInt(req.body.multzozki);
+//  console.log("multzo zki: " + vmultzozki);
   //var vMultzokopurua = req.body.multzokop;
-  var imultzo = [];
+  var imultzo = [], multzo;
 
   req.getConnection(function(err,connection){       
     connection.query('SELECT * FROM maila where idtxapelm = ? and idmaila = ? ',[id,vKategoria],function(err,rowsg)     {
@@ -178,9 +184,10 @@ exports.multzoakegin = function(req, res){
         var vMultzokopurua = rowsg[0].multzokop;
 
         for (var i=1; i<=vMultzokopurua;i++) {
+//            multzo = i + vmultzozki;
             var data = {
-            
-            multzo    : i,
+            multzo    : i,            
+//            multzo    : multzo,
             idtxapelketam : id,
             kategoriam : vKategoria,
             sexuam : " "
@@ -230,25 +237,26 @@ exports.multzoakbete = function(req, res){
          var multzozenbaki = 0;
          var idgrupo;
          for (var i in rows){
-          multzozenbaki = (i % vMultzokopurua) + 1;  // ADI lehentasuna : rankin edo taldeburu
-//          multzozenbaki = (i / vMultzokopurua) + 1;   // ADI lehentasuna : talde zenbakia
+//          multzozenbaki = (i % vMultzokopurua) + 1;  // ADI lehentasuna : rankin edo taldeburu
+          multzozenbaki = (Math.trunc(i / 4)) + 1;   // ADI lehentasuna : talde zenbakia  LAUNAKA
           idgrupo = imultzo [multzozenbaki];
           id = rows[i].idtaldeak;
+//          console.log("i : "+ i + "multzozenbaki : "+ multzozenbaki + "idgrupo : "+ idgrupo + "id : "+ id);
           var data = {
             
             idgrupot    : idgrupo
         
-        };
+          };
         
-        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,id], function(err, rowst)
-        {
+          connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,id], function(err, rowst)
+          {
   
-          if (err)
+            if (err)
               console.log("Error Updating : %s ",err );
-        });
-        }
+          });
+         }
 
-        res.redirect(303, '/admin/kalkuluak');
+         res.redirect(303, '/admin/kalkuluak');
 
       }); 
    }
@@ -267,7 +275,9 @@ var k = 0;
 var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 var multzoizena;
 var vKategoria, vMultzo,postua;
-var admin = (req.path == "/admin/sailkapenak");
+//var admin = (req.path == "/admin/sailkapenak");
+var admin = (req.path.slice(0,7) == "/admin/");
+var bigarrengoak = (req.path == "/admin/bigarrengoak");
 var zuretaldekoa = (req.path == "/taldesailkapena");
 //var txapelketaprest = 0;
 var grupo;
@@ -295,6 +305,7 @@ var grupo;
               multzoa.taldeak = taldeak;
               multzoak[t] = multzoa;
               maila.multzoak = multzoak;
+              maila.bigarrengoak = bigarrengoak;
               mailak[k] = maila;
               //console.log("Mailak:" +t + JSON.stringify(mailak[k]));
               k++;
@@ -349,6 +360,11 @@ var grupo;
                };
                
           }
+          if((j == 1 && bigarrengoak) || !bigarrengoak)
+                taldeaikusi = 1;
+          else 
+                taldeaikusi = 0; 
+
           taldeak[j] = {
                   postua : j+1,
                   taldeizena    : rows[i].taldeizena,
@@ -357,7 +373,9 @@ var grupo;
                   puntuak    : rows[i].puntuak,
                   golakalde : rows[i].golakalde,
                   golakkontra: rows[i].golakkontra,
-                  golaberaje : rows[i].golaberaje
+                  golaberaje : rows[i].golaberaje,
+                  taldeaikusi : taldeaikusi,
+                  multzoizena : multzoizena
                   //setalde: rows[i].setalde,
                   //setkontra: rows[i].setkontra
                };
@@ -373,6 +391,7 @@ var grupo;
               multzoa.taldeak = taldeak;
               multzoak[t] = multzoa;
               maila.multzoak = multzoak;
+              maila.bigarrengoak = bigarrengoak;
               mailak[k] = maila;
               //console.log("Mailak:" +t + JSON.stringify(mailak));
               k++;
@@ -1921,9 +1940,23 @@ exports.taldeaeditatu = function(req, res){
       connection.query('SELECT * FROM taldeak  where idtaldeak = ?',[idtalde],function(err,rows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
+        connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+          if(err)
+              console.log("Error Selecting : %s ",err );
 
-        res.render('taldeaaldatu.handlebars', {title : 'Txaparrotan-Taldearen datuak aldatu', data: rows, taldeizena: req.session.txapelketaizena} );
-    });
+          for(var i in rowsm ){
+               if(rows[0].kategoria == rowsm[i].idmaila){
+                  mailaizena = rowsm[i].mailaizena;
+                  rowsm[i].aukeratua = true;
+               }
+               else
+                  rowsm[i].aukeratua = false;
+          }
+          rows[0].mailak = rowsm;
+
+          res.render('taldeaaldatu.handlebars', {title : 'Txaparrotan-Taldearen datuak aldatu', data: rows, taldeizena: req.session.txapelketaizena} );
+        });
+      });
   });
 };
 
@@ -1936,6 +1969,7 @@ exports.taldeaaldatu = function(req,res){
         var data = {
             
             taldeizena : input.taldeizena,
+            kategoria   : input.kategoria,
             balidatuta   : input.balidatuta,
             berezitasunak : input.berezitasunak,
             lehentasuna  : input.lehentasuna,

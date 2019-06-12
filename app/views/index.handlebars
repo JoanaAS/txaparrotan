@@ -41,6 +41,19 @@
            </div>
            <p> Koloreak: <span style="color:#0000FF">emaila baieztatuta, </span><span style="color:#FF0000">baieztatu gabe</span> </p>
           {{/if}}
+
+          {{#if aukeraketa}}
+            <h3 style="color:#0000FF">Inskripzioa osatzeke:</h3>
+            <div style="width: 300px; height: 150px; overflow-y: scroll; " align="center">
+             {{#each taldeak}} 
+              {{#if aukeratuta}}
+                <p style="color:{{kolore}}">  {{taldeizena}}  </p>
+              {{/if}}  
+             {{/each}}
+           </div>
+           <p> Koloreak: <span style="color:#008000">taldea aukeratuta</span> </p>
+          {{/if}}
+
         </div>
       </div>
 

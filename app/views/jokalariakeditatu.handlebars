@@ -10,7 +10,13 @@
 
 <div class="formContainer">
 {{#each data}}
-    <form class="form-horizontal newsletterForm" role="form" action="/jokalariakaldatu/{{idjokalari}}" method="POST">
+
+    {{#if admin}}
+      <form class="form-horizontal newsletterForm" role="form" action="/admin/jokalariakaldatu/{{idjokalari}}" method="POST">
+    {{else}}
+      <form class="form-horizontal newsletterForm" role="form" action="/jokalariakaldatu/{{idjokalari}}" method="POST">
+    {{/if}}
+
     <input type="hidden" name="_csrf" value="{{_csrfToken}}">
         
         <p> JOKALARIAK </p>

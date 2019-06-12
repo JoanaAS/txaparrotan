@@ -40,11 +40,13 @@ exports.add = function(req, res){
 exports.editatu = function(req, res){
   var neurriak = [{neurria:"9-10"}, {neurria:"11-12"}, {neurria:"S"}, {neurria:"M"}, {neurria:"L"}, {neurria:"XL"}, {neurria:"XXL"}];
   //var id = req.params.id;
+  var admin = (req.path.slice(0,24) == "/admin/jokalariakeditatu");
+
+  if (admin)
+    req.session.idtalde = req.params.idtaldeak;
   var id = req.session.idtalde;
   var idjokalari = req.params.idjokalari;
-  var admin = (req.path.slice(0,24) == "/admin/jokalariakeditatu");
-  if (admin)
-    id = req.params.idtaldeak;
+
   req.getConnection(function(err,connection){
        
      connection.query('SELECT * FROM jokalariak WHERE idtaldej = ? and idjokalari = ?',[id,idjokalari],function(err,rows)
@@ -60,9 +62,9 @@ exports.editatu = function(req, res){
                else
                   neurriak[i].aukeratua = false;
             }
-
             rows[0].neurriak = neurriak;
-     
+
+            rows[0].admin = admin;
             res.render('jokalariakeditatu.handlebars', {page_title:"Jokalaria aldatu",data:rows, taldeizena: req.session.taldeizena, menuadmin: admin});
                            
          });
@@ -119,9 +121,9 @@ exports.aldatu = function(req,res){
     var id = req.session.idtalde;
     var idjokalari = req.params.idjokalari;
     var admin = (req.path.slice(0,23) == "/admin/jokalariakaldatu");
-    if (admin)
-      id = req.params.idtaldeak;
-                                        
+//    if (admin)
+//      id = req.params.idtaldeak;
+//    console.log("idtalde:" + id + "Admin : " + admin + "idjokalari:" + idjokalari);                                        
     req.getConnection(function (err, connection) {
         
         var data = {
@@ -129,7 +131,7 @@ exports.aldatu = function(req,res){
             jokalariizena : input.jokalariizena,
             emailaj   : input.emaila,
             telefonoaj   : input.telefonoa,
-            kamisetaneurria   : input.kamisetaneurria,
+            kamisetaneurria   : input.kamisetaneurria
         
         };
         

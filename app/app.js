@@ -250,6 +250,7 @@ app.post('/admin/finalordutegia', adminonartua, kudeaketa.finalordutegia);
 app.post('/admin/finalakosatu', adminonartua, kudeaketa.finalakosatu);
 app.post('/admin/finalakatzera', adminonartua, kudeaketa.finalakatzera);
 app.get('/admin/sailkapenak', adminonartua, kudeaketa.sailkapenak);
+app.get('/admin/bigarrengoak', adminonartua, kudeaketa.sailkapenak);
 app.post('/admin/partiduaksortu', adminonartua, kudeaketa.partiduaksortu);
 app.get('/admin/partiduak', adminonartua, kudeaketa.partiduakikusi);
 app.get('/admin/partiduguztiak', adminonartua, kudeaketa.partiduakikusi);

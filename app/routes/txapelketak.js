@@ -605,7 +605,7 @@ function doDelay(wait) {
 
 exports.berriakikusi = function(req, res){
   var id = req.session.idtxapelketa;
-  var kolore;
+  var kolore, aukeraketa, aukeratuta;
   var now= new Date(), izenemanikusi = 0;
   var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera,zozketaeguna;
 
@@ -650,17 +650,26 @@ exports.berriakikusi = function(req, res){
         connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by taldeizena asc',[id],function(err,rowst)     {
           if(err)
              console.log("Error Selecting : %s ",err );
+          aukeraketa = 0; 
           for (var i in rowst) { 
             kolore = "#000000";
-            if (rowst[i].balidatuta == 0)
+            aukeratuta = 0;
+            if (rowst[i].balidatuta == 0)                     // Balidatugabe 
                  kolore = "#FF0000";
-            else if (rowst[i].balidatuta == 1)
+            else if (rowst[i].balidatuta == 1)                // Balidatuta
                       kolore = "#0000FF";
-                 else if (rowst[i].balidatuta == 2)
+                 else if (rowst[i].balidatuta == 2)           // Jokalariakfaltan 
                            kolore = "#00FF00";
-            rowst[i].kolore =  kolore;  
+                      else if (rowst[i].balidatuta == 4)      // Aukeratuta
+                           {
+                             kolore = "#008000";
+                             aukeraketa = 1;
+                             aukeratuta = 1;
+                           }
+            rowst[i].kolore =  kolore; 
+            rowst[i].aukeratuta =  aukeratuta; 
           }  
-          res.render('index.handlebars',{title: "Txaparrotan", taldeizena: req.session.taldeizena, data:rowsb, data2: rows, taldeak: rowst, izenemanikusi: izenemanikusi});
+          res.render('index.handlebars',{title: "Txaparrotan", taldeizena: req.session.taldeizena, data:rowsb, data2: rows, taldeak: rowst, izenemanikusi: izenemanikusi, aukeraketa: aukeraketa});
         });                        
       });
     });   
@@ -1309,7 +1318,9 @@ debugger;
                         subj = req.session.txapelketaizena+ " txapelketan zure taldea  "+rows[i].taldeizena+"  aukeratua";
                         body = "<h2>" + req.session.txapelketaizena+" txapelketan zure taldea <b>"+rows[i].taldeizena+"</b> aukeratua </h2>\n" +
 
-                              "<p>2 egun dituzu <b>" +rowst[0].kontukorrontea+ "</b> kontu korrontean  <b>"+rowst[0].prezioa+ "</b> euro sartzeko. Kontzeptu bezala arduradunaren eta taldearen izena jarri : <b>"+rows[i].taldeizena+"-"+rows[i].izenaard+"</b> </p>" +
+//                              "<p>2 egun dituzu <b>" +rowst[0].kontukorrontea+ "</b> kontu korrontean  <b>"+rowst[0].prezioa+ "</b> euro sartzeko. Kontzeptu bezala arduradunaren eta taldearen izena jarri : <b>"+rows[i].taldeizena+"-"+rows[i].izenaard+"</b> </p>" +
+                              "<p>2 egun dituzu <b>" +rowst[0].kontukorrontea+ "</b> kontu korrontean  dirua sartzeko. Kontzeptu bezala arduradunaren eta taldearen izena jarri : <b>"+rows[i].taldeizena+"-"+rows[i].izenaard+"</b> </p>" +
+
                               "<p style='color:#FF0000'>Ordainketa egindakoan eta guk berrikusitakoan webguneko zerrendan zuen taldea azalduko da. Ordainketa egin ezean, zure taldeak txapelketan jolasteko aukera galduko du. </p> \n \n \n" +
 
                   //            "<h3> Sartu: http://" +hosta+" eta ikusi zure taldea onarturik Taldeak atalean</h3>\n \n \n"+
