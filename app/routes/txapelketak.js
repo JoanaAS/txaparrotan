@@ -43,7 +43,9 @@ exports.aukeratzeko = function(req, res){
                 console.log("Error query : %s ",err ); 
 //        console.log("txapelketak : " + JSON.stringify(rows)); 
 
-        connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak WHERE zenbakiBerria = 9 order by zenbakiBerria asc, dataBerria desc',function(err,rowsb)            
+//        connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak WHERE zenbakiBerria = 9 order by zenbakiBerria asc, dataBerria desc',function(err,rowsb)            
+        connection.query('SELECT *, DATE_FORMAT(dataBerria,"%Y/%m/%d") AS dataBerria FROM berriak,txapelketa WHERE zenbakiBerria = 9 and idtxapelketa = idtxapelBerria and txapelketaprest != 9 order by zenbakiBerria asc, dataBerria desc',function(err,rowsb)            
+
         {
           if(err)
             console.log("Error Selecting : %s ",err );

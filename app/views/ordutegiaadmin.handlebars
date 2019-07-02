@@ -28,8 +28,19 @@
                 <tr>
                     {{#each partiduak}}
     
-                        <td> {{#if akronimoa}} {{akronimoa}} <br/>{{/if}}{{taldeizena1}}<b>-</b><br/>&nbsp{{taldeizena2}}</td>
+                      <td> {{#if akronimoa}} {{akronimoa}} <br/>{{/if}}{{taldeizena1}}<b>-</b><br/>&nbsp{{taldeizena2}}
 
+                        {{#if emaitzabai}} <br/> {{golak1a}}-{{golak1b}} &nbsp
+                                    {{goldeoro1}} &nbsp
+                                    {{golak2a}}-{{golak2b}} &nbsp
+                                    {{goldeoro2}} &nbsp
+                                    s{{shutout}}
+                               <br/>
+                                  &nbsp &nbsp  {{emaitza1}}&nbsp - &nbsp{{emaitza2}}
+                        {{/if}}
+
+
+                      </td>
                     {{/each}}
                 </tr> 
             {{/each}}

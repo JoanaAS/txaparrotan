@@ -1217,6 +1217,7 @@ var vOrdua, vEguna;
 var admin = (req.path == "/admin/ordutegia");
 var data, datastring;
 var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
+var emaitzabai, golak;
 
   req.getConnection(function(err,connection){
 
@@ -1297,10 +1298,31 @@ var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
            else{ 
                 akronimoa = rowsf[i].akronimoa +" "+ alfabeto[rowsf[i].multzo -1] +" "+ rowsf[i].jardunaldia +".";
             }
+          if(rowsf[i].emaitza1 != null || rowsf[i].emaitza2 != null){
+              emaitzabai = 1;
+              golak = rowsf[i].emaitza1 +"-"+ rowsf[i].emaitza2 +".";
+          }    
+          else
+          {
+              emaitzabai = 0;
+              golak = "";    
+          }
+          
           partiduak[j] = {
                   akronimoa      : akronimoa,
                   taldeizena1    : rowsf[i].izenafinala1,
-                  taldeizena2    : rowsf[i].izenafinala2
+                  taldeizena2    : rowsf[i].izenafinala2,
+                  golak1a        : rowsf[i].golak1a,
+                  golak1b        : rowsf[i].golak1b,
+                  goldeoro1        : rowsf[i].goldeoro1,
+                  golak2a        : rowsf[i].golak2a,
+                  golak2b        : rowsf[i].golak2b,
+                  goldeoro2        : rowsf[i].goldeoro2,
+                  shutout        : rowsf[i].shutout,
+                  emaitza1        : rowsf[i].emaitza1,
+                  emaitza2        : rowsf[i].emaitza2, 
+                  emaitzabai     : emaitzabai,
+                  golak          : golak
                };
           j++;
         }
@@ -1572,9 +1594,13 @@ exports.emaitzasartu = function(req, res){
 
     connection.query('SELECT * FROM partiduak,grupoak where idgrupop=idgrupo and idpartidu = ? ',[idpar],function(err,rows)     {
 
-        if(err)
+      if(err)
            console.log("Error Selecting : %s ",err );
 
+      if (!(bemaitza1 == rows[0].emaitza1 && bemaitza2 == rows[0].emaitza2 &&          // ADI ADI  dato berdinak sartu dira
+           golak1a == rows[0].golak1a && golak2a == rows[0].golak2a &&
+            golak1b == rows[0].golak1b && golak2b == rows[0].golak2b ))
+      {
         var talde1=rows[0].idtalde1;
         var talde2=rows[0].idtalde2;
 
@@ -1594,7 +1620,6 @@ exports.emaitzasartu = function(req, res){
         
         connection.query("UPDATE partiduak set ? WHERE idpartidu = ? ",[data,idpar], function(err, rowst)
         {
-  
           if (err)
               console.log("Error Updating : %s ",err );
 
@@ -1602,7 +1627,7 @@ exports.emaitzasartu = function(req, res){
            connection.query('SELECT * FROM taldeak where idtaldeak= ? and idtxapeltalde = ?',[talde1,id],function(err,rowst)     {
             if(err)
               console.log("Error Selecting : %s ",err );
-            
+           
             jokatutakopartiduak = rowst[0].jokatutakopartiduak;
             irabazitakopartiduak = rowst[0].irabazitakopartiduak;
             puntuak = rowst[0].puntuak;
@@ -1619,19 +1644,22 @@ exports.emaitzasartu = function(req, res){
               if(bemaitza1>bemaitza2){
                 irabazitakopartiduak++; 
               }
-              console.log("5");
+//              console.log("5");
             }
             if(emaitza1 > emaitza2 && bemaitza1 < bemaitza2){
               irabazitakopartiduak--;
-              console.log("1");
+//              console.log("1");
             }
             if(emaitza1 < emaitza2 && bemaitza1 > bemaitza2){
               irabazitakopartiduak++;
-              console.log("2");
+//              console.log("2");
             }
-            puntuak = puntuak + (bemaitza1-emaitza1);
-            golakalde = golakalde + (golak1a + golak2a - lehengolak1a - lehengolak2a);
-            golakkontra = golakkontra + (golak1b + golak2b - lehengolak1b - lehengolak2b);
+//            puntuak = puntuak + (bemaitza1-emaitza1);
+//            golakalde = golakalde + (golak1a + golak2a - lehengolak1a - lehengolak2a);
+//            golakkontra = golakkontra + (golak1b + golak2b - lehengolak1b - lehengolak2b);
+            puntuak = puntuak + (bemaitza1 - rows[0].emaitza1);
+            golakalde = golakalde + (golak1a + golak2a - rows[0].golak1a - rows[0].golak2a);
+            golakkontra = golakkontra + (golak1b + golak2b - rows[0].golak1b - rows[0].golak2b);
             //setalde = setalde + (bemaitza1-emaitza1);
             //setkontra = setkontra + (bemaitza1-emaitza1);
             var data = {
@@ -1668,19 +1696,22 @@ exports.emaitzasartu = function(req, res){
                   if(bemaitza1 < bemaitza2){
                     irabazitakopartiduak++;
                   }
-                  console.log("0");
+//                  console.log("0");
                 }
                 if(emaitza1 < emaitza2 && bemaitza1 > bemaitza2){
                   irabazitakopartiduak--;
-                  console.log("3");
+//                  console.log("3");
                 }
                 if(emaitza1 > emaitza2 && bemaitza1 < bemaitza2){
                   irabazitakopartiduak++;
-                  console.log("4");
+//                  console.log("4");
                 }
-                puntuak = puntuak + (bemaitza2-emaitza2);
-                golakalde = golakalde + (golak1b + golak2b - lehengolak1b - lehengolak2b);
-                golakkontra = golakkontra + (golak1a + golak2a - lehengolak1a - lehengolak2a);
+//                puntuak = puntuak + (bemaitza2-emaitza2);
+//                golakalde = golakalde + (golak1b + golak2b - lehengolak1b - lehengolak2b);
+//                golakkontra = golakkontra + (golak1a + golak2a - lehengolak1a - lehengolak2a);
+                puntuak = puntuak + (bemaitza2 - rows[0].emaitza2);
+                golakalde = golakalde + (golak1b + golak2b - rows[0].golak1b - rows[0].golak2b);
+                golakkontra = golakkontra + (golak1a + golak2a - rows[0].golak1a - rows[0].golak2a);
                 //setalde = setalde + (bemaitza2-emaitza2);
                 //setkontra = setkontra + (bemaitza2-emaitza2);
 
@@ -1694,7 +1725,7 @@ exports.emaitzasartu = function(req, res){
                   //setalde : setalde,
                   //setkontra: setkontra        
                 };
-                console.log("data: " +JSON.stringify(data));
+//                console.log("data: " +JSON.stringify(data));
 
                 connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,talde2], function(err, rowst)
                 {
@@ -1703,47 +1734,55 @@ exports.emaitzasartu = function(req, res){
                     console.log("Error Updating : %s ",err );
                   res.redirect('/admin/emaitzak');
                 });
+             });
             });
-        });
-      });
-      }
-      else{
-        if(bemaitza1 > bemaitza2){
-          izenafinala = rows[0].izenafinala1;
-          idtalde = rows[0].idtalde1;
-        }
-        else{
-          izenafinala = rows[0].izenafinala2;
-          idtalde = rows[0].idtalde2;
-        }
-        if(rows[0].idfinala1 != null){
+           });
+          }
+          else{
+           if(bemaitza1 > bemaitza2){
+              izenafinala = rows[0].izenafinala1;
+              idtalde = rows[0].idtalde1;
+            }
+           else{
+              izenafinala = rows[0].izenafinala2;
+              idtalde = rows[0].idtalde2;
+            }
+           if(rows[0].idfinala1 != null){
             idparti = rows[0].idfinala1;
             var data = {
 
                   izenafinala1    : izenafinala,
                   idtalde1   : idtalde       
                 };
-        }
-        else{
-          if(rows[0].idfinala2 != null){
-            idparti = rows[0].idfinala2;
-            var data = {
+           }
+           else{
+            if(rows[0].idfinala2 != null){
+              idparti = rows[0].idfinala2;
+              var data = {
 
                   izenafinala2    : izenafinala,
                   idtalde2   : idtalde       
                 };
+            }
            }
-        }
-        connection.query("UPDATE partiduak set ? WHERE idpartidu = ? ",[data,idparti], function(err, rowst)
+           connection.query("UPDATE partiduak set ? WHERE idpartidu = ? ",[data,idparti], function(err, rowst)
                 {
   
                   if (err)
                     console.log("Error Updating : %s ",err );
                   res.redirect('/admin/emaitzak');
                 });
-
+          }
+        });          
       }
-     });
+      else     // ADI ADI  dato berdinak sartu dira
+       { 
+       console.log("Emaitza berdina: "+ bemaitza1 + "="+ rows[0].emaitza1 + "-"+ bemaitza2 + "="+ rows[0].emaitza2 + "-"+    
+           golak1a + "="+ rows[0].golak1a + "-"+ golak2a + "="+ rows[0].golak2a + "-"+
+            golak1b + "="+ rows[0].golak1b + "-"+ golak2b + "="+ rows[0].golak2b );
+
+       res.redirect('/admin/sailkapenak');
+       } 
      }); 
   });
   //res.redirect(303, '/admin/emaitzak');
