@@ -312,6 +312,7 @@ app.post('/admin/mezuakbidali', adminonartua, txapelketak.mezuakbidali);
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+/* 2019-07-21
 //if ('development' == app.get('env')) {
 if (process.env.NODE_ENV != 'production'){  
 var cliente = mysql.createConnection({
@@ -334,7 +335,7 @@ else{
               console.log("heroku2" );
 }
 //2015-03-24
-/*cliente.connect(function(err) {
+cliente.connect(function(err) {
   if (err) {
     console.error('error connecting: ' + err.stack);
     return;
