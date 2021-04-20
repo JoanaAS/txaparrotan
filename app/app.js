@@ -29,7 +29,8 @@ app.set('port', process.env.PORT || 3000);
 
 app.set('views', path.join(__dirname, 'views'));
 // set up handlebars view engine
-var handlebars = require('express3-handlebars').create({
+//var handlebars = require('express3-handlebars').create({
+var handlebars = require('express-handlebars').create({
     defaultLayout:'main',
     layoutsDir: "app/views/layouts/",
     partialsDir: "app/views/partials/",
