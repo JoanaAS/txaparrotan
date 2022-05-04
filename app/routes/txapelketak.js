@@ -26,7 +26,7 @@ var VALID_TEL_REGEX = /^[0-9-()+]{3,20}/;
 // make sure data directory exists
 //var dataDir = path.normalize(path.join(__dirname, '..', 'data'));
 var dataDir = path.normalize(path.join(__dirname, '../public', 'data'));
-console.log(dataDir);
+//console.log(dataDir);
 var argazkiakDir = path.join(dataDir, 'argazkiak');
 fs.existsSync(dataDir) || fs.mkdirSync(dataDir); 
 fs.existsSync(argazkiakDir) || fs.mkdirSync(argazkiakDir);
@@ -78,7 +78,7 @@ exports.sortzeko = function(req, res){
       connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
-        console.log("txapelketak : " + JSON.stringify(rows)); 
+//        console.log("txapelketak : " + JSON.stringify(rows)); 
         res.render('txapelketaksortu.handlebars', {title : 'Txaparrotan-Txapelketak sortu', txapelketak : rows});
       });   
   });  
@@ -108,7 +108,7 @@ exports.sortu = function(req,res){
   
   if(res.locals.flash != null){
 
-      console.log(req.body.taldeizena); 
+//      console.log(req.body.taldeizena); 
          return res.render('txapelketaksortu.handlebars', {
             txapelketaizena: req.body.txapelketaizena,
             taldeizena: req.body.taldeizena,
@@ -146,7 +146,7 @@ exports.sortu = function(req,res){
        connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.body.sTxapelketak],function(err,rows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
-        console.log("txapelketatik : " + JSON.stringify(rows));
+//        console.log("txapelketatik : " + JSON.stringify(rows));
         if (rows.length != 0) 
          var data = {
             txapelketaizena    : input.txapelketaizena,
@@ -194,7 +194,7 @@ exports.sortu = function(req,res){
                idtxapelz    : idtxapelketa
              };
         
-             console.log(dataz);
+//             console.log(dataz);
              var query = connection.query("INSERT INTO zelaia set ? ",dataz, function(err, rows)
              {
               if (err)
@@ -214,7 +214,7 @@ exports.sortu = function(req,res){
                idtxapelm  :  idtxapelketa
              };
         
-             console.log(datam);
+//             console.log(datam);
              var query = connection.query("INSERT INTO maila set ? ",datam, function(err, rows)
              {
               if (err)
@@ -235,7 +235,7 @@ exports.sortu = function(req,res){
                motaEdukia : rowsb[j].motaEdukia
              };
         
-             console.log(datab);
+//             console.log(datab);
              var query = connection.query("INSERT INTO berriak set ? ",datab, function(err, rows)
              {
               if (err)
@@ -256,7 +256,7 @@ exports.sortu = function(req,res){
             balidatuta : "admin"
         };
         
-        console.log(data);
+//        console.log(data);
         var query = connection.query("INSERT INTO taldeak set ? ",data, function(err, rows)
         {
   
@@ -356,7 +356,7 @@ exports.aldatu = function(req,res){
             finalakordua : input.finalakordua
         };
         
-        console.log(data);
+//        console.log(data);
         var query = connection.query("UPDATE txapelketa set ? WHERE idtxapelketa = ? ",[data,id], function(err, rows)
         {
   
@@ -758,7 +758,7 @@ exports.argazkiakikusi2 = function(req, res){
   fs.existsSync(txapelketadir) || fs.mkdirSync(txapelketadir);
   fs.readdir(txapelketadir, function (err, files) {
   if (err) throw err;
-  console.log("/usr files: " + files);
+//  console.log("/usr files: " + files);
   for (var i in files){
     //argazkiak[i] = files[i];
     console.log(files[i]);
@@ -769,7 +769,7 @@ exports.argazkiakikusi2 = function(req, res){
     
     argazkiak[i] = argazkia;
   }
-  console.log(JSON.stringify(argazkiak));
+//  console.log(JSON.stringify(argazkiak));
   res.render('argazkiak.handlebars', {title: "Txaparrotan - Argazkiak", irudiak:argazkiak, taldeizena: req.session.taldeizena});
   });
 };
@@ -996,7 +996,7 @@ exports.zelaiaksortu = function(req,res){
             idtxapelz    : id
         };
         
-        console.log(data);
+//        console.log(data);
         var query = connection.query("INSERT INTO zelaia set ? ",data, function(err, rows)
         {
   
@@ -1122,7 +1122,7 @@ exports.mailaksortu = function(req,res){
             idtxapelm    : id
         };
         
-        console.log(data);
+//        console.log(data);
         var query = connection.query("INSERT INTO maila set ? ",data, function(err, rows)
         {
   
@@ -1386,7 +1386,7 @@ debugger;
 
                   //            "<h3> Sartu: http://" +hosta+" eta ondoren has ezazu saioa zure datuekin jokalariak gehitu ahal izateko.  </h3> \n" +
                   
-                              "<h3> Ordaindu ez baduzue, sartu " +rowst[0].prezioa+" € kontu zenbaki honetan: "+rowst[0].kontukorrontea+ " Gogoratu, 8 pertsonatik gorako taldea bada, jokalariko gehigarriko 5€gehiago sartu behar dituzuela. Mila esker!</h3>\n \n \n"+
+                              "<h3> Ordaindu ez baduzue, sartu " +rowst[0].prezioa+" € kontu zenbaki honetan: "+rowst[0].kontukorrontea+ " Gogoratu, 8 pertsonatik gorako taldea bada, jokalariko gehigarriko "+rowst[0].partidukopmin+ "€ gehiago sartu behar dituzuela. Mila esker!</h3>\n \n \n"+
                               "<h3> P.D: Mesedez ez erantzun helbide honetara, mezuak txaparrotan@gmail.com -era bidali</h3>" ;
                     }
                     to = rows[i].emailard;
