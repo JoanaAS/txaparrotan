@@ -598,7 +598,7 @@ exports.sortu = function(req,res){
             if(vMultzokop <= rowsmg[0].mailaguztira)    
               topetalde = 1;
 
-             else if(rowsm[i].multzokop < 500 && req.body.sexua != " ") {
+             else if(rowsm[i].multzokop < 500 && req.body.sexua != undefined) {
                     if(req.xhr) return res.json({ error: 'Invalid mail' });
                         res.locals.flash = {
                             type: 'danger',
