@@ -859,6 +859,7 @@ var date = new Date();
 
                   idtaldeak  : rows[i].idtaldeak,
                   taldeizena    : rows[i].taldeizena,
+                  sexua    : rows[i].sexua,
                   herria    : rows[i].herria,
                   DNIard    : rows[i].DNIard,
                   izenaard    : rows[i].izenaard,

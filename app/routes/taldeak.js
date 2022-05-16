@@ -54,6 +54,7 @@ var admin = (admintalde || admingabe);
            taldeak[j] = {
                   postua : j+1,
                   taldeizena    : rows[i].taldeizena,
+                  sexua    : rows[i].sexua,
                   herria    : rows[i].herria,
                   balidatuta : rows[i].balidatuta,
                   izenaard : rows[i].izenaard,
@@ -180,6 +181,7 @@ exports.aldatu = function(req,res){
             
             taldeizena : input.taldeizena,
             kategoria   : input.kategoria,
+            sexua   : input.sexua,
             herria   : input.herria,
             izenaard   : input.izenaard,
             telefonoard   : input.telefonoard,
@@ -517,7 +519,7 @@ exports.sortu = function(req,res){
     }
 */    
     var aditestua;
-    var topetalde = 0;
+    var topetalde = 0, vMultzokop = 0;
     var mailaizena = "";
 
     if(!req.body.DNIard.match(VALID_DNI_REGEX)) {
@@ -571,16 +573,40 @@ exports.sortu = function(req,res){
    // return res.redirect(303, '/izenematea');
   }
 
-  req.getConnection(function (err, connection) {
-   connection.query('SELECT * FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+  req.getConnection(function(err,connection){
+  connection.query('SELECT count(*) as mailaguztira FROM taldeak where balidatuta >= 0 and idtxapeltalde= ? and kategoria= ? ',[req.session.idtxapelketa,req.body.kategoria],function(err,rowsmg)     {
+
+   if(err)
+      console.log("Error Selecting : %s ",err );
+
+   console.log("talde kopurua: %s ", rowsmg[0].mailaguztira);   
+    console.log("talde mixtoa: %s ", req.body.sexua);
+
+   req.getConnection(function (err, connection) {
+    connection.query('SELECT * FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
       if(err)
         console.log("Error Selecting : %s ",err ); 
       for(var i in rowsm ){
           if(input.kategoria == rowsm[i].idmaila){
             mailaizena = rowsm[i].mailaizena;
             rowsm[i].aukeratua = true;
-            if(rowsm[i].multzokop == 9)
+            if(rowsm[i].multzokop >= 500)                 //  > 500  Maila mixtoa
+              vMultzokop = rowsm[i].multzokop - 500;
+            else
+              vMultzokop = rowsm[i].multzokop;
+//            if(rowsm[i].multzokop == 9)
+            if(vMultzokop <= rowsmg[0].mailaguztira)    
               topetalde = 1;
+
+             else if(rowsm[i].multzokop < 500 && req.body.sexua != " ") {
+                    if(req.xhr) return res.json({ error: 'Invalid mail' });
+                        res.locals.flash = {
+                            type: 'danger',
+                            intro: 'Adi!',
+                            message: 'Maila honetan, talde MIXTOA ezin da apuntatu.',
+                        };
+             }
+
           }
           else
             rowsm[i].aukeratua = false;
@@ -595,6 +621,7 @@ exports.sortu = function(req,res){
             mailak : rowsm,
             taldeizena: req.body.taldeizena,
             kategoria   : req.body.kategoria,
+            sexua   : req.body.sexua,
             herria   : req.body.herria,
             DNIard    : req.body.DNIard,
             izenaard   : req.body.izenaard,
@@ -648,6 +675,7 @@ debugger;
             mailak : rowsm,
             taldeizena: req.body.taldeizena,
             kategoria   : req.body.kategoria,
+            sexua   : req.body.sexua,
             herria   : req.body.herria,
             DNIard    : req.body.DNIard,
             izenaard   : req.body.izenaard,
@@ -682,7 +710,7 @@ debugger;
             sortzedata : now,
             balidatuta : 0,
             lehentasuna : 99,
-            sexua : " "
+            sexua : input.sexua       // " "
            };
 
            var query = connection.query("INSERT INTO taldeak set ? ",data, function(err, rows)
@@ -772,13 +800,15 @@ debugger;
 
           emailService.send(to, subj, body);
           //res.redirect('/taldeak');
-          res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, txapelketaizena:req.session.txapelketaizena, kk:rowst[0].kontukorrontea, prezio: rowst[0].prezioa, emailard:data.emailard, izenaard: data.izenaard,mailaizena: mailaizena});
+          res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, mixtoa:data.sexua,txapelketaizena:req.session.txapelketaizena, kk:rowst[0].kontukorrontea, prezio: rowst[0].prezioa,gehigarri: rowst[0].partidukopmin, emailard:data.emailard, izenaard: data.izenaard,mailaizena: mailaizena});
                   }
                });   
           });
         }); 
       });
     });
+   });
+   });
   });
 };
 

@@ -4,7 +4,7 @@ exports.taldekopurua = function(req, res){
 
   req.getConnection(function(err,connection){
 //    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
-    connection.query('SELECT mailaizena,multzokop,finalak,balidatuta,count(*) as guztira, sum(case when balidatuta > 4 then 1 else 0 end) as onartuak, sum(case when balidatuta = 4 then 1 else 0 end) as aukeratuak, sum(case when (balidatuta > 0 and balidatuta < 4) then 1 else 0 end) as apuntatuak, sum(case when balidatuta = 0 then 1 else 0 end) as balidatugabeak FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+    connection.query('SELECT mailaizena,multzokop,finalak,balidatuta,count(*) as guztira, sum(case when sexua = "X" then 1 else 0 end) as mixtoak, sum(case when balidatuta > 4 then 1 else 0 end) as onartuak, sum(case when balidatuta = 4 then 1 else 0 end) as aukeratuak, sum(case when (balidatuta > 0 and balidatuta < 4) then 1 else 0 end) as apuntatuak, sum(case when balidatuta = 0 then 1 else 0 end) as balidatugabeak FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
 
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -15,12 +15,14 @@ exports.taldekopurua = function(req, res){
             guztira[2] += rowsg[i].aukeratuak;
             guztira[3] += rowsg[i].apuntatuak;
             guztira[4] += rowsg[i].balidatugabeak;
+            guztira[5] += rowsg[i].mixtoak;
          }
          guztirao.guztira = guztira[0];
          guztirao.onartuak = guztira[1];
          guztirao.aukeratuak = guztira[2]; 
          guztirao.apuntatuak = guztira[3]; 
          guztirao.balidatugabeak = guztira[4];
+         guztirao.mixtoak = guztira[5];
 
          guztirak[0] = guztirao; 
         res.render('taldekopurua.handlebars', {title : 'Txaparrotan-Taldeak', data2:rowsg, guztirak: guztirak, taldeizena: req.session.txapelketaizena} );
@@ -228,7 +230,7 @@ exports.multzoakbete = function(req, res){
           imultzo[rowsg[j].multzo] = rowsg[j].idgrupo;
         }
 
-     connection.query('SELECT * FROM taldeak where balidatuta >= 4 and idtxapeltalde = ? and kategoria = ? order by lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {
+     connection.query('SELECT * FROM taldeak where balidatuta >= 4 and idtxapeltalde = ? and kategoria = ? order by sexua desc,lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {
 //     connection.query('SELECT * FROM taldeak where balidatuta >= 1 and idtxapeltalde = ? and kategoria = ? order by lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {            
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -552,8 +554,11 @@ exports.partiduaksortu = function(req, res){
             vMultzo = rows[i].idgrupo;               
           }
           
-          multzoak[j] = rows[i].idtaldeak; 
-          multzoizenak[j] = rows[i].taldeizena;
+          multzoak[j] = rows[i].idtaldeak;
+          if(rows[i].sexua == "X") 
+            multzoizenak[j] = rows[i].taldeizena + " *";
+          else
+            multzoizenak[j] = rows[i].taldeizena;
           j++;
         }
         if(vKategoria !=null){
@@ -2009,6 +2014,7 @@ exports.taldeaaldatu = function(req,res){
             
             taldeizena : input.taldeizena,
             kategoria   : input.kategoria,
+            sexua   : input.sexua,
             balidatuta   : input.balidatuta,
             berezitasunak : input.berezitasunak,
             lehentasuna  : input.lehentasuna,
