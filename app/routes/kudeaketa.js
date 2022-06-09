@@ -212,6 +212,7 @@ exports.multzoakbete = function(req, res){
   var id = req.session.idtxapelketa;
   vKategoria = req.body.kategoria2;
   //var vMultzokopurua = req.body.multzokop2;
+  var vMultzokopurua = 0;
   var imultzo = [];
 
   req.getConnection(function(err,connection){
@@ -219,7 +220,7 @@ exports.multzoakbete = function(req, res){
         if(err)
            console.log("Error Selecting : %s ",err );
 
-        var vMultzokopurua = rowsg[0].multzokop;
+        vMultzokopurua = rowsg[0].multzokop;
 
         if(rowsg[0].multzokop == null){
           console.log("Maila honetako multzo kopurua ipini!");
@@ -229,21 +230,32 @@ exports.multzoakbete = function(req, res){
         for (var j in rowsg){
           imultzo[rowsg[j].multzo] = rowsg[j].idgrupo;
         }
-
-     connection.query('SELECT * FROM taldeak where balidatuta >= 4 and idtxapeltalde = ? and kategoria = ? order by sexua desc,lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {
+     connection.query('SELECT count(*) as mailakopurua FROM taldeak where balidatuta >= 4 and idtxapeltalde = ? and kategoria = ? ',[id,vKategoria],function(err,rowst)     {
+      if(err)
+           console.log("Error Selecting : %s ",err );
+      connection.query('SELECT * FROM taldeak where balidatuta >= 4 and idtxapeltalde = ? and kategoria = ? order by sexua desc,lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {
 //     connection.query('SELECT * FROM taldeak where balidatuta >= 1 and idtxapeltalde = ? and kategoria = ? order by lehentasuna,idtaldeak',[id,vKategoria],function(err,rows)     {            
         if(err)
            console.log("Error Selecting : %s ",err );
        
          //J/4 hondarra
-         var multzozenbaki = 0;
-         var idgrupo;
-         for (var i in rows){
+        var multzozenbaki = 0;
+        var vTaldekopurua = (Math.trunc(rowst[0].mailakopurua / vMultzokopurua));
+        console.log("maila : "+ rowst[0].mailakopurua + "multzo : "+ vMultzokopurua + "talde : "+ vTaldekopurua);
+//        if (rowst[0].mailakopurua > (vMultzokopurua * vTaldekopurua)) 
+//              vTaldekopurua += 1;
+//        console.log("maila2 : "+ rowst[0].mailakopurua + "multzo : "+ vMultzokopurua + "talde : "+ vTaldekopurua);
+        var idgrupo;
+        for (var i in rows){
 //          multzozenbaki = (i % vMultzokopurua) + 1;  // ADI lehentasuna : rankin edo taldeburu
-          multzozenbaki = (Math.trunc(i / 4)) + 1;   // ADI lehentasuna : talde zenbakia  LAUNAKA
+//          multzozenbaki = (Math.trunc(i / 4)) + 1;   // ADI lehentasuna : talde zenbakia  LAUNAKA
+          if ( i < (vTaldekopurua * vMultzokopurua))
+            multzozenbaki = (Math.trunc(i / vTaldekopurua)) + 1;   // ADI lehentasuna : talde zenbakia 
+          else
+            multzozenbaki = vMultzokopurua - (i % vMultzokopurua); 
           idgrupo = imultzo [multzozenbaki];
           id = rows[i].idtaldeak;
-//          console.log("i : "+ i + "multzozenbaki : "+ multzozenbaki + "idgrupo : "+ idgrupo + "id : "+ id);
+          console.log("i : "+ i + "multzozenbaki : "+ multzozenbaki + "idgrupo : "+ idgrupo + "id : "+ id);
           var data = {
             
             idgrupot    : idgrupo
@@ -256,12 +268,13 @@ exports.multzoakbete = function(req, res){
             if (err)
               console.log("Error Updating : %s ",err );
           });
-         }
+        }
 
-         res.redirect(303, '/admin/kalkuluak');
+        res.redirect(303, '/admin/kalkuluak');
 
-      }); 
-   }
+       }); 
+      });
+     }
    });
   });
 };
