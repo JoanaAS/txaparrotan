@@ -2,7 +2,8 @@ module.exports = {
 cookieSecret: 'your cookie secret goes here',
 gmail: {
 user: 'txaparrotanapp2022@gmail.com',
-password: 'Antolakuntxa2022',
+// password: 'Antolakuntxa2022',
+password: 'auoqodqzgdpyklsg',
 },
 /*
 twittereskubaloiaZKE: {
