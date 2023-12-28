@@ -32,10 +32,15 @@ dbdevelop: {
         database:'heroku_4efa3ee4ff6c16c'
 },
 dbproduction: {
-        host: 'us-cdbr-iron-east-02.cleardb.net',
-        user: 'b52372483fde60',
-        password : '4fd964e83256734',      // '4d96016a'
+//        host: 'us-cdbr-iron-east-02.cleardb.net',
+//        user: 'b52372483fde60',
+//        password : '4fd964e83256734',      // '4d96016a'
       //  port : 3306, //port mysql
-        database:'heroku_4efa3ee4ff6c16c'
+//        database:'heroku_4efa3ee4ff6c16c'
+        host: 'us-cluster-east-01.k8s.cleardb.net',
+        user: 'b2e41a658b178d',
+        password : 'a2e8ce90070606f',      // '4d96016a'
+      //  port : 3306, //port mysql
+        database:'heroku_aebe9d14ec5f8d2'
 }
 };
