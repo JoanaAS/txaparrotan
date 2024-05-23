@@ -4,7 +4,7 @@ exports.taldekopurua = function(req, res){
 
   req.getConnection(function(err,connection){
 //    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
-    connection.query('SELECT mailaizena,multzokop,finalak,balidatuta,count(*) as guztira, sum(case when sexua = "X" then 1 else 0 end) as mixtoak, sum(case when balidatuta > 4 then 1 else 0 end) as onartuak, sum(case when balidatuta = 4 then 1 else 0 end) as aukeratuak, sum(case when (balidatuta > 0 and balidatuta < 4) then 1 else 0 end) as apuntatuak, sum(case when balidatuta = 0 then 1 else 0 end) as balidatugabeak FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+    connection.query('SELECT mailaizena,multzokop,finalak,         count(*) as guztira, sum(case when sexua = "X" then 1 else 0 end) as mixtoak, sum(case when balidatuta > 4 then 1 else 0 end) as onartuak, sum(case when balidatuta = 4 then 1 else 0 end) as aukeratuak, sum(case when (balidatuta > 0 and balidatuta < 4) then 1 else 0 end) as apuntatuak, sum(case when balidatuta = 0 then 1 else 0 end) as balidatugabeak FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
 
         if(err)
            console.log("Error Selecting : %s ",err );
@@ -35,7 +35,7 @@ exports.taldekopbalidatugabe = function(req, res){
   var totala=0;
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT mailaizena,balidatuta,count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila and balidatuta = 0 group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
+    connection.query('SELECT mailaizena,             count(*) as guztira FROM taldeak,maila where idtxapeltalde= ? and kategoria=idmaila and balidatuta = 0 group by kategoria ORDER BY mailazki',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
 
@@ -116,7 +116,7 @@ exports.jokalarikopurua = function(req, res){
   var totala=0;
 
   req.getConnection(function(err,connection){
-    connection.query('SELECT taldeizena,izenaard,herria,idtaldeak,idgrupot,berezitasunak,balidatuta,lehentasuna,akronimoa,count(*) as guztira FROM taldeak,jokalariak,maila where idtxapeltalde= ? and idtaldeak = idtaldej and kategoria=idmaila group by taldeizena ORDER BY taldeizena',[id],function(err,rowsg)     {
+    connection.query('SELECT taldeizena,izenaard,herria,idgrupot,berezitasunak,balidatuta,lehentasuna,akronimoa,count(*) as guztira FROM taldeak,jokalariak,maila where idtxapeltalde= ? and idtaldeak = idtaldej and kategoria=idmaila group by taldeizena, izenaard, herria, idgrupot, berezitasunak, lehentasuna, balidatuta, akronimoa ORDER BY taldeizena',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );
 
@@ -973,12 +973,12 @@ var vKategoria = req.body.kategoria4;
   var vDenbora,vEguna,vOrdua,aOrdua,orduak,minutuak,segunduak,vBukaera,aBukaera,vAtsedena,vAtsedenaDenbora,atseordu;
 
   req.getConnection(function(err,connection){
-   connection.query('SELECT MAX (jardunaldia) as jardunkop FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo ',[id],function(err,rowsp)     {
+   connection.query('SELECT MAX(jardunaldia) as jardunkop FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo ',[id],function(err,rowsp)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         console.log("Jardunkop: "+rowsp[0].jardunkop);
      
-    connection.query('SELECT kategoriam , MAX (jardunaldia) as guztira FROM grupoak,partiduak,maila where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo and idmaila = kategoriam group by kategoriam ORDER BY guztira DESC, mailazki ASC',[id],function(err,rowsg)     {
+    connection.query('SELECT kategoriam , MAX(jardunaldia) as guztira FROM grupoak,partiduak,maila where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo and idmaila = kategoriam group by kategoriam ORDER BY guztira DESC, mailazki ASC',[id],function(err,rowsg)     {
     //connection.query('SELECT kategoriam ,count(*) as guztira FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo group by kategoriam ORDER BY guztira DESC',[id],function(err,rowsg)     {
         if(err)
            console.log("Error Selecting : %s ",err );

@@ -1238,7 +1238,7 @@ exports.ezabatu = function(req, res){
             } 
           else {
            console.log("Txapelketa ezabatu - 2: " +id);
-           connection.query("DELETE FROM berriak WHERE idtxapel = ?  ",[id], function(err, rowst)
+           connection.query("DELETE FROM berriak WHERE idtxapelBerria = ?  ",[id], function(err, rowst)
            {
             if (err)
               console.log("Error Deleting : %s ",err );
