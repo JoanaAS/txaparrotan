@@ -29,7 +29,7 @@ dbdevelop: {
         password : 'joanaagi',
         port : 3306, //port mysql
         //database:'txaparrotan'
-        database:'heroku_4efa3ee4ff6c16c'
+        database: 'heroku_aebe9d14ec5f8d2'  // 'heroku_4efa3ee4ff6c16c'
 },
 dbproduction: {
 //        host: 'us-cdbr-iron-east-02.cleardb.net',
