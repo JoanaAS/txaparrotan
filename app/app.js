@@ -17,8 +17,14 @@ var txapelketak = require('./routes/txapelketak');
 var jokalariak = require('./routes/jokalariak');
 var kudeaketa = require('./routes/kudeaketa');
 var app = express();
-var connection  = require('express-myconnection'); 
-var mysql = require('mysql');
+// postgres var connection  = require('express-myconnection'); 
+// postgres   var mysql = require('mysql');
+
+// postgresvar pg = require('pg');        // postgres
+// postgresconst pool = require('./db');  // postgres
+const {Pool} = require('pg');        // postgres
+//postgresConnect const { Client } = require('pg');       //postgresConnect
+
 
 var md = require('marked');
 
@@ -78,19 +84,29 @@ console.log("environment " + process.env.NODE_ENV);
 
 //if ('development' == app.get('env')) {
 if (process.env.NODE_ENV != 'production'){
-  app.use(
+// postgres  app.use(
+// postgres    connection(mysql, credentials.dbdevelop,'pool') 
+// postgres );
+   const connection = new Pool (credentials.pgdevelop)   //postgresConnect
+//postgresConnect   const connection = new Client (credentials.pgdevelop)   // postgres
 
-    connection(mysql, credentials.dbdevelop,'pool')
-
- );
+   app.use(function(req, res, next){
+     req.connection = connection;
+     next();
+   });
               console.log("localhost1" );
 }
 else{
-  app.use(
+//mysql  app.use(
+//mysql    connection(mysql, credentials.dbproduction,'pool') 
+//mysql );
+    
+   const connection = new Pool (credentials.dbproduction)   //postgresConnect
 
-    connection(mysql, credentials.dbproduction,'pool')
-
- );
+   app.use(function(req, res, next){
+     req.connection = connection;
+     next();
+   });
               console.log("heroku1" );
 }
   

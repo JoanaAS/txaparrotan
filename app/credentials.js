@@ -31,16 +31,27 @@ dbdevelop: {
         //database:'txaparrotan'
         database: 'heroku_aebe9d14ec5f8d2'  // 'heroku_4efa3ee4ff6c16c'
 },
+pgdevelop: {
+        host: 'localhost',
+        user: 'postgres',
+        password : 'pxab570416p',                    //root
+        port : 5432, //portpostgres                   // 
+        database: 'probatzen',      // 'probatzen'  'txaparrotan'  'heroku_'
+//        max: 10, // Limita a 10 conexiones simultáneas
+        idleTimeoutMillis: 30000 // Cierra conexiones inactivas después de 30 segundos
+
+},
 dbproduction: {
-//        host: 'us-cdbr-iron-east-02.cleardb.net',
-//        user: 'b52372483fde60',
-//        password : '4fd964e83256734',      // '4d96016a'
+//        host: 'us-cluster-east-01.k8s.cleardb.net',            'us-cdbr-iron-east-02.cleardb.net',
+//        user: 'b2e41a658b178d',                                'b52372483fde60',
+//        password : 'a2e8ce90070606f',                           '4fd964e83256734',      // '4d96016a'
       //  port : 3306, //port mysql
-//        database:'heroku_4efa3ee4ff6c16c'
-        host: 'us-cluster-east-01.k8s.cleardb.net',
-        user: 'b2e41a658b178d',
-        password : 'a2e8ce90070606f',      // '4d96016a'
-      //  port : 3306, //port mysql
-        database:'heroku_aebe9d14ec5f8d2'
+//        database: 'heroku_aebe9d14ec5f8d2'                     'heroku_4efa3ee4ff6c16c'
+        host: 'caij57unh724n3.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+        user: 'uej7j9knbq4ovl',
+        password : 'p545fb6535bd9cc5b6ddc2431068236ee0c5d8657c1252748cc71ac9c0a0d1c23',                   //'ff86419e'
+        port : 5432,                //port postgres
+        database:'d2u8dq0h0par9c'
+//        ssl: true
 }
 };

@@ -15,12 +15,12 @@ var admintalde = (req.path == "/admin/taldeak");
 var admingabe = (req.path == "/admin/taldeakbalidatugabe");
 var admin = (admintalde || admingabe);
 
-  req.getConnection(function(err,connection){
-//    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by mailazki,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
-    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by mailazki,lehentasuna,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
-
+//postgres  req.getConnection(function(err,connection){
+//postgres    connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = ? order by mailazki,lehentasuna,sortzedata',[req.session.idtxapelketa],function(err,rows)     {
+    req.connection.query('SELECT * FROM taldeak,maila where kategoria=idmaila and idtxapeltalde = $1 order by mailazki,lehentasuna,sortzedata',[req.session.idtxapelketa],function(err,wrows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
+        rows = wrows.rows;     //postgres 
 /*
         if(rows.length == 0){
            res.locals.flash = {
@@ -77,14 +77,14 @@ var admin = (admintalde || admingabe);
         res.render('taldeak.handlebars', {title : 'Txaparrotan-Taldeak', data2:mailak, taldeizena: req.session.taldeizena, menuadmin: admin} );
 
     });
-  });
+
 }
 
 exports.taldeakaukeratu = function(req, res){
   var id = req.session.idtxapelketa;
   var input = JSON.parse(JSON.stringify(req.body));
   var taldekide = [], ordaintzeko = 0;
-  req.getConnection(function(err,connection){
+//postgres  req.getConnection(function(err,connection){
     
 //      console.log("Body:" +JSON.stringify(req.body));
  
@@ -92,11 +92,12 @@ exports.taldeakaukeratu = function(req, res){
       var  idTaldeak = input.aukeratua[i];                                           //  ADI   .split("-");
 // ADI- taldekideakkopiatu.handlebars : gehitu checkbox-en kopiatu nahi duguna        
 //        console.log("input : " + i + "-" + input.aukeratuo[i] + "-" + idTaldekideak);
-      connection.query('SELECT * FROM taldeak WHERE idtxapeltalde = ? and idtaldeak= ?',[id,idTaldeak],function(err,rows)
+//postgres      connection.query('SELECT * FROM taldeak WHERE idtxapeltalde = ? and idtaldeak= ?',[id,idTaldeak],function(err,rows)
+      req.connection.query('SELECT * FROM taldeak WHERE idtxapeltalde = $1 and idtaldeak= $2',[id,idTaldeak],function(err,wrows)
       {
-       
         if(err)
-          console.log("Error Selecting : %s ",err );        
+          console.log("Error Selecting : %s ",err );
+        rows = wrows.rows;     //postgres                   
 //        console.log("kide : " + i + "-" + rows[0].ordaintzekoKide + "-" + rows[0].idTaldekideak);
         var  idTaldeak = rows[0].idtaldeak; 
         var data = {
@@ -104,8 +105,8 @@ exports.taldeakaukeratu = function(req, res){
             balidatuta    : 4
         
         };
-        
-        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta > 0 and balidatuta < 4" ,[data,idTaldeak], function(err, rows)
+//postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta > 0 and balidatuta < 4" ,[data,idTaldeak], function(err, rows)
+        req.connection.query("UPDATE taldeak set balidatuta=$1 WHERE idtaldeak = $2 and balidatuta > 0 and balidatuta < 4" ,[4,idTaldeak], function(err, rows)
         {
           if (err)
               console.log("Error updating : %s ",err );
@@ -116,42 +117,42 @@ exports.taldeakaukeratu = function(req, res){
     for (var j = 0; j < 1000; j++) {}  // atseden denbora ADI ADI
 
     res.redirect('/admin/taldeak');
-  });
+
 };
 
 exports.taldemail = function(req, res){
 
   var id = req.params.emaila;
 
-  req.getConnection(function(err,connection){
-       
-     connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta >= 1) and emailard = ? and idtxapeltalde = ?',[id,req.session.idtxapelketa],function(err,rows)     
-     
+//postgres  req.getConnection(function(err,connection){
+//postgres     connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta >= 1) and emailard = ? and idtxapeltalde = ?',[id,req.session.idtxapelketa],function(err,rows)     
+     req.connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = \'admin\' or balidatuta >= \'1\') and emailard = $1 and idtxapeltalde = $2',[id,req.session.idtxapelketa],function(err,wrows)     
         {
             if(err)
                 console.log("Error Selecting : %s ",err );
-
+            rows = wrows.rows;     //postgres 
             //res.render('forgot.handlebars', {title : 'Txaparrotan-Forgot', emailaard : id, taldeak : rows });
             res.json(rows);
          });
                   
-  }); 
 };
 
 exports.editatu = function(req, res){
 
   //var id = req.params.id;
   var id = req.session.idtalde;
-  req.getConnection(function(err,connection){
-       
-     connection.query('SELECT * FROM taldeak WHERE idtaldeak = ?',[id],function(err,rows)
+//postgres  req.getConnection(function(err,connection){
+//postgres     connection.query('SELECT * FROM taldeak WHERE idtaldeak = ?',[id],function(err,rows)
+     req.connection.query('SELECT * FROM taldeak WHERE idtaldeak = $1',[id],function(err,wrows)
         {
           if(err)
               console.log("Error Selecting : %s ",err );          
-          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+          rows = wrows.rows;     //postgres 
+//postgres          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+          req.connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = $1 ',[req.session.idtxapelketa],function(err,wrows)     {
             if(err)
               console.log("Error Selecting : %s ",err );
-
+            rowsm = wrows.rows;     //postgres 
             for(var i in rowsm ){
                if(rows[0].kategoria == rowsm[i].idmaila){
                   mailaizena = rowsm[i].mailaizena;
@@ -167,7 +168,7 @@ exports.editatu = function(req, res){
                            
           });
      });                 
-  }); 
+ 
 };
 
 exports.aldatu = function(req,res){
@@ -175,7 +176,7 @@ exports.aldatu = function(req,res){
     var input = JSON.parse(JSON.stringify(req.body));
    var id = req.session.idtalde;
     
-    req.getConnection(function (err, connection) {
+//postgres    req.getConnection(function (err, connection) {
         
         var data = {
             
@@ -188,8 +189,8 @@ exports.aldatu = function(req,res){
             emailard   : input.emailard,
         
         };
-        
-        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ?  ",[data,id], function(err, rows)
+//postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ?  ",[data,id], function(err, rows)
+        req.connection.query("UPDATE taldeak set taldeizena=$1, kategoria=$2, sexua=$3, herria=$4, izenaard=$5, telefonoard=$6, emailard=$7 WHERE idtaldeak = $8  ",[input.taldeizena, input.kategoria, input.sexua, input.herria, input.izenaard, input.telefonoard, input.emailard ,id], function(err, rows)
         {
             if(err || rows.length != 0){
         //  res.redirect('/izenematea');
@@ -199,30 +200,28 @@ exports.aldatu = function(req,res){
                  message: 'Saiatu berriz',
               };
             }
+            console.log("Error Updating : %s ",err );
 
-              console.log("Error Updating : %s ",err );
-         
-          res.redirect('/jokalariak');
-          
+          res.redirect('/jokalariak'); 
         });
     
-    });
   //}
 };
 
 exports.saioahasteko = function(req, res){
   var id = req.session.idtxapelketa;
-  req.getConnection(function (err, connection) {
-      if (err)
-              console.log("Error connection : %s ",err ); 
-      //connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta = 1) and emailard = ? ',[id],function(err,rows)     {
-      connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by taldeizena',[id],function(err,rows)  {
+//postgres  req.getConnection(function (err, connection) {
+//postgres      if (err)
+//postgres              console.log("Error connection : %s ",err ); 
+//postgres      connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = "admin" or balidatuta >= 1) and idtxapeltalde = ? order by taldeizena',[id],function(err,rows)  {
+      req.connection.query('SELECT idtaldeak, taldeizena FROM taldeak where (balidatuta = \'admin\' or balidatuta >= \'1\') and idtxapeltalde = $1 order by taldeizena',[id],function(err,wrows)  {
         if (err)
-                console.log("Error query : %s ",err ); 
+                console.log("Error query : %s ",err );
+        rows = wrows.rows;     //postgres                 
       //  console.log("taldeak : " + JSON.stringify(rows)); 
         res.render('login.handlebars', {title : 'Txaparrotan-Login',taldeizena: req.session.taldeizena, taldeak : rows});
       });   
-  });  
+  
 };
 
 exports.login = function(req, res){
@@ -245,16 +244,18 @@ exports.login = function(req, res){
   }
 
   var taldea; 
-  req.getConnection(function(err,connection){
+//postgres  req.getConnection(function(err,connection){
        //PASAHITZA ENKRIPTATU GABE
      //connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = idtxapelketa and emailard = ? and pasahitza = ? and (balidatuta = 1 or balidatuta = "admin") and idtaldeak = ? ',
      // [req.body.emailaard,req.body.pasahitza, req.body.sTaldeak],function(err,rows)     {
       //if(err || rows.length == 0){
 
-
-      //PASAHITZA ENKRIPTATUTA    
-      connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = idtxapelketa and emailard = ? and  (balidatuta >= 1 or balidatuta = "admin") and idtaldeak = ? ',
-      [req.body.emailaard,req.body.sTaldeak],function(err,rows)     {
+      //PASAHITZA ENKRIPTATUTA
+//postgres      connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = idtxapelketa and emailard = ? and  (balidatuta >= 1 or balidatuta = "admin") and idtaldeak = ? ',
+//postgres      [req.body.emailaard,req.body.sTaldeak],function(err,rows)     {
+      req.connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = idtxapelketa and emailard = $1 and  (balidatuta >= \'1\' or balidatuta = \'admin\') and idtaldeak = $2 ',
+      [req.body.emailaard,req.body.sTaldeak],function(err,wrows)     {
+        rows = wrows.rows;     //postgres 
         if(err || rows.length == 0 || !(bcrypt.compareSync(req.body.pasahitza, rows[0].pasahitza))){
 
           if(err)
@@ -309,8 +310,6 @@ exports.login = function(req, res){
                            
          });
        
-    });
-  
 };
 
 exports.bilatu = function(req, res){
@@ -328,14 +327,12 @@ exports.bilatu = function(req, res){
   var aldaketa = {};
   var aldaketarray = [];
   var egoeratalde = "";
-  req.getConnection(function(err,connection){
-    
-    
-     connection.query('SELECT * FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
-            
+//postgres  req.getConnection(function(err,connection){
+//postgres     connection.query('SELECT * FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = ?',[id],function(err,rows)     {
+     req.connection.query('SELECT * FROM taldeak,maila,txapelketa where idmaila = kategoria and idtxapelketa=idtxapeltalde and idtaldeak = $1',[id],function(err,wrows)     {
       if(err)
-
-           console.log("Error Selecting : %s ",err );
+          console.log("Error Selecting : %s ",err );
+      rows = wrows.rows;     //postgres 
       if (rows.length == 0) {
           res.redirect('/logout');
         }
@@ -373,12 +370,12 @@ exports.bilatu = function(req, res){
               egoeratalde = "prozesatzen";
          }
         rows[0].egoeratalde = egoeratalde;  
-   
-        connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rowsj)     {
+//postgres        connection.query('SELECT * FROM jokalariak where idtaldej= ?',[id],function(err,rowsj)     {
+        req.connection.query('SELECT * FROM jokalariak where idtaldej= $1',[id],function(err,wrows)     {
             
           if(err)
            console.log("Error Selecting : %s ",err );
-
+          rowsj = wrows.rows;     //postgres 
           for(var i in rowsj ){
                rowsj[i].aldaketabai = aldaketabai;
           }
@@ -390,7 +387,6 @@ exports.bilatu = function(req, res){
          });
         }
        });
-    });
   
 };
 exports.add = function(req, res){
@@ -400,19 +396,16 @@ exports.edit = function(req, res){
     
   var id = req.params.id;
     
-  req.getConnection(function(err,connection){
-       
-     connection.query('SELECT * FROM customer WHERE id = ?',[id],function(err,rows)
+//postgres  req.getConnection(function(err,connection){
+//postgres     connection.query('SELECT * FROM customer WHERE id = ?',[id],function(err,rows)
+     req.connection.query('SELECT * FROM customer WHERE id = $1',[id],function(err,wrows)
         {
-            
             if(err)
                 console.log("Error Selecting : %s ",err );
-     
+            rows = wrows.rows;     //postgres      
             res.render('edit_customer',{page_title:"Edit Customers - Node.js",data:rows});
-                           
-         });
-                 
-    }); 
+        });
+
 };
 
 exports.izenematea = function(req,res){
@@ -429,14 +422,17 @@ exports.izenematea = function(req,res){
     var aditestua = "Izen-ematea";
     var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera;
            console.log("IdTxaelketa : %s ",req.session.idtxapelketa );
-    req.getConnection(function(err,connection){
-      connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rows)     {
+//postgres    req.getConnection(function(err,connection){
+//postgres      connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rows)     {
+      req.connection.query('SELECT * FROM txapelketa where idtxapelketa = $1',[req.session.idtxapelketa],function(err,wrows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-
-        connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= ? and balidatuta != "admin" ',[req.session.idtxapelketa],function(err,rowsg)     {
+        rows = wrows.rows;     //postgres 
+//postgres        connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= ? and balidatuta != "admin" ',[req.session.idtxapelketa],function(err,rowsg)     {
+        req.connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= $1 and balidatuta != \'admin\' ',[req.session.idtxapelketa],function(err,wrows)     {
           if(err)
            console.log("Error Selecting : %s ",err );
+        rowsg = wrows.rows;     //postgres 
         if(rows.length != 0) {
           vHasiera = new Date();
           hasiera = rows[0].inskripziohasierae;
@@ -496,16 +492,17 @@ exports.izenematea = function(req,res){
         }
         else{
           //connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? and multzokop <> 9',[req.session.idtxapelketa],function(err,rowsm)     {
-          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+//postgres          connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+          req.connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = $1 ',[req.session.idtxapelketa],function(err,wrows)     {
             if(err)
               console.log("Error Selecting : %s ",err );
-
+            rowsm = wrows.rows;     //postgres 
           res.render('taldeaksortu.handlebars', {title : 'Txaparrotan-Izen-ematea', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, mailak:rowsm, aditestua:aditestua});
          });
         }
       });
      });
-    });
+
 }
 exports.sortu = function(req,res){
     
@@ -573,19 +570,21 @@ exports.sortu = function(req,res){
    // return res.redirect(303, '/izenematea');
   }
 
-  req.getConnection(function(err,connection){
-  connection.query('SELECT count(*) as mailaguztira FROM taldeak where balidatuta >= 0 and idtxapeltalde= ? and kategoria= ? ',[req.session.idtxapelketa,req.body.kategoria],function(err,rowsmg)     {
-
+//postgres  req.getConnection(function(err,connection){
+//postgres  connection.query('SELECT count(*) as mailaguztira FROM taldeak where balidatuta >= 0 and idtxapeltalde= ? and kategoria= ? ',[req.session.idtxapelketa,req.body.kategoria],function(err,rowsmg)     {
+  req.connection.query('SELECT count(*) as mailaguztira FROM taldeak where balidatuta >= \'0\' and idtxapeltalde= $1 and kategoria= $2 ',[req.session.idtxapelketa,req.body.kategoria],function(err,wrows)     {
    if(err)
       console.log("Error Selecting : %s ",err );
-
+   rowsmg = wrows.rows;     //postgres 
    console.log("talde kopurua: %s ", rowsmg[0].mailaguztira);   
     console.log("talde mixtoa: %s ", req.body.sexua);
 
-   req.getConnection(function (err, connection) {
-    connection.query('SELECT * FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+//postgres   req.getConnection(function (err, connection) {
+//postgres    connection.query('SELECT * FROM maila where idtxapelm = ? ',[req.session.idtxapelketa],function(err,rowsm)     {
+    req.connection.query('SELECT * FROM maila where idtxapelm = $1 ',[req.session.idtxapelketa],function(err,wrows)     {
       if(err)
         console.log("Error Selecting : %s ",err ); 
+      rowsm = wrows.rows;     //postgres 
       for(var i in rowsm ){
           if(input.kategoria == rowsm[i].idmaila){
             mailaizena = rowsm[i].mailaizena;
@@ -634,12 +633,11 @@ exports.sortu = function(req,res){
   
 //  req.getConnection(function (err, connection) {
 debugger;
-      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and (taldeizena = ? or emailard = ?)',[req.session.idtxapelketa, req.body.taldeizena, req.body.emailard],function(err,rows)  {
-
- //      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and taldeizena = ?',[req.session.idtxapelketa, req.body.taldeizena],function(err,rows)  {
+//postgres      connection.query('SELECT * FROM taldeak where idtxapeltalde= ? and (taldeizena = ? or emailard = ?)',[req.session.idtxapelketa, req.body.taldeizena, req.body.emailard],function(err,rows)  {
+      req.connection.query('SELECT * FROM taldeak where idtxapeltalde= $1 and (taldeizena = $2 or emailard = $3)',[req.session.idtxapelketa, req.body.taldeizena, req.body.emailard],function(err,wrows)  {
         if(err)
           console.log("Error Selecting : %s ",err );
-
+        rows = wrows.rows;     //postgres 
         if (rows.length != 0){
          var izenaberdin = 0, emailaberdin = 0; 
          for(var i in rows ){
@@ -686,16 +684,15 @@ debugger;
            });
          }
         }
-        connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {          
-            
+//postgres        connection.query('SELECT * FROM txapelketa where idtxapelketa = ?',[req.session.idtxapelketa],function(err,rowst)  {          
+        req.connection.query('SELECT * FROM txapelketa where idtxapelketa = $1',[req.session.idtxapelketa],function(err,wrows)  {          
             if(err)
                 console.log("Error inserting : %s ",err );
+            rowst = wrows.rows;     //postgres 
         // Generate password hash
             var salt = bcrypt.genSaltSync();
             var password_hash = bcrypt.hashSync(input.pasahitza, salt);
-
-          
-
+      
             var data = {
             
             taldeizena    : input.taldeizena,
@@ -712,16 +709,16 @@ debugger;
             lehentasuna : 99,
             sexua : input.sexua       // " "
            };
-
-           var query = connection.query("INSERT INTO taldeak set ? ",data, function(err, rows)
+//postgres           var query = connection.query("INSERT INTO taldeak set ? ",data, function(err, rows)
+           var query = req.connection.query('INSERT INTO taldeak (taldeizena, idtxapeltalde, kategoria, herria, DNIard, izenaard, telefonoard, emailard, pasahitza, sortzedata, balidatuta, lehentasuna, sexua) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING idtaldeak',[input.taldeizena, req.session.idtxapelketa, input.kategoria, input.herria, input.DNIard, input.izenaard, input.telefonoard, input.emailard, password_hash, now, 0, 99, input.sexua], function(err, rows)
            {
-  
             if (err)
               console.log("Error inserting : %s ",err );
-            connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= ? and balidatuta != "admin" ',[req.session.idtxapelketa],function(err,rowsg)     {
+//postgres            connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= ? and balidatuta != "admin" ',[req.session.idtxapelketa],function(err,rowsg)     {
+            req.connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= $1 and balidatuta != \'admin\' ',[req.session.idtxapelketa],function(err,wrows)     {
                 if(err)
                   console.log("Error Selecting : %s ",err );
-
+                rowsg = wrows.rows;     //postgres 
                 if(rowsg[0].guztira >= rowst[0].taldekopmax) {
                   if(req.xhr) return res.json({ error: 'Invalid beteta' });
                   res.locals.flash = {
@@ -761,7 +758,9 @@ debugger;
                 else{
          
                //Enkriptatu talde zenbakia. Zenbaki hau aldatuz gero, taldea balidatu ere aldatu + taldeabalekoa!
-         var taldezenbakia= rows.insertId * 3456789;
+//postgres         var taldezenbakia= rows.insertId * 3456789;
+         rows = rows.rows;     //postgres
+         var taldezenbakia= rows[0].idtaldeak * 3456789;         
 //         var mailaizena;   
          var to = input.emailard;
          var subj = "Ongi-etorri " + data.izenaard;
@@ -807,38 +806,34 @@ debugger;
         }); 
       });
     });
+
    });
-   });
-  });
+
 };
 
 exports.balidatu = function(req,res){
     
     var input = JSON.parse(JSON.stringify(req.body));
     var idEnkript = req.params.id;
-
     //ADI! taldeasortu-n aldatu balio hau aldatuz gero
     var id = idEnkript / 3456789;
     
-    req.getConnection(function (err, connection) {
+//postgres    req.getConnection(function (err, connection) {
         
         var data = {
             
             balidatuta    : 1
         
         };
-        
-        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta = 0" ,[data,id], function(err, rows)
+//postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta = 0" ,[data,id], function(err, rows)
+        req.connection.query("UPDATE taldeak set balidatuta =$1 WHERE idtaldeak = $2 and balidatuta = 0" ,[1, id], function(err, rows)
         {
-  
           if (err)
               console.log("Error Updating : %s ",err );
          
           res.redirect('/login');
-          
         });
     
-    });
 };
 
 exports.forgot = function(req,res){
@@ -876,7 +871,7 @@ exports.reset = function(req,res){
     }
     
     else{
-    req.getConnection(function (err, connection) {
+//postgres    req.getConnection(function (err, connection) {
 
          // Generate password hash
         var salt = bcrypt.genSaltSync();
@@ -887,8 +882,8 @@ exports.reset = function(req,res){
             pasahitza    :  password_hash     //input.pasahitza 
         
         };
-        
-        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,id], function(err, rows)
+//postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,id], function(err, rows)
+        req.connection.query("UPDATE taldeak set pasahitza=$1 WHERE idtaldeak = $2 ",[password_hash,id], function(err, rows)
         {
   
           if (err)
@@ -898,28 +893,9 @@ exports.reset = function(req,res){
           
         });
     
-    });
   }
 };
 
-exports.delete_customer = function(req,res){
-          
-     var id = req.params.id;
-    
-     req.getConnection(function (err, connection) {
-        
-        connection.query("DELETE FROM customer  WHERE id = ? ",[id], function(err, rows)
-        {
-            
-             if(err)
-                 console.log("Error deleting : %s ",err );
-            
-             res.redirect('/customers');
-             
-        });
-        
-     });
-};
 
 /*exports.partiduak = function(req, res){
   var taldea;
