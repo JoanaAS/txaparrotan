@@ -106,7 +106,7 @@ exports.taldeakaukeratu = function(req, res){
         
         };
 //postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta > 0 and balidatuta < 4" ,[data,idTaldeak], function(err, rows)
-        req.connection.query("UPDATE taldeak set balidatuta=$1 WHERE idtaldeak = $2 and balidatuta > 0 and balidatuta < 4" ,[4,idTaldeak], function(err, rows)
+        req.connection.query("UPDATE taldeak set balidatuta=$1 WHERE idtaldeak = $2 and balidatuta > \'0\' and balidatuta < \'4\'" ,[4,idTaldeak], function(err, rows)
         {
           if (err)
               console.log("Error updating : %s ",err );
@@ -199,8 +199,8 @@ exports.aldatu = function(req,res){
                  intro: 'Adi!',
                  message: 'Saiatu berriz',
               };
+              console.log("Error Updating : %s ",err );
             }
-            console.log("Error Updating : %s ",err );
 
           res.redirect('/jokalariak'); 
         });
@@ -572,7 +572,7 @@ exports.sortu = function(req,res){
 
 //postgres  req.getConnection(function(err,connection){
 //postgres  connection.query('SELECT count(*) as mailaguztira FROM taldeak where balidatuta >= 0 and idtxapeltalde= ? and kategoria= ? ',[req.session.idtxapelketa,req.body.kategoria],function(err,rowsmg)     {
-  req.connection.query('SELECT count(*) as mailaguztira FROM taldeak where balidatuta >= \'0\' and idtxapeltalde= $1 and kategoria= $2 ',[req.session.idtxapelketa,req.body.kategoria],function(err,wrows)     {
+  req.connection.query('SELECT count(*) as mailaguztira FROM taldeak where balidatuta >= \'0\' and balidatuta != \'admin\' and idtxapeltalde= $1 and kategoria= $2 ',[req.session.idtxapelketa,req.body.kategoria],function(err,wrows)     {
    if(err)
       console.log("Error Selecting : %s ",err );
    rowsmg = wrows.rows;     //postgres 
@@ -826,7 +826,7 @@ exports.balidatu = function(req,res){
         
         };
 //postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta = 0" ,[data,id], function(err, rows)
-        req.connection.query("UPDATE taldeak set balidatuta =$1 WHERE idtaldeak = $2 and balidatuta = 0" ,[1, id], function(err, rows)
+        req.connection.query("UPDATE taldeak set balidatuta =$1 WHERE idtaldeak = $2 and balidatuta = \'0\'" ,[1, id], function(err, rows)
         {
           if (err)
               console.log("Error Updating : %s ",err );

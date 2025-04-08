@@ -183,7 +183,7 @@ exports.sortu = function(req,res){
             txapelketaizena    : input.txapelketaizena
         };
 //postgres        var query = connection.query("INSERT INTO txapelketa set ? ",data, function(err, rows)
-        var query = req.connection.query('INSERT INTO txapelketa (txapelketaizena, zelaikop, taldekopmax, partidukopmin, hasierakoeguna, hasierakoordua, bukaerakoeguna, bukaerakoordua, hastekosexua, partidudenbora, inskripziohasierae, inskripziohasierao, inskripziobukaerae, inskripziobukaerao, prezioa, kontukorrontea, txapelketaprest, atsedenordua, atsedendenbora, finalakordua, buelta) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21) RETURNING idtxapelketa',[txapelketaizena, rows[0].zelaikop, rows[0].taldekopmax, rows[0].partidukopmin, rows[0].hasierakoeguna, rows[0].hasierakoordua, rows[0].bukaerakoeguna, rows[0].bukaerakoordua, rows[0].hastekosexua, rows[0].partidudenbora, rows[0].inskripziohasierae, rows[0].inskripziohasierao, rows[0].inskripziobukaerae, rows[0].inskripziobukaerao, rows[0].prezioa, rows[0].kontukorrontea, 0, rows[0].atsedenordua, rows[0].atsedendenbora, rows[0].finalakordua, rows[0].buelta], function(err, rows)
+        var query = req.connection.query('INSERT INTO txapelketa (txapelketaizena, zelaikop, taldekopmax, partidukopmin, hasierakoeguna, hasierakoordua, bukaerakoeguna, bukaerakoordua, hastekosexua, partidudenbora, inskripziohasierae, inskripziohasierao, inskripziobukaerae, inskripziobukaerao, prezioa, kontukorrontea, txapelketaprest, atsedenordua, atsedendenbora, finalakordua, buelta) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21) RETURNING idtxapelketa',[input.txapelketaizena, rows[0].zelaikop, rows[0].taldekopmax, rows[0].partidukopmin, rows[0].hasierakoeguna, rows[0].hasierakoordua, rows[0].bukaerakoeguna, rows[0].bukaerakoordua, rows[0].hastekosexua, rows[0].partidudenbora, rows[0].inskripziohasierae, rows[0].inskripziohasierao, rows[0].inskripziobukaerae, rows[0].inskripziobukaerao, rows[0].prezioa, rows[0].kontukorrontea, 0, rows[0].atsedenordua, rows[0].atsedendenbora, rows[0].finalakordua, rows[0].buelta], function(err, rows)
         {
           if (err)
               console.log("Error inserting : %s ",err ); 
@@ -238,7 +238,7 @@ exports.sortu = function(req,res){
            }    
           });
 //postgres        connection.query('SELECT * FROM berriak where idtxapelBerria= ?',[req.body.sTxapelketak],function(err,rowsb)   {
-         req.connection.query('SELECT * FROM berriak where idtxapelBerria= $1',[req.body.sTxapelketak],function(err,wrows)   {
+         req.connection.query('SELECT * FROM berriak where "idtxapelBerria"= $1',[req.body.sTxapelketak],function(err,wrows)   {
  
            if(err)
             console.log("Error Selecting : %s ",err );
@@ -973,7 +973,7 @@ exports.zelaiakbilatu = function(req, res){
 
 //postgres  req.getConnection(function(err,connection){     
 //postgres        connection.query('SELECT * FROM zelaia where idtxapelz= ?',[id],function(err,rows)     {
-        req.connection.query('SELECT * FROM zelaia where idtxapelz= $1',[id],function(err,wrows)     {
+        req.connection.query('SELECT * FROM zelaia where idtxapelz= $1 order by zelaizki',[id],function(err,wrows)     {
             
           if(err)
               console.log("Error Selecting : %s ",err );
