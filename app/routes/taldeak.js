@@ -192,7 +192,8 @@ exports.aldatu = function(req,res){
 //postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ?  ",[data,id], function(err, rows)
         req.connection.query("UPDATE taldeak set taldeizena=$1, kategoria=$2, sexua=$3, herria=$4, izenaard=$5, telefonoard=$6, emailard=$7 WHERE idtaldeak = $8  ",[input.taldeizena, input.kategoria, input.sexua, input.herria, input.izenaard, input.telefonoard, input.emailard ,id], function(err, rows)
         {
-            if(err || rows.length != 0){
+//            if(err || rows.length != 0){
+            if(err){              
         //  res.redirect('/izenematea');
               res.locals.flash = {
                  type: 'danger',
@@ -834,7 +835,7 @@ exports.balidatu = function(req,res){
           if (err)
               console.log("Error Updating : %s ",err );
          
-//          res.redirect('/login');
+          res.redirect('/');  // '/login'
         });
     
 };
