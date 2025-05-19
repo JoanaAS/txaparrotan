@@ -255,6 +255,9 @@ exports.login = function(req, res){
 //postgres      [req.body.emailaard,req.body.sTaldeak],function(err,rows)     {
       req.connection.query('SELECT * FROM taldeak,txapelketa where idtxapeltalde = idtxapelketa and emailard = $1 and  (balidatuta >= \'1\' or balidatuta = \'admin\') and idtaldeak = $2 ',
       [req.body.emailaard,req.body.sTaldeak],function(err,wrows)     {
+        if (err)
+                console.log("Error loging : %s ",err )
+// (Array.isArray(result ) && result.length) {
         rows = wrows.rows;     //postgres 
         if(err || rows.length == 0 || !(bcrypt.compareSync(req.body.pasahitza, rows[0].pasahitza))){
 
