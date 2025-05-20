@@ -1083,7 +1083,7 @@ var vKategoria = req.body.kategoria4;
               idpar = rows[k].idpartidu;
               Eguna = vEguna.getFullYear()+"-"+((vEguna.getMonth()<9?'0':'')+(vEguna.getMonth() + 1)) +"-"+((vEguna.getDate()<10?'0':'')+(vEguna.getDate())); ;
 
-              console.log(idpar+ "g: " + rows[k].idgrupop+" p: "+rows[k].idtalde1+"-"+rows[k].idtalde2 + " Eguna: "+ Eguna+" vOrdua: "+vOrdua+ " Zelaia:" +vZelaia);
+              console.log(idpar+ "g: " + rows[k].idgrupop+"-"+rows[k].kategoriam +" p: "+rows[k].idtalde1+"-"+rows[k].idtalde2 + "-"+ r +"-"+rows[k].jardunaldia + " Eguna: "+ Eguna+" vOrdua: "+vOrdua+ " Zelaia:" +vZelaia);
 
               var data = {
             

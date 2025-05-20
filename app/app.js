@@ -178,13 +178,13 @@ app.get('/taldeabalidatu/:id', taldeak.balidatu);
 app.get('/taldeaeditatu', authorize2, authorize, taldeak.editatu);
 app.post('/taldeaaldatu', authorize, taldeak.aldatu);
 app.get('/taldemail/:emaila', authorize2, taldeak.taldemail);
-app.get('/jokalariak', authorize, taldeak.bilatu);
+app.get('/jokalariak', authorize2, authorize, taldeak.bilatu);
 app.post('/jokalariasortu', authorize, jokalariak.sortu);
 app.post('/jokalariagehitu', function(req, res){
     res.render('jokalariaksortu.handlebars', {title : 'Txaparrotan-Jokalaria gehitu', taldeizena: req.session.taldeizena});
 });
-app.get('/jokalariakezabatu/:idjokalari', authorize, jokalariak.ezabatu);
-app.get('/jokalariakeditatu/:idjokalari', authorize, jokalariak.editatu);
+app.get('/jokalariakezabatu/:idjokalari', authorize2, authorize, jokalariak.ezabatu);
+app.get('/jokalariakeditatu/:idjokalari', authorize2, authorize, jokalariak.editatu);
 app.post('/jokalariakaldatu/:idjokalari', authorize, jokalariak.aldatu);
 
 app.get('/login', authorize2, function(req, res){
@@ -222,9 +222,9 @@ app.post('/kontaktuabidali',txapelketak.kontaktuabidali);
 app.get('/ordutegia',authorize2, kudeaketa.ordutegiaikusi);
 app.get('/sailkapenak',authorize2, kudeaketa.sailkapenak);
 
-app.get('/taldesailkapena', authorize, kudeaketa.sailkapenak);
-app.get('/taldepartiduak', authorize, kudeaketa.partiduakikusi);
-app.get('/taldeordutegia', authorize, kudeaketa.taldeordutegia);
+app.get('/taldesailkapena', authorize2, authorize, kudeaketa.sailkapenak);
+app.get('/taldepartiduak', authorize2, authorize, kudeaketa.partiduakikusi);
+app.get('/taldeordutegia', authorize2, authorize, kudeaketa.taldeordutegia);
 
 /*app.get('/admin/txapelketak', admintxapelketaonartua, function(req, res){
     res.render('txapelketaksortu.handlebars', {title : 'Txaparrotan-Txapelketak sortu'});
