@@ -114,7 +114,7 @@ exports.jokalarikopurua = function(req, res){
 
 //postgres  req.getConnection(function(err,connection){
 //postgres    connection.query('SELECT taldeizena,izenaard,herria,idgrupot,berezitasunak,balidatuta,lehentasuna,akronimoa,count(*) as guztira FROM taldeak,jokalariak,maila where idtxapeltalde= ? and idtaldeak = idtaldej and kategoria=idmaila group by taldeizena, izenaard, herria, idgrupot, berezitasunak, lehentasuna, balidatuta, akronimoa ORDER BY taldeizena',[id],function(err,rowsg)     {
-    req.connection.query('SELECT taldeizena,izenaard,herria,idgrupot,berezitasunak,balidatuta,lehentasuna,akronimoa,count(*) as guztira FROM taldeak,jokalariak,maila where idtxapeltalde= $1 and idtaldeak = idtaldej and kategoria=idmaila group by taldeizena, izenaard, herria, idgrupot, berezitasunak, lehentasuna, balidatuta, akronimoa ORDER BY taldeizena',[id],function(err,wrows)     {
+    req.connection.query('SELECT idtaldeak, taldeizena,izenaard,herria,idgrupot,berezitasunak,balidatuta,lehentasuna,akronimoa,count(*) as guztira FROM taldeak,jokalariak,maila where idtxapeltalde= $1 and idtaldeak = idtaldej and kategoria=idmaila group by idtaldeak,taldeizena, izenaard, herria, idgrupot, berezitasunak, lehentasuna, balidatuta, akronimoa ORDER BY taldeizena',[id],function(err,wrows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
          rowsg = wrows.rows;     //postgres     
@@ -977,7 +977,7 @@ var vKategoria = req.body.kategoria4;
   var idpar; 
   var vZelaia=0;
   var egunekobehin = 0;
-  var vDenbora,vEguna,vOrdua,aOrdua,orduak,minutuak,segunduak,vBukaera,aBukaera,vAtsedena,vAtsedenaDenbora,atseordu;
+  var vDenbora,vEguna,vOrdua,aOrdua,orduak,minutuak,segunduak,vBukaera,aBukaera,vAtsedena,vAtsedenaDenbora,atseordu, Eguna;
 
 //postgres  req.getConnection(function(err,connection){
 //postgres   connection.query('SELECT MAX(jardunaldia) as jardunkop FROM grupoak,partiduak where multzo < 900 and idtxapelketam = ? and idgrupop = idgrupo ',[id],function(err,rowsp)     {
@@ -1081,7 +1081,9 @@ var vKategoria = req.body.kategoria4;
               }
               
               idpar = rows[k].idpartidu;
-              console.log(idpar+ "g: " + rows[k].idgrupop+" p: "+rows[k].idtalde1+"-"+rows[k].idtalde2 + " vOrdua: "+vOrdua+ " Zelaia:" +vZelaia);
+              Eguna = vEguna.getFullYear()+"-"+((vEguna.getMonth()<9?'0':'')+(vEguna.getMonth() + 1)) +"-"+((vEguna.getDate()<10?'0':'')+(vEguna.getDate())); ;
+
+              console.log(idpar+ "g: " + rows[k].idgrupop+" p: "+rows[k].idtalde1+"-"+rows[k].idtalde2 + " Eguna: "+ Eguna+" vOrdua: "+vOrdua+ " Zelaia:" +vZelaia);
 
               var data = {
             
@@ -1091,7 +1093,7 @@ var vKategoria = req.body.kategoria4;
         
               };
 //postgres            var query = connection.query("UPDATE partiduak set ? WHERE idpartidu = ? ",[data,idpar], function(err, rowst)
-            var query = req.connection.query("UPDATE partiduak set pareguna=$1,parordua=$2,zelaia=$3 WHERE idpartidu = $4 " ,[vEguna, vOrdua, vZelaia, idpar], function(err, rowst)
+            var query = req.connection.query("UPDATE partiduak set pareguna=$1,parordua=$2,zelaia=$3 WHERE idpartidu = $4 " ,[Eguna, vOrdua, vZelaia, idpar], function(err, rowst)
             {
   
               if (err)                                                                                                                              

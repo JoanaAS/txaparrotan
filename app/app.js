@@ -171,15 +171,15 @@ function admintxapelketaonartua(req, res, next){
     res.render('index.handlebars', {title : 'Txaparrotan'});
 });*/
 app.get('/', authorize2, txapelketak.berriakikusi);
-app.get('/taldeak', taldeak.ikusi);
+app.get('/taldeak', authorize2, taldeak.ikusi);
 app.get('/izenematea', authorize2, taldeak.izenematea);
 app.post('/taldeasortu', authorize2, taldeak.sortu); 
 app.get('/taldeabalidatu/:id', taldeak.balidatu);
 app.get('/taldeaeditatu', authorize2, authorize, taldeak.editatu);
-app.post('/taldeaaldatu', taldeak.aldatu);
+app.post('/taldeaaldatu', authorize, taldeak.aldatu);
 app.get('/taldemail/:emaila', authorize2, taldeak.taldemail);
 app.get('/jokalariak', authorize, taldeak.bilatu);
-app.post('/jokalariasortu', jokalariak.sortu);
+app.post('/jokalariasortu', authorize, jokalariak.sortu);
 app.post('/jokalariagehitu', function(req, res){
     res.render('jokalariaksortu.handlebars', {title : 'Txaparrotan-Jokalaria gehitu', taldeizena: req.session.taldeizena});
 });
@@ -208,19 +208,19 @@ app.get('/reset/:idtalde', function(req, res){
     res.render('reset.handlebars', {title : 'Txaparrotan-Reset', taldeizena: req.session.taldeizena, idtalde: req.params.idtalde});
 });
 app.post('/reset/:idtalde', taldeak.reset);
-app.get('/partiduak', kudeaketa.partiduakikusi);
-app.get('/arauak', function(req, res){
+app.get('/partiduak',authorize2, kudeaketa.partiduakikusi);
+app.get('/arauak',authorize2, function(req, res){
     res.render('arauak.handlebars', {title : 'Txaparrotan-Arauak', taldeizena: req.session.taldeizena});
 });
-app.get('/argazkiak', txapelketak.argazkiakikusi);
+app.get('/argazkiak',authorize2, txapelketak.argazkiakikusi);
 
 app.get('/kontaktua', authorize2, function(req, res){
     res.render('kontaktua.handlebars', {title : 'Txaparrotan-Kontaktua', taldeizena: req.session.taldeizena, aditestua: "Kontaktua"});
 });
 app.post('/kontaktuabidali',txapelketak.kontaktuabidali); 
 
-app.get('/ordutegia', kudeaketa.ordutegiaikusi);
-app.get('/sailkapenak', kudeaketa.sailkapenak);
+app.get('/ordutegia',authorize2, kudeaketa.ordutegiaikusi);
+app.get('/sailkapenak',authorize2, kudeaketa.sailkapenak);
 
 app.get('/taldesailkapena', authorize, kudeaketa.sailkapenak);
 app.get('/taldepartiduak', authorize, kudeaketa.partiduakikusi);
