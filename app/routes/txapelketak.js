@@ -1081,7 +1081,7 @@ exports.mailakbilatu = function(req, res){
 
 //postgres  req.getConnection(function(err,connection){     
 //postgres        connection.query('SELECT * FROM maila where idtxapelm= ?',[id],function(err,rows)     {
-        req.connection.query('SELECT * FROM maila where idtxapelm= $1',[id],function(err,wrows)     {
+        req.connection.query('SELECT * FROM maila where idtxapelm= $1 order by mailazki',[id],function(err,wrows)     {
             
           if(err)
            console.log("Error Selecting : %s ",err );
@@ -1133,12 +1133,14 @@ exports.mailaksortu = function(req,res){
             mailazki   : input.mailazki,
             akronimoa   : input.akronimoa,
             multzokop   : 0,
+            ordutegiazki : 0,
+            finalak     : 0,
             idtxapelm    : id
         };
         
 //        console.log(data);
 //postgres        var query = connection.query("INSERT INTO maila set ? ",data, function(err, rows)
-        var query = req.connection.query('INSERT INTO maila (mailaizena, mailazki, akronimoa, multzokop, idtxapelm) VALUES ($1,$2,$3,$4,$5)',[input.mailaizena, input.mailazki, input.akronimoa, 0, id], function(err, rows)
+        var query = req.connection.query('INSERT INTO maila (mailaizena, mailazki, akronimoa, multzokop, ordutegiazki, finalak, idtxapelm) VALUES ($1,$2,$3,$4,$5,$6,$7)',[input.mailaizena, input.mailazki, input.akronimoa, 0, 0, 0, id], function(err, rows)
         {
           if (err)
               console.log("Error inserting : %s ",err );
@@ -1163,7 +1165,7 @@ exports.mailakaldatu = function(req,res){
             finalak     : input.finalak
         };
 //postgres        connection.query("UPDATE maila set ? WHERE idtxapelm = ? and idmaila = ? ",[data,id,idmaila], function(err, rows)
-        req.connection.query('UPDATE maila set mailaizena=$1,mailazki=$2,multzokop=$3,akronimoa=$4,finalak =$5  WHERE idtxapelm = $6 and idmaila = $7 ',[input.mailaizena, input.mailazki, input.multzokop, input.akronimoa, input.finalak,id,idmaila], function(err, rows)
+        req.connection.query('UPDATE maila set mailaizena=$1,mailazki=$2,multzokop=$3,akronimoa=$4,finalak =$5,ordutegiazki =$6  WHERE idtxapelm = $7 and idmaila = $8 ',[input.mailaizena, input.mailazki, input.multzokop, input.akronimoa, input.finalak, input.ordutegiazki, id, idmaila], function(err, rows)
         {
           if (err)
               console.log("Error Updating : %s ",err );

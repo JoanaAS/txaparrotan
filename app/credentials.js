@@ -36,7 +36,7 @@ pgdevelop: {
         user: 'postgres',
         password : 'pxab570416p',                    //root
         port : 5432, //portpostgres                   // 
-        database: 'probatzen',      // 'probatzen'  'txaparrotan'  'heroku_'
+        database: 'txaparrotan',      // 'probatzen'  'txaparrotan'  'heroku_'
 //        max: 10, // Limita a 10 conexiones simultáneas
         idleTimeoutMillis: 30000 // Cierra conexiones inactivas después de 30 segundos
 

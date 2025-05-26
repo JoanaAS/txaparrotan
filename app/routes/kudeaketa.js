@@ -133,7 +133,7 @@ exports.kalkuluak = function(req, res){
 //postgres      if (err)
 //postgres              console.log("Error connection : %s ",err ); 
 //postgres      connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = ? ',[id],function(err,rows)  {
-      req.connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = $1 ',[id],function(err,wrows)  {
+      req.connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = $1 order by mailazki ',[id],function(err,wrows)  {
         if (err)
                 console.log("Error query : %s ",err ); 
         rows = wrows.rows;     //postgres      
@@ -301,11 +301,11 @@ var admin = (req.path.slice(0,7) == "/admin/");
 var bigarrengoak = (req.path == "/admin/bigarrengoak");
 var zuretaldekoa = (req.path == "/taldesailkapena");
 //var txapelketaprest = 0;
-var grupo;
+var grupo, mixtoa;
 
 //postgres  req.getConnection(function(err,connection){
 //postgres      connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila,txapelketa where idgrupot=idgrupo and idtxapelketa = idtxapeltalde and kategoria=idmaila and idtxapeltalde = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc',[req.session.idtxapelketa],function(err,rows)     {
-      req.connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila,txapelketa where idgrupot=idgrupo and idtxapelketa = idtxapeltalde and kategoria=idmaila and idtxapeltalde = $1 and balidatuta != \'admin\' order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc',[req.session.idtxapelketa],function(err,wrows)     {
+      req.connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila,txapelketa where idgrupot=idgrupo and idtxapelketa = idtxapeltalde and kategoria=idmaila and idtxapeltalde = $1 and balidatuta != \'admin\' order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc, idtaldeak',[req.session.idtxapelketa],function(err,wrows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         rows = wrows.rows;     //postgres 
@@ -371,11 +371,12 @@ var grupo;
                 multzoizena = "Finala";
 
             }
+
             if(admin){
               grupo = rows[i].idgrupo;
             }
             else{
-              grupo = "";  
+              grupo = "";
             }  
             multzoa = {
                   multzo    : multzoizena,
@@ -387,10 +388,14 @@ var grupo;
                 taldeaikusi = 1;
           else 
                 taldeaikusi = 0; 
+          
+          mixtoa = "";
+          if (admin && rows[i].sexua=="X")
+                   mixtoa = " *";
 
           taldeak[j] = {
                   postua : j+1,
-                  taldeizena    : rows[i].taldeizena,
+                  taldeizena    : rows[i].taldeizena + mixtoa,
                   jokatutakopartiduak    : rows[i].jokatutakopartiduak,
                   irabazitakopartiduak    : rows[i].irabazitakopartiduak,
                   puntuak    : rows[i].puntuak,
@@ -973,7 +978,7 @@ var vKategoria = req.body.kategoria4;
   exports.ordutegiaegin = function(req, res){
   var id = req.session.idtxapelketa;
   var imultzo = [];
-  var r = 0;
+  var r = 0, j = 0, k = 0;
   var idpar; 
   var vZelaia=0;
   var egunekobehin = 0;
@@ -993,16 +998,22 @@ var vKategoria = req.body.kategoria4;
            console.log("Error Selecting : %s ",err );
         rowsg = wrows.rows;     //postgres
         console.log("Rowsg" + JSON.stringify(rowsg));
-
-        for (var r=1; r<= rowsp[0].jardunkop ; r++){
-          for (var j in rowsg){
+/*        
+//        for (var r=1; r<= rowsp[0].jardunkop ; r++){
+        for ( r=1; r<= rowsp[0].jardunkop ; r++){
+//          for (var j in rowsg){
+           for (j = 0; j < rowsg.length; j++) {
+           console.log(" j Rowsg" + j +"-"+rowsg[j].kategoriam+"-"+ r);
 //postgres            connection.query('SELECT * FROM grupoak,partiduak,txapelketa where idtxapelketam = ? and idtxapelketa = idtxapelketam and idgrupop = idgrupo and kategoriam = ? and jardunaldia = ? ',[id,rowsg[j].kategoriam, r],function(err,rows)     {            
-           req.connection.query('SELECT * FROM grupoak,partiduak,txapelketa where idtxapelketam = $1 and idtxapelketa = idtxapelketam and idgrupop = idgrupo and kategoriam = $2 and jardunaldia = $3 ',[id,rowsg[j].kategoriam, r],function(err,wrows)     {            
+           req.connection.query('SELECT * FROM grupoak,partiduak,txapelketa where idtxapelketam = $1 and idtxapelketa = idtxapelketam and idgrupop = idgrupo and kategoriam = $2 and jardunaldia = $3 ORDER BY multzo,jardunaldia ',[id,rowsg[j].kategoriam, r],function(err,wrows)     {            
+*/
+           req.connection.query('SELECT * FROM partiduak,grupoak,maila,txapelketa where idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and idtxapelketa = $1 order by jardunaldia,ordutegiazki,mailazki,multzo',[id],function(err,wrows)     {
+
               if(err)
                  console.log("Error Selecting : %s ",err );
               rows = wrows.rows;     //postgres
-              for(var k in rows){
-                
+//              for(var k in rows){
+              for ( k = 0; k < rows.length; k++) {                
               debugger;
               if (vZelaia == 0){
                   vZelaia = 1;
@@ -1102,8 +1113,10 @@ var vKategoria = req.body.kategoria4;
             });
             }
           });
+/*
           }
         } 
+*/        
         //res.redirect(303,'/admin/kalkuluak');
       }); 
     });
@@ -1133,10 +1146,14 @@ exports.finalordutegia = function(req, res){
         rowsg = wrows.rows;     //postgres 
         console.log("Rowsg" + JSON.stringify(rowsg));
         //Adi jardunaldi kopuruarekin! =10
-        for (var r=1; r< 10; r++){
+/*
+        for (r=1; r< 10; r++){
           for (var j in rowsg){
 //postgres            connection.query('SELECT * FROM grupoak,partiduak,txapelketa where multzo > 900 and idtxapelketam = ? and idtxapelketa = idtxapelketam and idgrupop = idgrupo and kategoriam = ? and jardunaldia = ? ',[id,rowsg[j].kategoriam, r],function(err,rows)     {            
             req.connection.query('SELECT * FROM grupoak,partiduak,txapelketa where multzo > \'900\' and idtxapelketam = $1 and idtxapelketa = idtxapelketam and idgrupop = idgrupo and kategoriam = $2 and jardunaldia = $3 ',[id,rowsg[j].kategoriam, r],function(err,wrows)     {            
+*/
+            req.connection.query('SELECT * FROM partiduak,grupoak,maila,txapelketa where multzo > \'900\' and idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and idtxapelketa = $1 order by finalak desc,jardunaldia,mailazki,multzo',[id],function(err,wrows)     {
+
               if(err)
                  console.log("Error Selecting : %s ",err );
               rows = wrows.rows;     //postgres
@@ -1219,8 +1236,10 @@ exports.finalordutegia = function(req, res){
             });
             }
           });
+/*
           }
         } 
+*/        
         //res.redirect(303, '/admin/kalkuluak');
       }); 
     });
@@ -1297,7 +1316,7 @@ var emaitzabai, golak;
             if(vEguna != rowsf[i].pareguna){
                 data = rowsf[i].pareguna;
 
-                if(data == "0000-00-00"){
+                if(data == "0000-00-00" || data == null){
                   datastring = "00/00/00";
                 }
                 else{
@@ -2575,7 +2594,8 @@ var vAkronimoa;
         }
         console.log("imultzo: "+JSON.stringify(imultzo));
 //postgres      connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = ? and kategoria = ? order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc',[id,kategoria],function(err,rows)     {
-      req.connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = $1 and kategoria = $2 order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc',[id,kategoria],function(err,wrows)     {
+      req.connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila where idgrupot=idgrupo and kategoria=idmaila and idtxapeltalde = $1 and kategoria = $2 order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc, idtaldeak',[id,kategoria],function(err,wrows)     {
+//      req.connection.query('SELECT *, (golakalde - golakkontra) AS golaberaje FROM taldeak,grupoak,maila,txapelketa where idgrupot=idgrupo and idtxapelketa = idtxapeltalde and kategoria=idmaila and idtxapeltalde = $1 and balidatuta != \'admin\' order by mailazki,multzo,irabazitakopartiduak desc,puntuak desc, golaberaje desc
         if(err)
            console.log("Error Selecting : %s ",err );
         rows = wrows.rows;     //postgres 
@@ -2787,7 +2807,7 @@ var vAkronimoa;
                       idfinala2   : idfinala2
                 };
 //postgres             var query = connection.query("UPDATE partiduak set ? WHERE idpartidu = ? ",[data,rowsf[i].idpartidu], function(err, rowsg)
-                var query = req.connection.query("UPDATE partiduak set izenareset1=$1, izenareset2=$2, izenafinala1=$3, izenafinala2=$4, idtalde1=$5, idtalde2=$6, idfinala1=$7, idfinala2=$8 WHERE idpartidu = $9 ",[rowsf[i].izenafinala1, rowsf[i].izenafinala2, izena1, izena2, idtalde1, idtalde2, idfinala1, idfinala2, rowsf[i].idpartidu], function(err, rowsg)
+                var query = req.connection.query("UPDATE partiduak set izenareset1=$1, izenareset2=$2, izenafinala1=$3, izenafinala2=$4, idtalde1=$5, idtalde2=$6, idfinala1=$7, idfinala2=$8 WHERE idpartidu = $9 ",[rowsf[i].izenafinala1, rowsf[i].izenafinala2, izena1, izena2, idtalde1, idtalde2, idfinala1, idfinala2, rowsf[i].idpartidu], function(err, wrows)
                       {
                        if (err)
                          console.log("Error updating : %s ",err );
@@ -2801,7 +2821,7 @@ var vAkronimoa;
                 };
 
 //postgres             var query = connection.query("UPDATE partiduak set ? WHERE idpartidu = ? ",[data,rowsf[i].idpartidu], function(err, rowsg)
-                var query = req.connection.query("UPDATE partiduak set idfinala1=$1, idfinala2=$2, idfinala2=$2 WHERE idpartidu = $3 ",[idfinala1, idfinala2, rowsf[i].idpartidu], function(err, rowsg)
+                var query = req.connection.query("UPDATE partiduak set idfinala1=$1, idfinala2=$2 WHERE idpartidu = $3 ",[idfinala1, idfinala2, rowsf[i].idpartidu], function(err, wrows)
                       {
                        if (err)
                          console.log("Error updating : %s ",err );
