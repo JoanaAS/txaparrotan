@@ -2217,7 +2217,7 @@ var vAkronimoa;
 
 //postgres  req.getConnection(function(err,connection){
 //postgres   connection.query('SELECT * FROM grupoak,maila where idmaila = kategoriam and idtxapelketam = ? and kategoriam = ? and multzo > 900 order by idgrupo ',[id,kategoria],function(err,rowsg)     {
-    req.connection.query('SELECT * FROM grupoak,maila where idmaila = kategoriam and idtxapelketam = $1 and kategoriam = $2 and multzo > \'900\' order by idgrupo ',[id,kategoria],function(err,wrows)     {
+    req.connection.query('SELECT * FROM grupoak,maila where idmaila = kategoriam and idtxapelketam = $1 and kategoriam = $2 and multzo > \'900\' order by idgrupo ',[id,kategoria,multzo],function(err,wrows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         rowsg = wrows.rows;     //postgres      
