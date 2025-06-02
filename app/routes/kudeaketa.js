@@ -1729,7 +1729,7 @@ exports.emaitzasartu = function(req, res){
               //setkontra: setkontra      
             };
 //postgres            connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,talde1], function(err, rowst)
-            req.connection.query("UPDATE taldeak set jokatutakopartiduak=$1, irabazitakopartiduak=$2, puntuak=$3, golakalde=$4, golakkontra=$5 WHERE idtaldeak = $6  ",[jokatutakopartiduak, irabazitakopartiduak, puntuak, golakalde, golakkontra, talde1], function(err, rows)
+            req.connection.query("UPDATE taldeak set jokatutakopartiduak=$1, irabazitakopartiduak=$2, puntuak=$3, golakalde=$4, golakkontra=$5 WHERE idtaldeak = $6  ",[jokatutakopartiduak, irabazitakopartiduak, puntuak, golakalde, golakkontra, talde1], function(err, rowst)
 
             {
              if (err)
@@ -2078,7 +2078,7 @@ exports.taldeaaldatu = function(req,res){
           data.idgrupot = input.idgrupot;
         }
 //postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? ",[data,idtaldea], function(err, rows)
-        req.connection.query("UPDATE taldeak set taldeizena=$1, kategoria=$2 , sexua=$3, balidatuta=$4, berezitasunak=$5, lehentasuna=$6, izenaard=$7, telefonoard=$8, emailard=$9 WHERE idtaldeak = $10 ",[input.taldeizena, input.kategoria, input.sexua, input.balidatuta, input.berezitasunak, input.lehentasuna, input.izenaard, input.telefonoard, input.emailard, idtaldea], function(err, rows)
+        req.connection.query("UPDATE taldeak set taldeizena=$1, kategoria=$2 , sexua=$3, balidatuta=$4, berezitasunak=$5, lehentasuna=$6, izenaard=$7, telefonoard=$8, emailard=$9, herria = $10 WHERE idtaldeak = $11 ",[input.taldeizena, input.kategoria, input.sexua, input.balidatuta, input.berezitasunak, input.lehentasuna, input.izenaard, input.telefonoard, input.emailard, input.herria, idtaldea], function(err, rows)
         {
           if (err)
               console.log("Error Updating : %s ",err );
