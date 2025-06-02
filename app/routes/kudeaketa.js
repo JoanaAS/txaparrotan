@@ -1352,7 +1352,8 @@ var emaitzabai, golak;
            else{ 
                 akronimoa = rowsf[i].akronimoa +" "+ alfabeto[rowsf[i].multzo -1] +" "+ rowsf[i].jardunaldia +".";
             }
-          if(rowsf[i].emaitza1 != null || rowsf[i].emaitza2 != null){
+//          if(rowsf[i].emaitza1 != null || rowsf[i].emaitza2 != null){
+          if(rowsf[i].emaitza1 != 0 && rowsf[i].emaitza2 != 0){            
               emaitzabai = 1;
               golak = rowsf[i].emaitza1 +"-"+ rowsf[i].emaitza2 +".";
           }    
@@ -2154,6 +2155,7 @@ exports.finalakegin = function (req,res){
 
 var input = JSON.parse(JSON.stringify(req.body));
 var id = req.session.idtxapelketa;
+var vMultzo;
 
 //postgres  req.getConnection(function(err,connection){
 //postgres    connection.query('SELECT * FROM maila where idtxapelm = ? and idmaila = ?  ',[id,input.kategoriaf],function(err,rowsg)     {
@@ -2172,7 +2174,7 @@ var id = req.session.idtxapelketa;
       var faseak = Math.log(partidukopuru) / Math.log(2);
 
       for(var f=0; f <= faseak; f++){
-
+         vMultzo = 1000 - partidukopuru;
          var data = {
             
             multzo    : 1000 - partidukopuru,
@@ -2180,7 +2182,7 @@ var id = req.session.idtxapelketa;
             kategoriam : input.kategoriaf
         };
 //postgres        var query = connection.query("INSERT INTO grupoak set ? ",data, function(err, rowsg)
-        var query = req.connection.query('INSERT INTO grupoak (multzo,idtxapelketam,kategoriam) VALUES ($1,$2,$3)',[1000 - partidukopuru, req.session.idtxapelketa, input.kategoriaf], function(err, rowsg)
+        var query = req.connection.query('INSERT INTO grupoak (multzo,idtxapelketam,kategoriam) VALUES ($1,$2,$3)',[vMultzo, req.session.idtxapelketa, input.kategoriaf], function(err, rowsg)
         {
           if (err)
               console.log("Error inserting : %s ",err );
