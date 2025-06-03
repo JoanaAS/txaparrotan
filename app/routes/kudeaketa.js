@@ -685,6 +685,7 @@ var multzoizena;
       req.connection.query('SELECT * FROM partiduak,grupoak,maila,zelaia,txapelketa where idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and zelaia=zelaizki and idtxapelz = $1 and idtxapelketam = $2 order by mailazki,multzo,jardunaldia,pareguna,parordua,zelaia',[id,id],function(err,wrows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
+console.log(req.path +"-" +admin);
         rows = wrows.rows;     //postgres 
         if(rows.length == 0 || (rows[0].txapelketaprest== 0 && !admin)){
            res.locals.flash = {
@@ -1152,7 +1153,7 @@ exports.finalordutegia = function(req, res){
 //postgres            connection.query('SELECT * FROM grupoak,partiduak,txapelketa where multzo > 900 and idtxapelketam = ? and idtxapelketa = idtxapelketam and idgrupop = idgrupo and kategoriam = ? and jardunaldia = ? ',[id,rowsg[j].kategoriam, r],function(err,rows)     {            
             req.connection.query('SELECT * FROM grupoak,partiduak,txapelketa where multzo > \'900\' and idtxapelketam = $1 and idtxapelketa = idtxapelketam and idgrupop = idgrupo and kategoriam = $2 and jardunaldia = $3 ',[id,rowsg[j].kategoriam, r],function(err,wrows)     {            
 */
-            req.connection.query('SELECT * FROM partiduak,grupoak,maila,txapelketa where multzo > \'900\' and idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and idtxapelketa = $1 order by finalak desc,jardunaldia,mailazki,multzo',[id],function(err,wrows)     {
+            req.connection.query('SELECT * FROM partiduak,grupoak,maila,txapelketa where multzo > \'900\' and idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and idtxapelketa = $1 order by multzo, mailazki, izenafinala1',[id],function(err,wrows)     {
 
               if(err)
                  console.log("Error Selecting : %s ",err );
@@ -2213,7 +2214,7 @@ var kategoria = input.kategoriaf2;
 //var taldekopuru = input.finala2 * 2;
 var finalpartiduak = [];
 var imultzo = [];
-var vAkronimoa;
+var vAkronimoa, vizen1, vizen2;
 
 //postgres  req.getConnection(function(err,connection){
 //postgres   connection.query('SELECT * FROM grupoak,maila where idmaila = kategoriam and idtxapelketam = ? and kategoriam = ? and multzo > 900 order by idgrupo ',[id,kategoria],function(err,rowsg)     {
@@ -2336,8 +2337,10 @@ var vAkronimoa;
                       izenafinala2   : izen2,
                       jardunaldia : f + 1
                 };
+                vizen1 = izen1.substring(0,45);
+                vizen2 = izen2.substring(0,45);
 //postgres                var query = connection.query("INSERT INTO partiduak set ? ",data, function(err, rowsg)
-                var query = req.connection.query('INSERT INTO partiduak (idgrupop, izenafinala1, izenafinala2, jardunaldia) VALUES ($1,$2,$3,$4)',[imultzo[f], izen1, izen2, f + 1], function(err, rowsg)
+                var query = req.connection.query('INSERT INTO partiduak (idgrupop, izenafinala1, izenafinala2, jardunaldia) VALUES ($1,$2,$3,$4)',[imultzo[f], vizen1, vizen2, f + 1], function(err, rowsg)
                       {
                        if (err)
                          console.log("Error inserting : %s ",err ); 
