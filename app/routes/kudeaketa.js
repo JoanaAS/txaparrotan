@@ -1485,7 +1485,7 @@ exports.partiduordua = function(req, res){
 //postgres  req.getConnection(function(err,connection){
       //connection.query('SELECT *,t1.taldeizena taldeizena1,t2.taldeizena taldeizena2 FROM partiduak p,taldeak t1,taldeak t2 where t1.idtaldeak=p.idtalde1 and t2.idtaldeak=p.idtalde2 and t1.idtxapeltalde = ? and t2.idtxapeltalde = ? and idpartidu = ?',[id, id,idpar],function(err,rows)     {
 //postgres      connection.query('SELECT * FROM partiduak where idpartidu = ?',[idpar],function(err,rows)     {
-      req.connection.query('SELECT * FROM partiduak where idpartidu = $1',[idpar],function(err,wrows)     {
+      req.connection.query('SELECT *, to_char("pareguna", \'YYYY-MM-DD\') AS "pareguna" FROM partiduak where idpartidu = $1',[idpar],function(err,wrows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
         rows = wrows.rows;     //postgres 

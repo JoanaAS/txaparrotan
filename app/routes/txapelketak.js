@@ -40,7 +40,7 @@ exports.aukeratzeko = function(req, res){
       //Txapelketa bat pruebetako ixkutatuta idtxapelketa != 42
       //connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where idtxapelketa != 42',function(err,rows)  {
 //postgres      connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where txapelketaprest != 9',function(err,rows)  {
-      req.connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where txapelketaprest != \'9\'',function(err,wrows)  {
+      req.connection.query('SELECT idtxapelketa, txapelketaizena FROM txapelketa where txapelketaprest != \'9\' order by idtxapelketa',function(err,wrows)  {
         if (err)
                 console.log("Error query : %s ",err );
         rows = wrows.rows;     //postgres         
