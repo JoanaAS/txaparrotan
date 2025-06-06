@@ -1,4 +1,8 @@
-{{> menu}}
+{{#if menuadmin}}
+  {{> menuadmin}}
+{{else}}
+  {{> menu}}
+{{/if}} 
 
       <div class="jumbotron">
         <h2>{{aditestua}}</h2>
@@ -13,7 +17,8 @@
 
 <div class="formContainer col-sm-offset-1">
     <form class="form-horizontal newsletterForm" role="form" action="/taldeasortu" method="POST">
-    <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+         <input type="hidden" name="_csrf" value="{{_csrfToken}}">
+         <input type="hidden" name="admin" value="{{menuadmin}}">
 <!--
         <h4><b> Urrats hauek egin ondoren, zure taldearen izena "Taldeak" atalean agertzen ez bada, jarri kontaktuan gurekin. </b></h4>
         </br>

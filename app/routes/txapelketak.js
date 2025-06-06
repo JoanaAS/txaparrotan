@@ -1309,7 +1309,7 @@ debugger;
         if(input.mezumota == "prest" || input.mezumota == "onartuak"){
 
 //postgres            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta > 3 order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
-            req.connection.query('SELECT * FROM taldeak where idtxapeltalde = $1 and balidatuta > \'3\' order by emailard',[req.session.idtxapelketa],function(err,wrows)     {  
+            req.connection.query('SELECT *, to_char(sortzedata, \'YYYY-MM-DD\') AS sortzedata FROM taldeak where idtxapeltalde = $1 and balidatuta > \'3\' order by emailard',[req.session.idtxapelketa],function(err,wrows)     {  
               if(err)
                 console.log("Error Selecting : %s ",err );
               rows = wrows.rows;     //postgres
@@ -1365,7 +1365,7 @@ debugger;
         }
         else if(input.mezumota == "ordgabe" || input.mezumota == "erdiord" || input.mezumota == "onargabe"){
 //            connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and (balidatuta <= 4) order by emailard',[req.session.idtxapelketa],function(err,rows)     {  
-            req.connection.query('SELECT * FROM taldeak where idtxapeltalde = $1 and (balidatuta <= \'5\') order by emailard',[req.session.idtxapelketa],function(err,wrows)     {  
+            req.connection.query('SELECT *, to_char(sortzedata, \'YYYY-MM-DD\') AS sortzedata FROM taldeak where idtxapeltalde = $1 and (balidatuta <= \'5\') order by emailard',[req.session.idtxapelketa],function(err,wrows)     {  
               if(err)
                 console.log("Error Selecting : %s ",err );
               rows = wrows.rows;     //postgres            
@@ -1426,7 +1426,7 @@ debugger;
 
            else if(input.mezumota == "jokgabe"){
 //postgres              connection.query('SELECT * FROM taldeak where idtxapeltalde = ? and balidatuta != "admin" and balidatuta >= 0 and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,rows)     {
-             req.connection.query('SELECT * FROM taldeak where idtxapeltalde = $1 and balidatuta != \'admin\' and balidatuta > \'0\' and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,wrows)     {
+             req.connection.query('SELECT *, to_char(sortzedata, \'YYYY-MM-DD\') AS sortzedata FROM taldeak where idtxapeltalde = $1 and balidatuta != \'admin\' and balidatuta > \'0\' and NOT EXISTS (SELECT * FROM jokalariak where idtaldeak=idtaldej) order by emailard',[req.session.idtxapelketa],function(err,wrows)     {
               if(err)
                 console.log("Error Selecting : %s ",err );
               rows = wrows.rows;     //postgres

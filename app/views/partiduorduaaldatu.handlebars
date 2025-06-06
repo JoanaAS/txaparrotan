@@ -58,11 +58,52 @@
     </form>
 </div>
 
+<div class="col-lg-1 col-md-offset-6">
 
+<form class="form-horizontal" role="form"  onsubmit="return confirmarBorrado()" action="/admin/partiduaezabatu" method="POST">
 
-          
-        
+  <input type="hidden" name="idpartidu" value="{{idpartidu}}"> 
 
+  <button type="submit" class="btn btn-default" id="ezabatu">ADI - PARTIDUA EZABATU</button>
+</form>
+</div>
+   
 {{/each}}
 
 </div>
+
+{{#section 'jquery'}}
+<script>
+  $(document).ready(function(){        
+
+   $("#ezabat1").on('click',function (){ 
+        myFunction(); 
+   });
+  });
+            
+
+function myFunction() {
+    var x;
+    if (confirm("Seguru al zaude partidua ezabatu nahi duzula?") == true) {
+        location.href = "/admin/partiduak";
+    } else {
+        x = "You pressed Cancel!";
+    }
+    document.getElementById("demo").innerHTML = x;
+}
+
+function confirmarBorrado() {
+            // La función confirm() muestra un cuadro de diálogo con un mensaje y dos botones: "Aceptar" y "Cancelar".
+            // Devuelve true si el usuario hace clic en "Aceptar" y false si hace clic en "Cancelar".
+
+        var confirmacion = confirm("¿Seguru al zaude partidua ezabatu nahi duzula?");
+
+            // Si el usuario hace clic en "Cancelar", la función devuelve false, lo que evita que el formulario se envíe.
+
+        return confirmacion;
+}
+
+
+</script>
+
+{{/section}}

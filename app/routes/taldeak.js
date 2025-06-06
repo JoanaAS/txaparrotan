@@ -239,6 +239,16 @@ exports.login = function(req, res){
     return res.redirect(303, '/login');
   }
 
+  if(isNaN(req.body.sTaldeak)) {
+    if(req.xhr) return res.json({ error: 'Invalid name taldea.' });
+    req.session.flash = {
+      type: 'danger',
+      intro: 'Adi!',
+      message: 'Taldea ez da zuzena',
+    };
+    return res.redirect(303, '/login');
+  }
+
   if(req.body.emailaard == "admin@txapelketak.eus") {
     req.session.erabiltzaile = "admin@txapelketak.eus";
     return res.redirect(303, '/admin/txapelketak');
@@ -718,6 +728,10 @@ debugger;
            {
             if (err)
               console.log("Error inserting : %s ",err );
+
+            if (input.admin)
+                 res.redirect('/admin/taldeakikusi');
+
 //postgres            connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= ? and balidatuta != "admin" ',[req.session.idtxapelketa],function(err,rowsg)     {
             req.connection.query('SELECT count(*) as guztira FROM taldeak where idtxapeltalde= $1 and balidatuta != \'admin\' ',[req.session.idtxapelketa],function(err,wrows)     {
                 if(err)
@@ -806,6 +820,7 @@ debugger;
           res.render('taldeaeskerrak.handlebars', {title: "Mila esker!", taldeizena:data.taldeizena, mixtoa:data.sexua,txapelketaizena:req.session.txapelketaizena, kk:rowst[0].kontukorrontea, prezio: rowst[0].prezioa,gehigarri: rowst[0].partidukopmin, emailard:data.emailard, izenaard: data.izenaard,mailaizena: mailaizena});
                   }
                });   
+          
           });
         }); 
       });
@@ -821,23 +836,59 @@ exports.balidatu = function(req,res){
     var idEnkript = req.params.id;
     //ADI! taldeasortu-n aldatu balio hau aldatuz gero
     var id = idEnkript / 3456789;
-    
+
+    var now= new Date();   // now : UTC +2ordu heroku config:add TZ="Europe/Madrid" 
+   
+    var vHasiera,aHasiera,aHasieraOrdua,hasiera,vBukaera,aBukaera,bukaera;
+
+    req.connection.query('SELECT * FROM taldeak, txapelketa where idtaldeak = $1 and idtxapelketa = idtxapeltalde',[id],function(err,wrows)     {
+      if(err)
+           console.log("Error Selecting : %s ",err );
+      rows = wrows.rows;     //postgres 
+
+      if(rows.length != 0) {
+          vHasiera = new Date();
+          hasiera = rows[0].inskripziohasierae;
+
+          aHasiera = hasiera.split("-");
+          vHasiera.setDate(aHasiera[2]);
+          vHasiera.setMonth(aHasiera[1] - 1);
+          vHasiera.setYear(aHasiera[0]);
+          aHasieraOrdua = rows[0].inskripziohasierao.split(":");
+          vHasiera.setHours(aHasieraOrdua[0],aHasieraOrdua[1],0);
+
+          vHasiera.set
+          vBukaera = new Date();
+          bukaera = rows[0].inskripziobukaerae;
+          aBukaera = bukaera.split("-");
+          vBukaera.setDate(aBukaera[2]);
+          vBukaera.setMonth(aBukaera[1] - 1);
+          vBukaera.setYear(aBukaera[0]);  
+
+         if((vHasiera > now) || (vBukaera < now))
+
+              res.redirect('/');
+
+         else
+         {    
 //postgres    req.getConnection(function (err, connection) {
-        
-        var data = {
-            
-            balidatuta    : 1
-        
-        };
+            var data = {
+                 balidatuta    : 1
+             };
 //postgres        connection.query("UPDATE taldeak set ? WHERE idtaldeak = ? and balidatuta = 0" ,[data,id], function(err, rows)
-        req.connection.query("UPDATE taldeak set balidatuta =$1 WHERE idtaldeak = $2 and balidatuta = \'0\'" ,[1, id], function(err, rows)
-        {
-          if (err)
-              console.log("Error Updating : %s ",err );
-         
-          res.redirect('/');  // '/login'
-        });
-    
+            req.connection.query("UPDATE taldeak set balidatuta =$1 WHERE idtaldeak = $2 and balidatuta = \'0\'" ,[1, id], function(err, rows)
+             {
+              if (err)
+                 console.log("Error Updating : %s ",err );
+             
+              res.redirect('/');  // '/login'
+            });
+          }
+
+      }
+      else
+        res.redirect('/');
+    });              
 };
 
 exports.forgot = function(req,res){

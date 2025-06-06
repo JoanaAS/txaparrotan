@@ -685,7 +685,6 @@ var multzoizena;
       req.connection.query('SELECT * FROM partiduak,grupoak,maila,zelaia,txapelketa where idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and zelaia=zelaizki and idtxapelz = $1 and idtxapelketam = $2 order by mailazki,multzo,jardunaldia,pareguna,parordua,zelaia',[id,id],function(err,wrows)     {
         if(err)
            console.log("Error Selecting : %s ",err );
-console.log(req.path +"-" +admin);
         rows = wrows.rows;     //postgres 
         if(rows.length == 0 || (rows[0].txapelketaprest== 0 && !admin)){
            res.locals.flash = {
@@ -1490,8 +1489,8 @@ exports.partiduordua = function(req, res){
         if(err)
            console.log("Error Selecting : %s ",err );
         rows = wrows.rows;     //postgres 
-        console.log(rows);
-
+//        console.log(rows);
+        console.log("Aldatu "+idpar);
         res.render('partiduorduaaldatu.handlebars', {title : 'Txaparrotan-Partidu ordua aldatu', data: rows, taldeizena: req.session.txapelketaizena} );
     });
 
@@ -1934,7 +1933,8 @@ exports.multzoakreset = function(req, res){
         debugger;
         //Update taldea ta delete grupoak.
 //postgres        connection.query("UPDATE taldeak set ? WHERE idtxapeltalde = ? and kategoria = ? ",[data,id,vKategoria], function(err, rowst)
-        req.connection.query("UPDATE taldeak SET jokatutakopartiduak=NULL, irabazitakopartiduak=NULL, puntuak=NULL, golakalde=NULL, golakkontra=NULL, setalde=NULL, setkontra=NULL, idgrupot=NULL  WHERE idtxapeltalde = $1 and kategoria = $2 ",[id,vKategoria], function(err, rowst)
+//null        req.connection.query("UPDATE taldeak SET jokatutakopartiduak=NULL, irabazitakopartiduak=NULL, puntuak=NULL, golakalde=NULL, golakkontra=NULL, setalde=NULL, setkontra=NULL, idgrupot=NULL  WHERE idtxapeltalde = $1 and kategoria = $2 ",[id,vKategoria], function(err, rowst)
+        req.connection.query("UPDATE taldeak SET jokatutakopartiduak=0, irabazitakopartiduak=0, puntuak=0, golakalde=0, golakkontra=0, setalde=0, setkontra=0, idgrupot=NULL  WHERE idtxapeltalde = $1 and kategoria = $2 ",[id,vKategoria], function(err, rowst)
         {
           if (err)
               console.log("Error Updating : %s ",err );
@@ -1971,7 +1971,9 @@ exports.partiduakreset = function(req, res){
         //Update taldea ta delete grupoak.
 //postgres        connection.query("UPDATE taldeak set ? WHERE idtxapeltalde = ?  ",[data,id], function(err, rowst)
 //        req.connection.query("UPDATE taldeak jokatutakopartiduak=$1, irabazitakopartiduak=$2, puntuak=$3, golakalde=$4, golakkontra=$5, setalde=$6, setkontra=$7 WHERE idtxapeltalde = $8  ",[NULL,NULL,NULL,NULL,NULL,NULL,NULL, id], function(err, rowst)
-        req.connection.query("UPDATE taldeak SET jokatutakopartiduak=NULL, irabazitakopartiduak=NULL, puntuak=NULL, golakalde=NULL, golakkontra=NULL, setalde=NULL, setkontra=NULL WHERE idtxapeltalde = $1  ",[id], function(err, rowst)
+//null        req.connection.query("UPDATE taldeak SET jokatutakopartiduak=NULL, irabazitakopartiduak=NULL, puntuak=NULL, golakalde=NULL, golakkontra=NULL, setalde=NULL, setkontra=NULL WHERE idtxapeltalde = $1  ",[id], function(err, rowst)
+        req.connection.query("UPDATE taldeak SET jokatutakopartiduak=0, irabazitakopartiduak=0, puntuak=0, golakalde=0, golakkontra=0, setalde=0, setkontra=0 WHERE idtxapeltalde = $1  ",[id], function(err, rowst)
+
         {
   
           if (err)
@@ -2025,6 +2027,36 @@ exports.partiduorduaaldatu = function(req,res){
           
         });
 
+};
+
+exports.partiduaezabatu = function(req,res){
+    
+//    var idpartidu = req.params.partidu;
+    var input = JSON.parse(JSON.stringify(req.body));
+    var idpartidu = input.idpartidu;    
+
+        req.connection.query("DELETE FROM partiduak WHERE idpartidu =$1",[idpartidu], function(err, rows)
+        {
+          if (err)
+              console.log("Error Deleting : %s ",err );
+ 
+          console.log("Ezabatu "+idpartidu);
+
+          res.redirect('/admin/partiduak');
+          
+        });
+
+};
+
+exports.taldeagehitu = function(req,res){
+
+  var admin = 1, aditestua = "Taldea admin";  
+      req.connection.query('SELECT idmaila, mailaizena FROM maila where idtxapelm = $1 ',[req.session.idtxapelketa],function(err,wrows)     {
+        if(err)
+              console.log("Error Selecting : %s ",err );
+        rowsm = wrows.rows;     //postgres 
+        res.render('taldeaksortu.handlebars', {title : 'Txaparrotan-Izen-ematea', taldeizena: req.session.taldeizena, idtxapelketa: req.session.idtxapelketa, mailak:rowsm, aditestua:aditestua, menuadmin:admin});
+      });
 };
 
 exports.taldeaeditatu = function(req, res){
