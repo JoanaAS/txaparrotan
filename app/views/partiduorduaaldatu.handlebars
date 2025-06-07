@@ -74,23 +74,6 @@
 
 {{#section 'jquery'}}
 <script>
-  $(document).ready(function(){        
-
-   $("#ezabat1").on('click',function (){ 
-        myFunction(); 
-   });
-  });
-            
-
-function myFunction() {
-    var x;
-    if (confirm("Seguru al zaude partidua ezabatu nahi duzula?") == true) {
-        location.href = "/admin/partiduak";
-    } else {
-        x = "You pressed Cancel!";
-    }
-    document.getElementById("demo").innerHTML = x;
-}
 
 function confirmarBorrado() {
             // La función confirm() muestra un cuadro de diálogo con un mensaje y dos botones: "Aceptar" y "Cancelar".

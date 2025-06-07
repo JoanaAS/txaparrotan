@@ -676,17 +676,24 @@ var vKategoria, vMultzo;
 var alfabeto = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
 var admin = (req.path == "/admin/partiduak");
 var zuretaldekoa = (req.path == "/taldepartiduak");
-var multzoizena;
+var multzoizena, ezindaikusi;
 //var txapelketaprest = 0;
 
 //postgres  req.getConnection(function(err,connection){
       //connection.query('SELECT *,t1.taldeizena taldeizena1,t2.taldeizena taldeizena2 FROM partiduak p,taldeak t1,taldeak t2,grupoak,maila,zelaia where idgrupop=idgrupo and t1.kategoria=idmaila and t1.idtaldeak=p.idtalde1 and t2.idtaldeak=p.idtalde2 and p.zelaia=zelaizki and idtxapelz=t1.idtxapeltalde and t1.idtxapeltalde = ? and t2.idtxapeltalde = ? order by mailazki,multzo,jardunaldia',[id, id],function(err,rows)     {
 //postgres      connection.query('SELECT * FROM partiduak,grupoak,maila,zelaia,txapelketa where idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and zelaia=zelaizki and idtxapelz = ? and idtxapelketam = ? order by mailazki,multzo,jardunaldia,pareguna,parordua,zelaia',[id,id],function(err,rows)     {
-      req.connection.query('SELECT * FROM partiduak,grupoak,maila,zelaia,txapelketa where idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and zelaia=zelaizki and idtxapelz = $1 and idtxapelketam = $2 order by mailazki,multzo,jardunaldia,pareguna,parordua,zelaia',[id,id],function(err,wrows)     {
-        if(err)
+    req.connection.query('SELECT * FROM partiduak,grupoak,maila,zelaia,txapelketa where idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and zelaia=zelaizki and idtxapelz = $1 and idtxapelketam = $2 order by mailazki,multzo,jardunaldia,pareguna,parordua,zelaia',[id,id],function(err,wrows)     {
+      if(err)
            console.log("Error Selecting : %s ",err );
-        rows = wrows.rows;     //postgres 
-        if(rows.length == 0 || (rows[0].txapelketaprest== 0 && !admin)){
+      rows = wrows.rows;     //postgres 
+      ezindaikusi = 0;
+      if(rows.length == 0)
+           ezindaikusi = 1;
+      else
+       if (rows[0].txapelketaprest== 0)
+             ezindaikusi = 1;
+//      if(rows.length == 0 || (rows[0].txapelketaprest== 0 && !admin)){
+      if(ezindaikusi && !admin){
            res.locals.flash = {
             type: 'danger',
             intro: 'Adi!',
@@ -694,8 +701,25 @@ var multzoizena;
            };
            //return res.redirect('/'); 
             return res.render('partiduak.handlebars', {title : 'Txaparrotan-Partiduak', data2:mailak, taldeizena: req.session.taldeizena,menuadmin: admin, taldekoa: zuretaldekoa} );
+      };
 
-        }; 
+      req.connection.query('SELECT * FROM partiduak,grupoak,maila,txapelketa where idgrupop=idgrupo and idtxapelketa = idtxapelketam and kategoriam=idmaila and idtxapelketam = $1 order by mailazki,multzo,jardunaldia,pareguna,parordua,idpartidu',[id],function(err,wrows)     {
+        if(err)
+           console.log("Error Selecting : %s ",err );
+        rowsp = wrows.rows;     //postgres 
+        if(rowsp.length == 0){
+           res.locals.flash = {
+            type: 'danger',
+            intro: 'Adi!',
+            message: 'Oraindik, Ez dago partidurik!',
+           };
+           //return res.redirect('/'); 
+            return res.render('partiduak.handlebars', {title : 'Txaparrotan-Partiduak', data2:mailak, taldeizena: req.session.taldeizena,menuadmin: admin, taldekoa: zuretaldekoa} );
+        }
+ 
+        if(rows.length == 0)
+             rows = wrows.rows;   // azkeneko select-a 
+
         for (var i in rows) {
           if(rows[i].pareguna != null){
             data = rows[i].pareguna;
@@ -795,8 +819,8 @@ var multzoizena;
         else{
         res.render('partiduak.handlebars', {title : 'Txaparrotan-Partiduak', data2:mailak, taldeizena: req.session.taldeizena,menuadmin: admin, taldekoa: zuretaldekoa} );
         }
+      });
     });
-
 }
 
 exports.kamisetak = function(req, res){
