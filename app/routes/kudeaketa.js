@@ -1377,7 +1377,7 @@ var emaitzabai, golak;
                 akronimoa = rowsf[i].akronimoa +" "+ alfabeto[rowsf[i].multzo -1] +" "+ rowsf[i].jardunaldia +".";
             }
 //          if(rowsf[i].emaitza1 != null || rowsf[i].emaitza2 != null){
-          if(rowsf[i].emaitza1 != 0 && rowsf[i].emaitza2 != 0){            
+          if(rowsf[i].emaitza1 != 0 || rowsf[i].emaitza2 != 0){            
               emaitzabai = 1;
               golak = rowsf[i].emaitza1 +"-"+ rowsf[i].emaitza2 +".";
           }    
@@ -1834,6 +1834,12 @@ exports.emaitzasartu = function(req, res){
                   izenafinala1    : izenafinala,
                   idtalde1   : idtalde       
                 };
+            req.connection.query("UPDATE partiduak set izenafinala1=$1, idtalde1=$2 WHERE idpartidu = $3 ",[izenafinala, idtalde, idparti], function(err, rowst)
+                {
+                  if (err)
+                    console.log("Error Updating : %s ",err );
+                  res.redirect('/admin/emaitzak');
+                });    
            }
            else{
             if(rows[0].idfinala2 != null){
@@ -1843,15 +1849,23 @@ exports.emaitzasartu = function(req, res){
                   izenafinala2    : izenafinala,
                   idtalde2   : idtalde       
                 };
+              req.connection.query("UPDATE partiduak set izenafinala2=$1, idtalde2=$2 WHERE idpartidu = $3 ",[izenafinala, idtalde, idparti], function(err, rowst)
+                {
+                  if (err)
+                    console.log("Error Updating : %s ",err );
+                  res.redirect('/admin/emaitzak');
+                });
             }
            }
 //postgres           connection.query("UPDATE partiduak set ? WHERE idpartidu = ? ",[data,idparti], function(err, rowst)
+/*
            req.connection.query("UPDATE partiduak set izenafinala2=$1, idtalde2=$2 WHERE idpartidu = $3 ",[izenafinala, idtalde, idparti], function(err, rowst)
                 {
                   if (err)
                     console.log("Error Updating : %s ",err );
                   res.redirect('/admin/emaitzak');
                 });
+*/                
           }
         });          
       }
