@@ -229,6 +229,11 @@ exports.login = function(req, res){
 
   var input = JSON.parse(JSON.stringify(req.body));
 
+  if(req.body.emailaard == "admin@txapelketak.eus") {
+    req.session.erabiltzaile = "admin@txapelketak.eus";
+    return res.redirect(303, '/admin/txapelketak');
+  }  
+
   if(!req.body.emailaard.match(VALID_EMAIL_REGEX)) {
     if(req.xhr) return res.json({ error: 'Invalid name email address.' });
     req.session.flash = {
@@ -249,10 +254,6 @@ exports.login = function(req, res){
     return res.redirect(303, '/login');
   }
 
-  if(req.body.emailaard == "admin@txapelketak.eus") {
-    req.session.erabiltzaile = "admin@txapelketak.eus";
-    return res.redirect(303, '/admin/txapelketak');
-  }
 
   var taldea; 
 //postgres  req.getConnection(function(err,connection){
